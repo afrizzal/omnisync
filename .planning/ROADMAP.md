@@ -1,0 +1,108 @@
+# Roadmap: OmniSync
+
+## Overview
+
+OmniSync is built in six phases that follow a strict dependency chain: shared infrastructure and schema first (the `UNIQUE(fingerprint)` constraint and ESM/Prisma 7 foundation must exist before any app code), then the ingestion API (events must enter the system before a worker can consume them), then the worker core (idempotent persistence before resilience layers are added on top), then resilience (retry → DLQ → circuit breaker, sequenced so DLQ exists before the breaker is testable), then the dashboard and observability layer (meaningful only once real events and failures flow through), and finally the testing, CI/CD, and deployment phase where the kill-Postgres integration test — the project's signature deliverable — is locked in and the always-on worker hosting is resolved for the live demo.
+
+## Phases
+
+**Phase Numbering:**
+- Integer phases (1, 2, 3): Planned milestone work
+- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
+
+Decimal phases appear between their surrounding integers in numeric order.
+
+- [ ] **Phase 1: Foundation & Local Infra** - Monorepo scaffold, shared Prisma schema (with `UNIQUE(fingerprint)`), Zod types, Docker Compose (Redis noeviction + Postgres), and CI skeleton
+- [ ] **Phase 2: High-Speed Ingestion API** - Fastify ingestion endpoint with HMAC validation, Zod validation, SHA-256 fingerprint, Redis SET NX gate, BullMQ enqueue, and HTTP 202 fast-ACK
+- [ ] **Phase 3: Worker Core & Idempotent Persistence** - Always-on BullMQ worker pool that normalizes events and persists them idempotently via `ON CONFLICT DO NOTHING`, completing the happy path end-to-end
+- [ ] **Phase 4: Resilience & Dynamic Routing** - Jittered exponential backoff, hand-built DLQ (BullMQ failed handler + Postgres mirror), mock CRM downstream, opossum circuit breaker, re-queue path, and runtime-reloadable routing rules
+- [ ] **Phase 5: Dashboard & Observability** - Next.js dashboard with live queue metrics, DLQ list with one-click re-queue and load-test visualization, plus OpenTelemetry structured logs and metrics wired to real events
+- [ ] **Phase 6: Testing, CI/CD & Deployment** - Kill-Postgres integration test, Playwright E2E, ≥80% coverage gate, GitHub Actions CI/CD, multi-stage Docker, resolved always-on worker hosting, and load-test demo script
+
+## Phase Details
+
+### Phase 1: Foundation & Local Infra
+**Goal**: The shared substrate every other phase builds on exists and is correct — ESM-native monorepo, authoritative Prisma schema with `UNIQUE(fingerprint)` and `dlq_events` table, shared Zod types, and a reproducible local environment.
+**Depends on**: Nothing (first phase)
+**Requirements**: QUE-01, OPS-02
+**Success Criteria** (what must be TRUE):
+  1. `docker compose up` starts Postgres and Redis locally with Redis `maxmemory-policy noeviction` verified by a startup assertion
+  2. `pnpm -r build` in the monorepo compiles all packages and apps without TypeScript errors
+  3. `prisma migrate dev` applies the schema and `psql \d events` shows `CONSTRAINT events_fingerprint_unique UNIQUE (fingerprint)`
+  4. Shared `@omnisync/db` and `@omnisync/types` packages are importable from `apps/api`, `apps/worker`, and `apps/dashboard` with no circular dependencies
+  5. GitHub Actions CI skeleton runs type-check on every push and passes green
+**Plans**: TBD
+
+### Phase 2: High-Speed Ingestion API
+**Goal**: Webhooks can enter OmniSync: a Fastify endpoint validates signatures, rejects malformed payloads, generates a deterministic fingerprint, gates duplicates via Redis SET NX, enqueues the job, and returns HTTP 202 before any DB write occurs.
+**Depends on**: Phase 1
+**Requirements**: ING-01, ING-02, ING-03, ING-04, ING-05, IDM-01
+**Success Criteria** (what must be TRUE):
+  1. `POST /ingest/:source` with a valid HMAC signature and well-formed payload returns HTTP 202 in low single-digit milliseconds (measured under local load)
+  2. A request with a tampered or missing `X-Webhook-Signature` header returns HTTP 401 and no job is enqueued
+  3. A request with a schema-invalid payload (missing required fields) returns HTTP 422 with a structured error body
+  4. Sending the identical webhook twice concurrently results in exactly one job enqueued in BullMQ (the second call returns 202 with `status: "duplicate"`)
+  5. The SHA-256 fingerprint of `source + event_type + external_id + occurred_at` is present on every enqueued job payload and is stable across identical re-deliveries
+**Plans**: TBD
+
+### Phase 3: Worker Core & Idempotent Persistence
+**Goal**: Events queued by the ingestion API are consumed by a separate, always-on BullMQ worker process, normalized to a canonical schema, and persisted to PostgreSQL idempotently — duplicate events are silently absorbed, never double-stored.
+**Depends on**: Phase 2
+**Requirements**: QUE-02, QUE-03, QUE-04, IDM-02, IDM-03
+**Success Criteria** (what must be TRUE):
+  1. A valid job enqueued by the API is picked up by the worker, normalized, and appears as a row in the `events` table within a few seconds, with the worker process running as a separate Docker service
+  2. Sending 50 identical webhooks simultaneously results in exactly one row in `events` (DB unique constraint absorbs all duplicates; no `INSERT` error surfaces to the caller)
+  3. Re-queuing the same event after it has already been persisted marks the job complete without creating a duplicate row — idempotency holds across the re-queue path
+  4. Worker concurrency is configurable via an environment variable and the worker processes multiple jobs in parallel without connection pool exhaustion on the local Postgres instance
+**Plans**: TBD
+
+### Phase 4: Resilience & Dynamic Routing
+**Goal**: The system survives failures gracefully: transient errors retry with jittered backoff, exhausted jobs land in a durable DLQ (Redis + Postgres mirror), a circuit breaker protects the mock CRM downstream, failed jobs can be re-queued idempotently, and routing/transformation rules can be updated in the DB and take effect in the running worker without a redeploy.
+**Depends on**: Phase 3
+**Requirements**: RES-01, RES-02, RES-03, RES-04, RES-05, RES-06, RES-07, RTE-01, RTE-02
+**Success Criteria** (what must be TRUE):
+  1. Injecting a transient error into the worker causes automatic retry with jittered exponential backoff — retry timestamps in logs are spread across a window, not synchronized (no thundering herd)
+  2. After exhausting all retry attempts, the job appears in the `dlq_events` Postgres table with the original payload, full error stack, attempt count, and source channel — the DLQ entry survives a Redis restart
+  3. Configuring the mock CRM to return 5xx errors at a rate above the threshold causes the opossum circuit breaker to open; while open, affected events route to retry/DLQ without hammering the mock CRM; killing Postgres does NOT open the breaker
+  4. Clicking "Re-queue" on a DLQ entry reprocesses the event through the normal worker pipeline and results in exactly one DB row — idempotency holds on re-queue
+  5. Updating a routing rule in the `routing_rules` table (e.g., enabling E.164 phone normalization) takes effect in the running worker without restarting, and the next processed event reflects the updated rule
+**Plans**: TBD
+
+### Phase 5: Dashboard & Observability
+**Goal**: Operators can see the system's health in real time: a Next.js dashboard shows live queue throughput metrics, lists DLQ entries with full error detail and a one-click re-queue action, and visualizes a live load test — all backed by OpenTelemetry-instrumented structured logs and metrics covering every event lifecycle transition.
+**Depends on**: Phase 4
+**Requirements**: OBS-01, OBS-02, DSH-01, DSH-02, DSH-03, DSH-04
+**Success Criteria** (what must be TRUE):
+  1. The dashboard `/dashboard` page shows live queue depth and throughput metrics that update without a page reload as events flow through the system
+  2. The dashboard `/dlq` page lists all DLQ entries with error detail (message, stack, attempt count, source channel) and a "Re-queue" button that triggers reprocessing
+  3. The dashboard `/demo` page visualizes a running load test in real time — events processed vs. failed charted live as the test script fires synthetic events
+  4. Structured logs are emitted for every event lifecycle transition (received, processing, completed, failed, DLQ) and are queryable/filterable in the local log output
+  5. The OpenTelemetry metrics endpoint (or BullMQ job-state gauge) exposes throughput, queue latency, retry count, and error distribution as observable, numeric values
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 6: Testing, CI/CD & Deployment
+**Goal**: The project's quality bar is enforced and the system is demonstrable live: the kill-Postgres integration test proves queue durability under DB failure, Playwright E2E covers the DLQ re-queue flow, ≥80% line coverage is a CI gate, Docker images build cleanly, and the always-on worker is deployed to a free-tier host reachable for a live recruiter demo.
+**Depends on**: Phase 5
+**Requirements**: TST-01, TST-02, TST-03, TST-04, OPS-01, OPS-03, OPS-04
+**Success Criteria** (what must be TRUE):
+  1. Killing Postgres mid-processing (via `docker pause` in a Testcontainers test) results in zero events dropped from the BullMQ queue — all in-flight events complete successfully once Postgres is restored
+  2. Firing 50 concurrent identical webhooks in an integration test results in exactly one row in the `events` table (concurrent dedup test passes in CI)
+  3. The Playwright E2E test navigates to the DLQ dashboard, clicks re-queue on a seeded failed job, and asserts the event appears in the `events` table exactly once — this test passes in CI headlessly
+  4. `pnpm test` reports ≥80% line coverage and the GitHub Actions workflow blocks merges that fall below the threshold
+  5. The always-on worker is reachable at a public URL (Render background worker, Fly.io, or equivalent) and the load-test script successfully blasts synthetic events through the full live pipeline
+**Plans**: TBD
+
+## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 1. Foundation & Local Infra | 0/TBD | Not started | - |
+| 2. High-Speed Ingestion API | 0/TBD | Not started | - |
+| 3. Worker Core & Idempotent Persistence | 0/TBD | Not started | - |
+| 4. Resilience & Dynamic Routing | 0/TBD | Not started | - |
+| 5. Dashboard & Observability | 0/TBD | Not started | - |
+| 6. Testing, CI/CD & Deployment | 0/TBD | Not started | - |

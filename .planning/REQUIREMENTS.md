@@ -102,13 +102,47 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (to be filled by roadmap) | — | Pending |
+| QUE-01 | Phase 1 | Pending |
+| OPS-02 | Phase 1 | Pending |
+| ING-01 | Phase 2 | Pending |
+| ING-02 | Phase 2 | Pending |
+| ING-03 | Phase 2 | Pending |
+| ING-04 | Phase 2 | Pending |
+| ING-05 | Phase 2 | Pending |
+| IDM-01 | Phase 2 | Pending |
+| QUE-02 | Phase 3 | Pending |
+| QUE-03 | Phase 3 | Pending |
+| QUE-04 | Phase 3 | Pending |
+| IDM-02 | Phase 3 | Pending |
+| IDM-03 | Phase 3 | Pending |
+| RES-01 | Phase 4 | Pending |
+| RES-02 | Phase 4 | Pending |
+| RES-03 | Phase 4 | Pending |
+| RES-04 | Phase 4 | Pending |
+| RES-05 | Phase 4 | Pending |
+| RES-06 | Phase 4 | Pending |
+| RES-07 | Phase 4 | Pending |
+| RTE-01 | Phase 4 | Pending |
+| RTE-02 | Phase 4 | Pending |
+| OBS-01 | Phase 5 | Pending |
+| OBS-02 | Phase 5 | Pending |
+| DSH-01 | Phase 5 | Pending |
+| DSH-02 | Phase 5 | Pending |
+| DSH-03 | Phase 5 | Pending |
+| DSH-04 | Phase 5 | Pending |
+| TST-01 | Phase 6 | Pending |
+| TST-02 | Phase 6 | Pending |
+| TST-03 | Phase 6 | Pending |
+| TST-04 | Phase 6 | Pending |
+| OPS-01 | Phase 6 | Pending |
+| OPS-03 | Phase 6 | Pending |
+| OPS-04 | Phase 6 | Pending |
 
 **Coverage:**
 - v1 requirements: 33 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 33 ⚠️
+- Mapped to phases: 33
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-02*
-*Last updated: 2026-06-02 after initial definition*
+*Last updated: 2026-06-02 — traceability populated after roadmap creation*
