@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-04 (app stubs + Dockerfiles + CI skeleton — Phase 1 complete)
-last_updated: "2026-06-02T08:49:57.890Z"
-last_activity: 2026-06-02
+stopped_at: Phase 1 FULLY VERIFIED — all 5 success criteria pass live (SC1 Redis noeviction, SC3-live migration+constraint, OPS-02 image builds run under Docker 29.5.2; 2 Dockerfile bugs found & fixed). Ready to plan Phase 2.
+last_updated: "2026-06-03T00:00:00.000Z"
+last_activity: 2026-06-03
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 4
   completed_plans: 4
-  percent: 50
+  percent: 17
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 1 of 6 (Foundation & Local Infra)
-Plan: 4 of 4 in current phase (01-01, 01-02, 01-03 complete)
-Status: Ready to execute
-Last activity: 2026-06-02
+Phase: 1 of 6 (Foundation & Local Infra) — ✅ COMPLETE & VERIFIED
+Plan: 4 of 4 complete (01-01 … 01-04); all 5 success criteria pass live
+Status: Phase 1 done — ready to plan Phase 2 (High-Speed Ingestion API)
+Last activity: 2026-06-03
 
-Progress: [█████░░░░░] 50% (3 of 4 plans in Phase 1) — Wave 3 (app stubs + CI) pending
+Progress: [█░░░░░] Phase 1 of 6 complete (17%) — runtime UAT green: Redis noeviction, live migration + fingerprint constraint, both Docker images build
 
 ## Performance Metrics
 
@@ -88,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-06-02T08:49:57.885Z
-Stopped at: Completed 01-04 (app stubs + Dockerfiles + CI skeleton — Phase 1 complete)
-Resume file: None
+Last session: 2026-06-03 (resumed)
+Stopped at: Phase 1 UAT completed under Docker. Resolved 5432 conflict (remapped compose PG → 5433). SC1/SC3-live/OPS-02 all PASS. Fixed 2 Dockerfile bugs during OPS-02 (missing tsconfig.base.json in prune; build-only-target → turbo dep-graph build). HANDOFF.json + .continue-here.md cleared (one-shot, resolved).
+Resume file: None — Phase 1 closed. Next: /gsd:plan-phase 2.

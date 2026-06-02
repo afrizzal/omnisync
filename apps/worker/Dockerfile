@@ -15,8 +15,13 @@ COPY --from=prune /app/out/json/ .
 RUN pnpm install --frozen-lockfile
 # Copy full pruned source and build
 COPY --from=prune /app/out/full/ .
-RUN pnpm --filter @omnisync/db generate
-RUN pnpm --filter @omnisync/worker build
+# turbo prune --docker omits root config files; every package tsconfig extends
+# ../../tsconfig.base.json (and Prisma's TS-client generator reads it too), so copy it in.
+COPY tsconfig.base.json ./
+# Build the worker AND its workspace deps in topological order (turbo respects
+# dependsOn ^build) — mirrors local `pnpm build`. This also runs @omnisync/db's
+# `prisma generate`, which is part of that package's build script.
+RUN pnpm exec turbo run build --filter=@omnisync/worker
 
 # ── Stage 3: runtime ─────────────────────────────────────────────────────────
 FROM node:22-slim AS runtime
