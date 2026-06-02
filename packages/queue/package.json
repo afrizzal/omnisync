@@ -1,0 +1,24 @@
+{
+  "name": "@omnisync/queue",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "bullmq": "^5.77.0",
+    "ioredis": "5.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1"
+  }
+}
