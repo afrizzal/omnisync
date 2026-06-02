@@ -1,5 +1,5 @@
-import { prisma } from "@omnisync/db";
 import { env } from "@omnisync/config";
+import { prisma } from "@omnisync/db";
 
 console.log(
   `[api] ready — NODE_ENV=${env.NODE_ENV} db=${env.DATABASE_URL.split("@")[1] ?? env.DATABASE_URL}`,

@@ -1,5 +1,5 @@
-import { QUEUE_NAME } from "@omnisync/queue";
 import { env } from "@omnisync/config";
+import { QUEUE_NAME } from "@omnisync/queue";
 
 console.log(
   `[worker] ready for queue "${QUEUE_NAME}" — NODE_ENV=${env.NODE_ENV}`,
