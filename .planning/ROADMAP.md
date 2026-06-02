@@ -12,7 +12,7 @@ OmniSync is built in six phases that follow a strict dependency chain: shared in
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Local Infra** - Monorepo scaffold, shared Prisma schema (with `UNIQUE(fingerprint)`), Zod types, Docker Compose (Redis noeviction + Postgres), and CI skeleton
+- [x] **Phase 1: Foundation & Local Infra** - Monorepo scaffold, shared Prisma schema (with `UNIQUE(fingerprint)`), Zod types, Docker Compose (Redis noeviction + Postgres), and CI skeleton (completed 2026-06-02)
 - [ ] **Phase 2: High-Speed Ingestion API** - Fastify ingestion endpoint with HMAC validation, Zod validation, SHA-256 fingerprint, Redis SET NX gate, BullMQ enqueue, and HTTP 202 fast-ACK
 - [ ] **Phase 3: Worker Core & Idempotent Persistence** - Always-on BullMQ worker pool that normalizes events and persists them idempotently via `ON CONFLICT DO NOTHING`, completing the happy path end-to-end
 - [ ] **Phase 4: Resilience & Dynamic Routing** - Jittered exponential backoff, hand-built DLQ (BullMQ failed handler + Postgres mirror), mock CRM downstream, opossum circuit breaker, re-queue path, and runtime-reloadable routing rules
@@ -100,7 +100,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Local Infra | 2/4 | In Progress|  |
+| 1. Foundation & Local Infra | 4/4 | Complete   | 2026-06-02 |
 | 2. High-Speed Ingestion API | 0/TBD | Not started | - |
 | 3. Worker Core & Idempotent Persistence | 0/TBD | Not started | - |
 | 4. Resilience & Dynamic Routing | 0/TBD | Not started | - |

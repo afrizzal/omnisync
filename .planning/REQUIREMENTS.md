@@ -65,7 +65,7 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 ### Ops & Delivery
 
 - [ ] **OPS-01**: GitHub Actions CI runs type-check, tests, and Docker build on every push
-- [ ] **OPS-02**: API and worker each build as a multi-stage Docker image and run together via docker-compose locally
+- [x] **OPS-02**: API and worker each build as a multi-stage Docker image and run together via docker-compose locally
 - [ ] **OPS-03**: The system is deployed to a free-tier host with the always-on worker kept alive and reachable for a live demo
 - [ ] **OPS-04**: A load-test/demo script blasts a high volume of synthetic multi-channel events to drive the demo scenario
 
@@ -103,7 +103,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | QUE-01 | Phase 1 | Complete |
-| OPS-02 | Phase 1 | Pending |
+| OPS-02 | Phase 1 | Complete |
 | ING-01 | Phase 2 | Pending |
 | ING-02 | Phase 2 | Pending |
 | ING-03 | Phase 2 | Pending |
