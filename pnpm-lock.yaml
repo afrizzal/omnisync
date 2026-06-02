@@ -24,6 +24,12 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/types:
+    dependencies:
+      zod:
+        specifier: ^4.0.0
+        version: 4.4.3
+
 packages:
 
   '@biomejs/biome@2.4.16':
@@ -327,6 +333,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
 snapshots:
 
   '@biomejs/biome@2.4.16':
@@ -540,3 +549,5 @@ snapshots:
       '@turbo/windows-arm64': 2.9.16
 
   typescript@5.9.3: {}
+
+  zod@4.4.3: {}
