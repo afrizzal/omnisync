@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
+status: executing
 stopped_at: Completed 01-01-PLAN.md (repo skeleton + tooling + local infra)
 last_updated: "2026-06-02T04:19:24.735Z"
-last_activity: 2026-06-02 — Roadmap created; all 33 v1 requirements mapped across 6 phases
+last_activity: 2026-06-02 — Phase 01 executing — 01-01 complete
 progress:
   total_phases: 6
   completed_phases: 0
@@ -21,7 +21,7 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value:** No accepted event is ever silently lost — once acknowledged (HTTP 202), an event is durably queued and processed at-least-once and idempotently, surviving worker crashes, DB outages, and flaky downstream APIs, with a DLQ as the final safety net.
-**Current focus:** Phase 1 — Foundation & Local Infra
+**Current focus:** Phase 01 — foundation-local-infra
 
 ## Current Position
 
