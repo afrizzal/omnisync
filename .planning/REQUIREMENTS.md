@@ -17,7 +17,7 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 
 ### Queue & Workers
 
-- [ ] **QUE-01**: Ingestion and processing are decoupled through a Redis-backed BullMQ queue
+- [x] **QUE-01**: Ingestion and processing are decoupled through a Redis-backed BullMQ queue
 - [ ] **QUE-02**: A separate, always-on worker process (distinct from the API process) consumes events from the queue
 - [ ] **QUE-03**: Workers process events concurrently with a configurable concurrency limit
 - [ ] **QUE-04**: Worker normalizes each event into a canonical schema before persistence
@@ -102,7 +102,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| QUE-01 | Phase 1 | Pending |
+| QUE-01 | Phase 1 | Complete |
 | OPS-02 | Phase 1 | Pending |
 | ING-01 | Phase 2 | Pending |
 | ING-02 | Phase 2 | Pending |

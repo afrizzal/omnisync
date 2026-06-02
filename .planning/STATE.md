@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-01-PLAN.md (repo skeleton + tooling + local infra)
-last_updated: "2026-06-02T04:19:24.735Z"
-last_activity: 2026-06-02 — Phase 01 executing — 01-01 complete
+stopped_at: Completed 01-03-PLAN.md (config + queue packages)
+last_updated: "2026-06-02T04:47:32.430Z"
+last_activity: 2026-06-02
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
-  percent: 0
+  completed_plans: 2
+  percent: 25
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 1 of 6 (Foundation & Local Infra)
-Plan: 1 of 4 in current phase (01-01-PLAN.md complete)
-Status: In progress
-Last activity: 2026-06-02 — Completed 01-01 repo skeleton + tooling + local infra
+Plan: 2 of 4 in current phase (01-01-PLAN.md complete)
+Status: Ready to execute
+Last activity: 2026-06-02
 
 Progress: [███░░░░░░░] 25% (1 of 4 plans in Phase 1)
 
@@ -52,6 +52,7 @@ Progress: [███░░░░░░░] 25% (1 of 4 plans in Phase 1)
 - Trend: baseline
 
 *Updated after each plan completion*
+| Phase 01 P03 | 21 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,8 @@ Recent decisions affecting current work:
 - Roadmap: Hosting decision (always-on worker free-tier) remains deferred to Phase 6 per research recommendation; Render/Fly candidates known
 - [Phase 01]: Biome 2.x uses files.includes with negation patterns (not files.ignore) — verified during 01-01 execution
 - [Phase 01]: Turborepo v2 uses tasks key (not pipeline); biome folder exclusions need no trailing /** from v2.2.0+
+- [Phase 01]: ioredis pinned to 5.10.1 in @omnisync/queue to match BullMQ bundled version — prevents TypeScript type conflict in pnpm dual-version resolution
+- [Phase 01]: z.treeifyError confirmed as the correct Zod v4 error API; named { Redis } import from ioredis required for ESM + NodeNext + verbatimModuleSyntax
 
 ### Pending Todos
 
@@ -79,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-06-02T04:19:24.726Z
-Stopped at: Completed 01-01-PLAN.md (repo skeleton + tooling + local infra)
+Last session: 2026-06-02T04:47:32.424Z
+Stopped at: Completed 01-03-PLAN.md (config + queue packages)
 Resume file: None
