@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-06-09T12:32:35.377Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-06-09T13:04:45.214Z"
 last_activity: 2026-06-09
 progress:
   total_phases: 6
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 7
   percent: 17
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 02 (high-speed-ingestion-api) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-06-09
 
@@ -57,6 +57,7 @@ Progress: [█░░░░░] Phase 1 of 6 complete (17%) — runtime UAT green
 | Phase 01-foundation-local-infra P04 | 45 | 4 tasks | 15 files |
 | Phase 02-high-speed-ingestion-api P01 | 9 | 3 tasks | 7 files |
 | Phase 02 P02 | 17 | 2 tasks | 9 files |
+| Phase 02-high-speed-ingestion-api P03 | 18 | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 02-high-speed-ingestion-api]: workspace:* used for @omnisync/queue in apps/api (corrected from pnpm default workspace:^) for consistency with other workspace deps
 - [Phase 02]: Vitest setupFiles used to pre-populate env vars before module load to prevent @omnisync/config Zod parse failure in tests (Pitfall 4 prevention)
 - [Phase 02]: Known-value SHA-256 hash anchor hardcoded in fingerprint test to detect algorithm drift: 7ed400d9932c822806865fbc3658051dcffc88718ad40ea0039690d284d0ea74
+- [Phase 02-high-speed-ingestion-api]: Add bullmq, ioredis, zod as direct deps of @omnisync/api — NodeNext module resolution requires direct deps for type-only imports
+- [Phase 02-high-speed-ingestion-api]: Redis SET NX uses 'EX', seconds, 'NX' order — matches ioredis overload signature (EX token before NX)
 
 ### Pending Todos
 
@@ -102,6 +105,6 @@ None yet.
 
 Last activity: 2026-06-09 - Completed quick task 260609-qjn: Add Commits and Collaboration conventions to project CLAUDE.md
 
-Last session: 2026-06-09T12:32:35.371Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-06-09T13:04:45.210Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None

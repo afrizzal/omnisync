@@ -47,8 +47,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 02-01-PLAN.md — Foundation: extend env schema with WEBHOOK_SECRET_*, install Fastify + Vitest deps, create test scaffold + rawBody type augmentation (Wave 0)
-- [ ] 02-02-PLAN.md — Pure functions (TDD): buildFingerprint (ING-04/SC-5) + verifySignature (ING-02/SC-2) with unit tests (Wave 1)
-- [ ] 02-03-PLAN.md — Fastify app factory, /healthz, POST /ingest/:source hot path, entrypoint wiring, and app.inject() route tests (Wave 2)
+- [x] 02-02-PLAN.md — Pure functions (TDD): buildFingerprint (ING-04/SC-5) + verifySignature (ING-02/SC-2) with unit tests (Wave 1)
+- [x] 02-03-PLAN.md — Fastify app factory, /healthz, POST /ingest/:source hot path, entrypoint wiring, and app.inject() route tests (Wave 2)
 
 ### Phase 3: Worker Core & Idempotent Persistence
 **Goal**: Events queued by the ingestion API are consumed by a separate, always-on BullMQ worker process, normalized to a canonical schema, and persisted to PostgreSQL idempotently — duplicate events are silently absorbed, never double-stored.

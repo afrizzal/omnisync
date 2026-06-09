@@ -9,11 +9,11 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 
 ### Ingestion
 
-- [ ] **ING-01**: System accepts webhook events via HTTP POST and returns 202 Accepted in low single-digit milliseconds, before any processing
+- [x] **ING-01**: System accepts webhook events via HTTP POST and returns 202 Accepted in low single-digit milliseconds, before any processing
 - [x] **ING-02**: System validates a webhook HMAC/signature and rejects events with an invalid signature
-- [ ] **ING-03**: System validates payload shape with Zod and rejects malformed events with a structured 4xx error
+- [x] **ING-03**: System validates payload shape with Zod and rejects malformed events with a structured 4xx error
 - [x] **ING-04**: System computes a deterministic idempotency fingerprint (SHA-256 of source + event_type + external_id + occurred_at) for every accepted event
-- [ ] **ING-05**: System enqueues the validated payload and never persists/processes it synchronously on the request path
+- [x] **ING-05**: System enqueues the validated payload and never persists/processes it synchronously on the request path
 
 ### Queue & Workers
 
@@ -104,11 +104,11 @@ Which phases cover which requirements. Populated during roadmap creation.
 |-------------|-------|--------|
 | QUE-01 | Phase 1 | Complete |
 | OPS-02 | Phase 1 | Complete |
-| ING-01 | Phase 2 | Pending |
+| ING-01 | Phase 2 | Complete |
 | ING-02 | Phase 2 | Complete |
-| ING-03 | Phase 2 | Pending |
+| ING-03 | Phase 2 | Complete |
 | ING-04 | Phase 2 | Complete |
-| ING-05 | Phase 2 | Pending |
+| ING-05 | Phase 2 | Complete |
 | IDM-01 | Phase 2 | Complete |
 | QUE-02 | Phase 3 | Pending |
 | QUE-03 | Phase 3 | Pending |
