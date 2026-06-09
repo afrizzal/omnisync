@@ -7,6 +7,10 @@ const Env = z.object({
   DATABASE_URL: z.string().url(),
   DIRECT_URL: z.string().url(),
   REDIS_URL: z.string().url(),
+  WEBHOOK_SECRET_SHOPEE: z.string().min(1),
+  WEBHOOK_SECRET_TOKOPEDIA: z.string().min(1),
+  WEBHOOK_SECRET_META_ADS: z.string().min(1),
+  WEBHOOK_SECRET_CRM: z.string().min(1),
 });
 
 export const env = (() => {
