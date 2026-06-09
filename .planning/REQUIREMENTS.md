@@ -24,7 +24,7 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 
 ### Idempotency
 
-- [ ] **IDM-01**: A fast Redis `SET NX` in-flight gate prevents duplicate enqueue of concurrent identical events
+- [x] **IDM-01**: A fast Redis `SET NX` in-flight gate prevents duplicate enqueue of concurrent identical events
 - [ ] **IDM-02**: A PostgreSQL `UNIQUE(fingerprint)` constraint with `INSERT … ON CONFLICT DO NOTHING` guarantees each event is stored at most once
 - [ ] **IDM-03**: Re-delivering or re-queuing the same event never creates a duplicate stored record
 
@@ -109,7 +109,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | ING-03 | Phase 2 | Pending |
 | ING-04 | Phase 2 | Pending |
 | ING-05 | Phase 2 | Pending |
-| IDM-01 | Phase 2 | Pending |
+| IDM-01 | Phase 2 | Complete |
 | QUE-02 | Phase 3 | Pending |
 | QUE-03 | Phase 3 | Pending |
 | QUE-04 | Phase 3 | Pending |
