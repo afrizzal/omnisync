@@ -54,7 +54,7 @@ describe("buildFingerprint", () => {
     const known = buildFingerprint(SOURCE, EVENT_TYPE, EXTERNAL_ID, OCCURRED_AT);
     // Placeholder: will be replaced with the actual hash during GREEN
     expect(known).toMatch(/^[0-9a-f]{64}$/);
-    // The actual hardcoded value is set below after GREEN confirms it:
-    expect(known).toBe("PLACEHOLDER_HASH_TO_BE_REPLACED");
+    // Hardcoded anchor: any change to the hashing algorithm will break this test
+    expect(known).toBe("7ed400d9932c822806865fbc3658051dcffc88718ad40ea0039690d284d0ea74");
   });
 });
