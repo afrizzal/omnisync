@@ -86,7 +86,15 @@ None yet.
 - [Phase 4] Confirm opossum v9 current API shape (`circuitBreaker()` constructor vs `Policy` wrapper) before implementation
 - [Phase 6] Final always-on worker hosting choice (Render background worker vs Fly.io) needs real testing against free-tier keep-alive constraints
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260609-qjn | Add Commits and Collaboration conventions to project CLAUDE.md | 2026-06-09 | aaae6f6 | [260609-qjn-add-commits-and-collaboration-convention](.planning/quick/260609-qjn-add-commits-and-collaboration-convention/) |
+
 ## Session Continuity
+
+Last activity: 2026-06-09 - Completed quick task 260609-qjn: Add Commits and Collaboration conventions to project CLAUDE.md
 
 Last session: 2026-06-09T11:40:35.685Z
 Stopped at: Phase 2 context gathered
