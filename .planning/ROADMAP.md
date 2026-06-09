@@ -43,7 +43,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A request with a schema-invalid payload (missing required fields) returns HTTP 422 with a structured error body
   4. Sending the identical webhook twice concurrently results in exactly one job enqueued in BullMQ (the second call returns 202 with `status: "duplicate"`)
   5. The SHA-256 fingerprint of `source + event_type + external_id + occurred_at` is present on every enqueued job payload and is stable across identical re-deliveries
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Foundation: extend env schema with WEBHOOK_SECRET_*, install Fastify + Vitest deps, create test scaffold + rawBody type augmentation (Wave 0)
+- [ ] 02-02-PLAN.md — Pure functions (TDD): buildFingerprint (ING-04/SC-5) + verifySignature (ING-02/SC-2) with unit tests (Wave 1)
+- [ ] 02-03-PLAN.md — Fastify app factory, /healthz, POST /ingest/:source hot path, entrypoint wiring, and app.inject() route tests (Wave 2)
 
 ### Phase 3: Worker Core & Idempotent Persistence
 **Goal**: Events queued by the ingestion API are consumed by a separate, always-on BullMQ worker process, normalized to a canonical schema, and persisted to PostgreSQL idempotently — duplicate events are silently absorbed, never double-stored.
@@ -101,7 +106,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Local Infra | 4/4 | Complete   | 2026-06-02 |
-| 2. High-Speed Ingestion API | 0/TBD | Not started | - |
+| 2. High-Speed Ingestion API | 0/3 | Planned | - |
 | 3. Worker Core & Idempotent Persistence | 0/TBD | Not started | - |
 | 4. Resilience & Dynamic Routing | 0/TBD | Not started | - |
 | 5. Dashboard & Observability | 0/TBD | Not started | - |
