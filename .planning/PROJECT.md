@@ -18,15 +18,17 @@ If everything else is stripped away, this guarantee — and the ability to *demo
 
 <!-- Shipped and confirmed valuable. -->
 
-(None yet — greenfield; ship to validate)
+**Ingestion** — Validated in Phase 02: High-Speed Ingestion API
+- [x] High-speed Fastify ingestion endpoint that validates a webhook signature, generates an idempotency fingerprint, enqueues the raw payload, and returns HTTP 202 in low single-digit milliseconds
+- [x] Schema validation (Zod) of inbound payloads with structured rejection of malformed events
 
 ### Active
 
 <!-- Current scope (hypotheses until shipped). Full-spec MVP chosen. -->
 
 **Ingestion**
-- [ ] High-speed Fastify ingestion endpoint that validates a webhook signature, generates an idempotency fingerprint, enqueues the raw payload, and returns HTTP 202 in low single-digit milliseconds
-- [ ] Schema validation (Zod) of inbound payloads with structured rejection of malformed events
+- [x] High-speed Fastify ingestion endpoint that validates a webhook signature, generates an idempotency fingerprint, enqueues the raw payload, and returns HTTP 202 in low single-digit milliseconds *(Validated in Phase 02)*
+- [x] Schema validation (Zod) of inbound payloads with structured rejection of malformed events *(Validated in Phase 02)*
 
 **Queue & Workers**
 - [ ] Asynchronous BullMQ queue backed by Redis decoupling ingestion from processing
@@ -116,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-01 after initialization*
+*Last updated: 2026-06-09 — Phase 02 complete (ingestion API validated)*
