@@ -167,7 +167,11 @@ If everything else is stripped away, this guarantee — and the ability to *demo
 <!-- GSD:conventions-start source:CONVENTIONS.md -->
 ## Conventions
 
-Conventions not yet established. Will populate as patterns emerge during development.
+### Commits & Collaboration
+- Commit every task atomically: one logical change per commit, with a green working tree (build, lint, type-check passing) at each commit. Not "every file save" — avoid commit noise.
+- Use Conventional Commits with a phase scope: `type(NN): summary` (e.g., `feat(02): add HMAC verifySignature over raw body`).
+- Push to the remote at the end of each plan/wave so the team always sees progress; never leave completed work as a local-only commit.
+- Never bundle unrelated changes in one commit; never commit secrets (`.env` stays untracked).
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->
