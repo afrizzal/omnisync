@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Wave 1 complete — 03-01/02/03/04 all done
-last_updated: "2026-06-11T00:00:00.000Z"
-last_activity: 2026-06-11
+stopped_at: Completed 03-05-PLAN.md — Phase 03 all 5 plans done
+last_updated: "2026-06-10T18:22:31.473Z"
+last_activity: 2026-06-10
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 12
-  completed_plans: 11
-  percent: 55
+  completed_plans: 12
+  percent: 40
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 3
-Plan: 3 of 5 (03-03 complete)
-Status: Executing Phase 03
-Last activity: 2026-06-11
+Plan: 4 of 5 (03-03 complete)
+Status: Ready to execute
+Last activity: 2026-06-10
 
 Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progress: 03-03 worker test scaffold + CI service containers complete
 
@@ -60,6 +60,7 @@ Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progr
 | Phase 02-high-speed-ingestion-api P03 | 18 | 3 tasks | 10 files |
 | Phase 03-worker-core-idempotent-persistence P03 | 6 | 2 tasks | 5 files |
 | Phase 03 P04 | 22 | 3 tasks | 9 files |
+| Phase 03-worker-core-idempotent-persistence P05 | 25 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,9 @@ Recent decisions affecting current work:
 - [Phase 03]: stalledInterval/drainDelay are WorkerOptions (NOT QueueOptions) — guardInterval does NOT exist in BullMQ v5 (D-09)
 - [Phase 03]: ProcessorLogger is structural interface — pino satisfies it in prod, vi.fn() spy satisfies it in unit tests (no pino mock needed)
 - [Phase 03]: Graceful shutdown order: worker.close() -> prisma.$disconnect() -> connection.quit() with 30s force-exit timer + docker-compose stop_grace_period: 35s
+- [Phase 03-05]: Invoke buildProcessor directly in idempotency tests to bypass BullMQ jobId dedup — tests the DB constraint, not BullMQ
+- [Phase 03-05]: Use Date.now()-based unique fingerprint per worker.test.ts run to prevent BullMQ completed-job deduplication across re-runs
+- [Phase 03-05]: Bounded poll (max N * delayMs) for QUE-02 end-to-end test instead of BullMQ event listeners — prevents CI hang, cleaner teardown
 
 ### Pending Todos
 
@@ -123,6 +127,6 @@ None yet.
 
 Last activity: 2026-06-11 - Completed 03-03: worker test scaffold + CI service containers
 
-Last session: 2026-06-11T00:00:00.000Z
-Stopped at: Wave 1 complete — 03-01/02/03/04 all done, Wave 2 (03-05 integration tests) pending
-Resume file: .planning/phases/03-worker-core-idempotent-persistence/03-05-PLAN.md
+Last session: 2026-06-10T18:22:31.466Z
+Stopped at: Completed 03-05-PLAN.md — Phase 03 all 5 plans done
+Resume file: None
