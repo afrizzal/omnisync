@@ -129,3 +129,23 @@ None — no external service configuration required.
 - `EventJobData` schema is ready for worker's `safeParse(job.data)` poison-message guard in Plan 03-03
 - `WORKER_CONCURRENCY` is in config, ready for `buildWorker` concurrency option in Plan 03-04
 - API has no DB dependency — confirmed by both typecheck and the removed package.json entry
+
+---
+*Phase: 03-worker-core-idempotent-persistence*
+*Completed: 2026-06-11*
+
+## Self-Check: PASSED
+
+Files verified present:
+- packages/queue/src/index.ts — FOUND
+- packages/queue/tests/factory.test.ts — FOUND
+- packages/queue/vitest.config.ts — FOUND
+- packages/types/src/event.ts — FOUND
+- packages/config/src/env.ts — FOUND
+- apps/api/src/index.ts — FOUND
+
+Commits verified:
+- 37dafff (Task 1: queue factory refactor) — FOUND
+- 2b38680 (Task 2: EventJobData + WORKER_CONCURRENCY) — FOUND
+- 7666356 (Task 3: API rewire + db removal) — FOUND
+- 3f578f0 (Docs: SUMMARY + STATE + ROADMAP) — FOUND
