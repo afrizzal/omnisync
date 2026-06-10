@@ -20,12 +20,12 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 - [x] **QUE-01**: Ingestion and processing are decoupled through a Redis-backed BullMQ queue
 - [ ] **QUE-02**: A separate, always-on worker process (distinct from the API process) consumes events from the queue
 - [ ] **QUE-03**: Workers process events concurrently with a configurable concurrency limit
-- [ ] **QUE-04**: Worker normalizes each event into a canonical schema before persistence
+- [x] **QUE-04**: Worker normalizes each event into a canonical schema before persistence
 
 ### Idempotency
 
 - [x] **IDM-01**: A fast Redis `SET NX` in-flight gate prevents duplicate enqueue of concurrent identical events
-- [ ] **IDM-02**: A PostgreSQL `UNIQUE(fingerprint)` constraint with `INSERT … ON CONFLICT DO NOTHING` guarantees each event is stored at most once
+- [x] **IDM-02**: A PostgreSQL `UNIQUE(fingerprint)` constraint with `INSERT … ON CONFLICT DO NOTHING` guarantees each event is stored at most once
 - [ ] **IDM-03**: Re-delivering or re-queuing the same event never creates a duplicate stored record
 
 ### Resilience
@@ -112,8 +112,8 @@ Which phases cover which requirements. Populated during roadmap creation.
 | IDM-01 | Phase 2 | Complete |
 | QUE-02 | Phase 3 | Pending |
 | QUE-03 | Phase 3 | Pending |
-| QUE-04 | Phase 3 | Pending |
-| IDM-02 | Phase 3 | Pending |
+| QUE-04 | Phase 3 | Complete |
+| IDM-02 | Phase 3 | Complete |
 | IDM-03 | Phase 3 | Pending |
 | RES-01 | Phase 4 | Pending |
 | RES-02 | Phase 4 | Pending |

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-06-10T12:32:00.000Z"
-last_activity: 2026-06-10
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-06-11T00:37:13Z"
+last_activity: 2026-06-11
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
-  percent: 33
+  total_plans: 8
+  completed_plans: 8
+  percent: 36
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-09
+Phase: 3 of 6
+Plan: 1 of 5 complete
+Status: Executing Phase 03
+Last activity: 2026-06-11
 
-Progress: [██░░░░] Phase 2 of 6 complete (33%) — Phase 02 ingestion API complete: HMAC + Zod validation, SHA-256 fingerprint, Redis SET NX dedup gate, BullMQ enqueue, HTTP 202 fast-ACK
+Progress: [██░░░░] Phase 2 of 6 complete (36%) — 03-01: schema migrations D-01+D-06, createPrismaClient factory, $executeRaw smoke test green
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [██░░░░] Phase 2 of 6 complete (33%) — Phase 02 ingestio
 | Phase 02-high-speed-ingestion-api P01 | 9 | 3 tasks | 7 files |
 | Phase 02 P02 | 17 | 2 tasks | 9 files |
 | Phase 02-high-speed-ingestion-api P03 | 18 | 3 tasks | 10 files |
+| Phase 03-worker-core-idempotent-persistence P01 | 15 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,9 @@ Recent decisions affecting current work:
 - [260610-s0n]: Gate-then-enqueue rollback: AppDeps.redis widened to Pick<Redis, "set" | "del">; queue.add wrapped in try/catch with best-effort redis.del on failure
 - [260610-s0n]: buildFingerprint normalizes occurredAt via new Date(occurredAt).toISOString() — safe window (no persisted fingerprints yet); null-byte test updated to use valid ISO inputs
 - [260610-s0n]: Redis AOF enabled via --appendonly yes + redisdata named volume in docker-compose; --maxmemory-policy noeviction preserved
+- [Phase 03-01]: $executeRaw chosen over createMany skipDuplicates — returns affected count 1/0 for duplicate-absorbed log (D-03/D-05); SQL proven against real Postgres
+- [Phase 03-01]: createPrismaClient({ max }) factory exported alongside prisma singleton — worker uses factory, API keeps singleton, zero breakage
+- [Phase 03-01]: packages/db vitest scaffold has no coverage thresholds — apps/worker owns 80% gate; packages/db is infrastructure test, not business logic
 
 ### Pending Todos
 
@@ -108,8 +112,8 @@ None yet.
 
 ## Session Continuity
 
-Last activity: 2026-06-10 - Completed quick task 260610-sw5: CI coverage gate, .claude gitignore, doc drift fixes, Zod v4 API migration
+Last activity: 2026-06-11 - Completed 03-01: schema D-01+D-06 migrations, createPrismaClient factory (D-12), $executeRaw smoke test
 
-Last session: 2026-06-10T14:45:00.000Z
-Stopped at: Completed 260610-sw5 quick task
-Resume file: None
+Last session: 2026-06-11T00:37:13Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: .planning/phases/03-worker-core-idempotent-persistence/03-02-PLAN.md
