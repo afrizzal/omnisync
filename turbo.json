@@ -9,7 +9,8 @@
       "dependsOn": ["^build"]
     },
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "env": ["NODE_ENV", "DATABASE_URL", "DIRECT_URL", "REDIS_URL", "WORKER_CONCURRENCY"]
     },
     "lint": {},
     "dev": {

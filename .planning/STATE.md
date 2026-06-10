@@ -122,6 +122,7 @@ None yet.
 | 260609-qjn | Add Commits and Collaboration conventions to project CLAUDE.md | 2026-06-09 | aaae6f6 | [260609-qjn-add-commits-and-collaboration-convention](.planning/quick/260609-qjn-add-commits-and-collaboration-convention/) |
 | 260610-s0n | P0 correctness: ingest gate rollback, fingerprint normalization, Redis AOF persistence | 2026-06-10 | 3a8cb7d | [260610-s0n-p0-correctness-ingest-gate-rollback-on-e](.planning/quick/260610-s0n-p0-correctness-ingest-gate-rollback-on-e/) |
 | 260610-sw5 | Housekeeping: CI test+coverage gate, gitignore .claude, fix ROADMAP/STATE drift, migrate deprecated Zod v4 APIs | 2026-06-10 | bb49354 | [260610-sw5-housekeeping-ci-test-coverage-gate-gitig](.planning/quick/260610-sw5-housekeeping-ci-test-coverage-gate-gitig/) |
+| 260611-fast | Declare test-task env vars in turbo.json — turbo v2 strict env mode filtered CI's DATABASE_URL (red CI fix) | 2026-06-11 | see ci(03) commit | — (inline /gsd:fast) |
 
 ## Session Continuity
 
