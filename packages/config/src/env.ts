@@ -4,9 +4,9 @@ const Env = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
-  DATABASE_URL: z.string().url(),
-  DIRECT_URL: z.string().url(),
-  REDIS_URL: z.string().url(),
+  DATABASE_URL: z.url(),
+  DIRECT_URL: z.url(),
+  REDIS_URL: z.url(),
   WEBHOOK_SECRET_SHOPEE: z.string().min(1),
   WEBHOOK_SECRET_TOKOPEDIA: z.string().min(1),
   WEBHOOK_SECRET_META_ADS: z.string().min(1),

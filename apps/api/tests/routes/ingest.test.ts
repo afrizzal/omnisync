@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createHmac } from "node:crypto";
-import { buildApp } from "../../src/app.js";
 import type { FastifyInstance } from "fastify";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { buildApp } from "../../src/app.js";
 
 const SECRET = "test-secret-shopee"; // matches vitest.setup.ts WEBHOOK_SECRET_SHOPEE
 
@@ -18,13 +18,22 @@ const validBody = {
 
 describe("POST /ingest/:source", () => {
   let mockQueue: { add: ReturnType<typeof vi.fn> };
-  let mockRedis: { set: ReturnType<typeof vi.fn>; del: ReturnType<typeof vi.fn> };
+  let mockRedis: {
+    set: ReturnType<typeof vi.fn>;
+    del: ReturnType<typeof vi.fn>;
+  };
   let app: FastifyInstance;
 
   beforeEach(async () => {
     mockQueue = { add: vi.fn().mockResolvedValue({ id: "job-1" }) };
-    mockRedis = { set: vi.fn().mockResolvedValue("OK"), del: vi.fn().mockResolvedValue(1) };
-    app = await buildApp({ queue: mockQueue as never, redis: mockRedis as never });
+    mockRedis = {
+      set: vi.fn().mockResolvedValue("OK"),
+      del: vi.fn().mockResolvedValue(1),
+    };
+    app = await buildApp({
+      queue: mockQueue as never,
+      redis: mockRedis as never,
+    });
   });
 
   afterEach(async () => {
@@ -52,7 +61,11 @@ describe("POST /ingest/:source", () => {
 
       // ING-05: queue.add called exactly once with jobId = fingerprint
       expect(mockQueue.add).toHaveBeenCalledTimes(1);
-      const [, , options] = mockQueue.add.mock.calls[0] as [string, unknown, { jobId: string }];
+      const [, , options] = mockQueue.add.mock.calls[0] as [
+        string,
+        unknown,
+        { jobId: string },
+      ];
       expect(options.jobId).toBe(body.fingerprint);
     });
   });
@@ -66,7 +79,8 @@ describe("POST /ingest/:source", () => {
         url: "/ingest/SHOPEE",
         headers: {
           "content-type": "application/json",
-          "x-webhook-signature": "sha256=deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+          "x-webhook-signature":
+            "sha256=deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
         },
         payload: bodyStr,
       });
@@ -117,7 +131,10 @@ describe("POST /ingest/:source", () => {
       });
 
       expect(response.statusCode).toBe(422);
-      const body = response.json<{ error: string; issues: Array<{ field: string; message: string }> }>();
+      const body = response.json<{
+        error: string;
+        issues: Array<{ field: string; message: string }>;
+      }>();
       expect(body.error).toBe("VALIDATION_ERROR");
       expect(Array.isArray(body.issues)).toBe(true);
       expect(body.issues.length).toBeGreaterThan(0);

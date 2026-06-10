@@ -1,11 +1,14 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { buildApp } from "../../src/app.js";
 
 describe("GET /healthz", () => {
   it("returns 200 with status ok", async () => {
     const mockQueue = { add: vi.fn().mockResolvedValue({ id: "job-1" }) };
     const mockRedis = { set: vi.fn().mockResolvedValue("OK") };
-    const app = await buildApp({ queue: mockQueue as never, redis: mockRedis as never });
+    const app = await buildApp({
+      queue: mockQueue as never,
+      redis: mockRedis as never,
+    });
 
     const response = await app.inject({
       method: "GET",
