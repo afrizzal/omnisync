@@ -89,6 +89,9 @@ Recent decisions affecting current work:
 - [260610-s0n]: Gate-then-enqueue rollback: AppDeps.redis widened to Pick<Redis, "set" | "del">; queue.add wrapped in try/catch with best-effort redis.del on failure
 - [260610-s0n]: buildFingerprint normalizes occurredAt via new Date(occurredAt).toISOString() — safe window (no persisted fingerprints yet); null-byte test updated to use valid ISO inputs
 - [260610-s0n]: Redis AOF enabled via --appendonly yes + redisdata named volume in docker-compose; --maxmemory-policy noeviction preserved
+- [Phase 03-01]: $executeRaw chosen over createMany skipDuplicates — returns affected count 1/0 for duplicate-absorbed log (D-03/D-05); SQL proven against real Postgres
+- [Phase 03-01]: createPrismaClient({ max }) factory exported alongside prisma singleton — worker uses factory, API keeps singleton, zero breakage
+- [Phase 03-01]: packages/db vitest scaffold has no coverage thresholds — apps/worker owns 80% gate; packages/db is infrastructure test, not business logic
 - [Phase 03-03]: vitest.setup.ts uses ?? operator so CI job-level env vars override local defaults without conditionals
 - [Phase 03-03]: CI publishes Postgres on 5432 (not 5433 locally) — service containers don't need custom port mapping
 - [Phase 03-03]: pino added as direct dep in Wave 0 so Plan 03-04 needs no package.json edit
