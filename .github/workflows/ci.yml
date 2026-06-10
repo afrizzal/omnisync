@@ -7,6 +7,33 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://omnisync:omnisync@localhost:5432/omnisync
+      DIRECT_URL: postgresql://omnisync:omnisync@localhost:5432/omnisync
+      REDIS_URL: redis://localhost:6379
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: omnisync
+          POSTGRES_PASSWORD: omnisync
+          POSTGRES_DB: omnisync
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U omnisync"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
@@ -23,6 +50,9 @@ jobs:
 
       - name: Generate Prisma client
         run: pnpm --filter @omnisync/db generate
+
+      - name: Apply database migrations
+        run: pnpm --filter @omnisync/db exec prisma migrate deploy
 
       - name: Type-check
         run: pnpm typecheck

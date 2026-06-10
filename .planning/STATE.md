@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-04-PLAN.md — worker pipeline, normalize seam, idempotent persist, poison guard
-last_updated: "2026-06-10T17:51:21.689Z"
-last_activity: 2026-06-09
+stopped_at: Wave 1 complete — 03-01/02/03/04 all done
+last_updated: "2026-06-11T00:00:00.000Z"
+last_activity: 2026-06-11
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 12
-  completed_plans: 7
-  percent: 33
+  completed_plans: 11
+  percent: 55
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 3
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-09
+Plan: 3 of 5 (03-03 complete)
+Status: Executing Phase 03
+Last activity: 2026-06-11
 
-Progress: [██░░░░] Phase 2 of 6 complete (33%) — Phase 02 ingestion API complete: HMAC + Zod validation, SHA-256 fingerprint, Redis SET NX dedup gate, BullMQ enqueue, HTTP 202 fast-ACK
+Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progress: 03-03 worker test scaffold + CI service containers complete
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [██░░░░] Phase 2 of 6 complete (33%) — Phase 02 ingestio
 | Phase 02-high-speed-ingestion-api P01 | 9 | 3 tasks | 7 files |
 | Phase 02 P02 | 17 | 2 tasks | 9 files |
 | Phase 02-high-speed-ingestion-api P03 | 18 | 3 tasks | 10 files |
+| Phase 03-worker-core-idempotent-persistence P03 | 6 | 2 tasks | 5 files |
 | Phase 03 P04 | 22 | 3 tasks | 9 files |
 
 ## Accumulated Context
@@ -88,6 +89,9 @@ Recent decisions affecting current work:
 - [260610-s0n]: Gate-then-enqueue rollback: AppDeps.redis widened to Pick<Redis, "set" | "del">; queue.add wrapped in try/catch with best-effort redis.del on failure
 - [260610-s0n]: buildFingerprint normalizes occurredAt via new Date(occurredAt).toISOString() — safe window (no persisted fingerprints yet); null-byte test updated to use valid ISO inputs
 - [260610-s0n]: Redis AOF enabled via --appendonly yes + redisdata named volume in docker-compose; --maxmemory-policy noeviction preserved
+- [Phase 03-03]: vitest.setup.ts uses ?? operator so CI job-level env vars override local defaults without conditionals
+- [Phase 03-03]: CI publishes Postgres on 5432 (not 5433 locally) — service containers don't need custom port mapping
+- [Phase 03-03]: pino added as direct dep in Wave 0 so Plan 03-04 needs no package.json edit
 - [Phase 03]: stalledInterval/drainDelay are WorkerOptions (NOT QueueOptions) — guardInterval does NOT exist in BullMQ v5 (D-09)
 - [Phase 03]: ProcessorLogger is structural interface — pino satisfies it in prod, vi.fn() spy satisfies it in unit tests (no pino mock needed)
 - [Phase 03]: Graceful shutdown order: worker.close() -> prisma.$disconnect() -> connection.quit() with 30s force-exit timer + docker-compose stop_grace_period: 35s
@@ -112,8 +116,8 @@ None yet.
 
 ## Session Continuity
 
-Last activity: 2026-06-10 - Completed quick task 260610-sw5: CI coverage gate, .claude gitignore, doc drift fixes, Zod v4 API migration
+Last activity: 2026-06-11 - Completed 03-03: worker test scaffold + CI service containers
 
-Last session: 2026-06-10T17:51:21.683Z
-Stopped at: Completed 03-04-PLAN.md — worker pipeline, normalize seam, idempotent persist, poison guard
-Resume file: None
+Last session: 2026-06-11T00:00:00.000Z
+Stopped at: Wave 1 complete — 03-01/02/03/04 all done, Wave 2 (03-05 integration tests) pending
+Resume file: .planning/phases/03-worker-core-idempotent-persistence/03-05-PLAN.md
