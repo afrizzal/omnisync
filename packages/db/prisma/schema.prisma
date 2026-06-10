@@ -21,14 +21,14 @@ model Event {
   fingerprint  String
   source       String
   eventType    String
+  externalId   String
+  occurredAt   DateTime
   payload      Json
   status       EventStatus @default(RECEIVED)
   retryCount   Int         @default(0)
   errorMessage String?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
-
-  dlq          DeadLetterEvent?
 
   @@map("events")
   @@unique([fingerprint], map: "events_fingerprint_unique")
@@ -39,14 +39,18 @@ model Event {
 
 model DeadLetterEvent {
   id            String   @id @default(uuid())
-  eventId       String   @unique
-  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  failureReason String
-  attempts      Int      @default(0)
+  fingerprint   String
+  source        String
+  eventType     String
   payload       Json
+  failureReason String
+  errorStack    String?
+  attempts      Int      @default(0)
   resolved      Boolean  @default(false)
   frozenAt      DateTime @default(now())
+  eventId       String?
 
   @@map("dlq_events")
+  @@index([fingerprint])
   @@index([resolved])
 }
