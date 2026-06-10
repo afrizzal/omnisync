@@ -114,7 +114,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundation & Local Infra | 4/4 | Complete   | 2026-06-02 |
 | 2. High-Speed Ingestion API | 3/3 | Complete | 2026-06-09 |
-| 3. Worker Core & Idempotent Persistence | 0/5 | Planned | - |
+| 3. Worker Core & Idempotent Persistence | 0/5 | Planned    |  |
 | 4. Resilience & Dynamic Routing | 0/TBD | Not started | - |
 | 5. Dashboard & Observability | 0/TBD | Not started | - |
 | 6. Testing, CI/CD & Deployment | 0/TBD | Not started | - |
