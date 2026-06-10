@@ -14,7 +14,9 @@
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "build": "prisma generate && tsc",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@omnisync/types": "workspace:*",
@@ -24,7 +26,9 @@
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
+    "@vitest/coverage-v8": "4.1.8",
     "dotenv": "^16.0.0",
-    "prisma": "^7.0.0"
+    "prisma": "^7.0.0",
+    "vitest": "4.1.8"
   }
 }
