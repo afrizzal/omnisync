@@ -11,3 +11,10 @@ export const InboundEvent = z.object({
 });
 
 export type InboundEvent = z.infer<typeof InboundEvent>;
+
+export const EventJobData = z.object({
+  source: EventSource,
+  payload: InboundEvent,
+  fingerprint: z.string().regex(/^[0-9a-f]{64}$/),
+});
+export type EventJobData = z.infer<typeof EventJobData>;

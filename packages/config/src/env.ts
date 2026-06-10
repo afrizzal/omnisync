@@ -11,6 +11,7 @@ const Env = z.object({
   WEBHOOK_SECRET_TOKOPEDIA: z.string().min(1),
   WEBHOOK_SECRET_META_ADS: z.string().min(1),
   WEBHOOK_SECRET_CRM: z.string().min(1),
+  WORKER_CONCURRENCY: z.coerce.number().int().min(1).max(50).default(5),
 });
 
 export const env = (() => {
