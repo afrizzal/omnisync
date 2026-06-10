@@ -8,7 +8,7 @@ import { ingestRoutes } from "./routes/ingest.js";
 
 export interface AppDeps {
   queue: Pick<Queue, "add">;
-  redis: Pick<Redis, "set">;
+  redis: Pick<Redis, "set" | "del">;
 }
 
 export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {

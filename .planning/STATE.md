@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-06-09T13:18:00.835Z"
-last_activity: 2026-06-09
+last_updated: "2026-06-10T12:32:00.000Z"
+last_activity: 2026-06-10
 progress:
   total_phases: 6
   completed_phases: 2
@@ -84,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Known-value SHA-256 hash anchor hardcoded in fingerprint test to detect algorithm drift: 7ed400d9932c822806865fbc3658051dcffc88718ad40ea0039690d284d0ea74
 - [Phase 02-high-speed-ingestion-api]: Add bullmq, ioredis, zod as direct deps of @omnisync/api — NodeNext module resolution requires direct deps for type-only imports
 - [Phase 02-high-speed-ingestion-api]: Redis SET NX uses 'EX', seconds, 'NX' order — matches ioredis overload signature (EX token before NX)
+- [260610-s0n]: Gate-then-enqueue rollback: AppDeps.redis widened to Pick<Redis, "set" | "del">; queue.add wrapped in try/catch with best-effort redis.del on failure
+- [260610-s0n]: buildFingerprint normalizes occurredAt via new Date(occurredAt).toISOString() — safe window (no persisted fingerprints yet); null-byte test updated to use valid ISO inputs
+- [260610-s0n]: Redis AOF enabled via --appendonly yes + redisdata named volume in docker-compose; --maxmemory-policy noeviction preserved
 
 ### Pending Todos
 
@@ -100,11 +103,12 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260609-qjn | Add Commits and Collaboration conventions to project CLAUDE.md | 2026-06-09 | aaae6f6 | [260609-qjn-add-commits-and-collaboration-convention](.planning/quick/260609-qjn-add-commits-and-collaboration-convention/) |
+| 260610-s0n | P0 correctness: ingest gate rollback, fingerprint normalization, Redis AOF persistence | 2026-06-10 | 3a8cb7d | [260610-s0n-p0-correctness-ingest-gate-rollback-on-e](.planning/quick/260610-s0n-p0-correctness-ingest-gate-rollback-on-e/) |
 
 ## Session Continuity
 
-Last activity: 2026-06-09 - Completed quick task 260609-qjn: Add Commits and Collaboration conventions to project CLAUDE.md
+Last activity: 2026-06-10 - Completed quick task 260610-s0n: P0 correctness fixes (gate rollback, fingerprint normalization, Redis AOF)
 
-Last session: 2026-06-09T13:04:45.210Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-06-10T12:32:00.000Z
+Stopped at: Completed 260610-s0n quick task
 Resume file: None

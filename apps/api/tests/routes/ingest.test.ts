@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createHmac } from "node:crypto";
 import { buildApp } from "../../src/app.js";
 import type { FastifyInstance } from "fastify";
@@ -18,12 +18,12 @@ const validBody = {
 
 describe("POST /ingest/:source", () => {
   let mockQueue: { add: ReturnType<typeof vi.fn> };
-  let mockRedis: { set: ReturnType<typeof vi.fn> };
+  let mockRedis: { set: ReturnType<typeof vi.fn>; del: ReturnType<typeof vi.fn> };
   let app: FastifyInstance;
 
   beforeEach(async () => {
     mockQueue = { add: vi.fn().mockResolvedValue({ id: "job-1" }) };
-    mockRedis = { set: vi.fn().mockResolvedValue("OK") };
+    mockRedis = { set: vi.fn().mockResolvedValue("OK"), del: vi.fn().mockResolvedValue(1) };
     app = await buildApp({ queue: mockQueue as never, redis: mockRedis as never });
   });
 
@@ -185,6 +185,53 @@ describe("POST /ingest/:source", () => {
       const body = response.json<{ error: string }>();
       expect(body.error).toBe("INVALID_SIGNATURE");
       expect(mockQueue.add).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("IDM-01 / ING-05: queue.add failure (gate rollback)", () => {
+    it("returns 500, calls redis.del with the idem key, and allows a retry that enqueues successfully", async () => {
+      // Arrange: queue.add rejects on first call, resolves on second
+      mockQueue.add.mockRejectedValueOnce(new Error("redis down"));
+      const bodyStr = JSON.stringify(validBody);
+      const sig = sign(bodyStr);
+
+      // Act: first POST — queue.add throws
+      const first = await app.inject({
+        method: "POST",
+        url: "/ingest/SHOPEE",
+        headers: {
+          "content-type": "application/json",
+          "x-webhook-signature": sig,
+        },
+        payload: bodyStr,
+      });
+
+      // Assert: 500 returned to caller
+      expect(first.statusCode).toBe(500);
+
+      // Assert: redis.del was called once and the key starts with "idem:"
+      expect(mockRedis.del).toHaveBeenCalledTimes(1);
+      const delKey = (mockRedis.del.mock.calls[0] as [string])[0];
+      expect(delKey).toMatch(/^idem:/);
+
+      // Act: second POST with same body — gate is now open (redis.set returns "OK" again)
+      // mockQueue.add will use its default mock (resolves with { id: "job-1" })
+      const second = await app.inject({
+        method: "POST",
+        url: "/ingest/SHOPEE",
+        headers: {
+          "content-type": "application/json",
+          "x-webhook-signature": sig,
+        },
+        payload: bodyStr,
+      });
+
+      // Assert: retry succeeds and enqueues
+      expect(second.statusCode).toBe(202);
+      const secondBody = second.json<{ status: string; fingerprint: string }>();
+      expect(secondBody.status).toBe("queued");
+      // queue.add was called twice total (once failed, once succeeded)
+      expect(mockQueue.add).toHaveBeenCalledTimes(2);
     });
   });
 });

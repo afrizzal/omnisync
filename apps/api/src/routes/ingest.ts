@@ -47,7 +47,16 @@ export async function ingestRoutes(app: FastifyInstance, { queue, redis }: AppDe
     }
 
     // Step 5: Enqueue (D-14 / ING-05) — jobId = fingerprint (BullMQ dedup). No DB write on this path.
-    await queue.add("process-event", { source, payload: parsed.data, fingerprint }, { jobId: fingerprint });
+    // Gate-then-enqueue rollback (IDM-01): if queue.add rejects after the dedup gate is set,
+    // release the idem key so the sender's retry is accepted instead of silently dropped as a "duplicate".
+    try {
+      await queue.add("process-event", { source, payload: parsed.data, fingerprint }, { jobId: fingerprint });
+    } catch (err) {
+      // Best-effort rollback: release the dedup gate so the sender's retry is accepted,
+      // not silently dropped as a "duplicate" while no job was ever enqueued.
+      await redis.del(`idem:${fingerprint}`).catch(() => undefined);
+      throw err; // centralized error handler returns 500 → sender retries
+    }
     return reply.code(202).send({ status: "queued", fingerprint });
   });
 }

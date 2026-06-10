@@ -43,18 +43,33 @@ describe("buildFingerprint", () => {
   });
 
   it("prevents field-boundary collisions via null-byte separator", () => {
-    // Without null-byte separator, "a"+"bc"+"d" would collide with "ab"+"c"+"d"
-    const noCollision1 = buildFingerprint("a", "b", "c", "d");
-    const noCollision2 = buildFingerprint("ab", "c", "d", "");
+    // Without null-byte separator, "a"+"bc"+"d" and "ab"+"c"+"d" would collide.
+    // Use valid ISO timestamps as the occurredAt argument (normalization is a no-op for canonical inputs).
+    const noCollision1 = buildFingerprint("a", "bc", "d", "2026-06-09T10:00:00.000Z");
+    const noCollision2 = buildFingerprint("ab", "c", "d", "2026-06-09T10:00:00.000Z");
     expect(noCollision1).not.toBe(noCollision2);
   });
 
   it("matches a known-value anchor (stability guard against algorithm changes)", () => {
-    // Known value computed during GREEN phase — hardcoded to detect future algorithm drift
+    // Known value hardcoded to detect future algorithm drift.
+    // The anchor input (OCCURRED_AT = "2026-06-09T10:00:00.000Z") is already canonical ISO-8601 UTC,
+    // so normalization is a no-op for it — this anchor value is UNCHANGED by the normalization fix.
     const known = buildFingerprint(SOURCE, EVENT_TYPE, EXTERNAL_ID, OCCURRED_AT);
-    // Placeholder: will be replaced with the actual hash during GREEN
-    expect(known).toMatch(/^[0-9a-f]{64}$/);
-    // Hardcoded anchor: any change to the hashing algorithm will break this test
     expect(known).toBe("7ed400d9932c822806865fbc3658051dcffc88718ad40ea0039690d284d0ea74");
+  });
+
+  it("normalizes equivalent ISO-8601 instants to the same fingerprint", () => {
+    // Three different string representations of the same UTC instant must hash identically
+    const withZ = buildFingerprint(SOURCE, EVENT_TYPE, EXTERNAL_ID, "2026-06-09T10:00:00Z");
+    const withMillis = buildFingerprint(SOURCE, EVENT_TYPE, EXTERNAL_ID, "2026-06-09T10:00:00.000Z");
+    const withOffset = buildFingerprint(SOURCE, EVENT_TYPE, EXTERNAL_ID, "2026-06-09T10:00:00+00:00");
+    expect(withZ).toBe(withMillis);
+    expect(withMillis).toBe(withOffset);
+  });
+
+  it("a genuinely different instant still produces a different fingerprint", () => {
+    const tenAM = buildFingerprint(SOURCE, EVENT_TYPE, EXTERNAL_ID, "2026-06-09T10:00:00.000Z");
+    const elevenAM = buildFingerprint(SOURCE, EVENT_TYPE, EXTERNAL_ID, "2026-06-09T11:00:00.000Z");
+    expect(tenAM).not.toBe(elevenAM);
   });
 });
