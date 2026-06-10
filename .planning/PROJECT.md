@@ -31,9 +31,9 @@ If everything else is stripped away, this guarantee — and the ability to *demo
 - [x] Schema validation (Zod) of inbound payloads with structured rejection of malformed events *(Validated in Phase 02)*
 
 **Queue & Workers**
-- [ ] Asynchronous BullMQ queue backed by Redis decoupling ingestion from processing
-- [ ] Distributed worker pool that consumes events, normalizes them, and persists to PostgreSQL
-- [ ] Idempotent processing — duplicate events (same fingerprint) are detected and never double-stored
+- [x] Asynchronous BullMQ queue backed by Redis decoupling ingestion from processing *(Validated in Phase 03)*
+- [x] Distributed worker pool that consumes events, normalizes them, and persists to PostgreSQL *(Validated in Phase 03)*
+- [x] Idempotent processing — duplicate events (same fingerprint) are detected and never double-stored *(Validated in Phase 03)*
 
 **Resilience**
 - [ ] Automatic retry with jittered exponential backoff on transient failures
@@ -118,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-09 — Phase 02 complete (ingestion API validated)*
+*Last updated: 2026-06-11 — Phase 03 complete (worker core + idempotent persistence validated)*
