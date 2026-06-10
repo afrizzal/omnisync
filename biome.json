@@ -16,6 +16,7 @@
       "!**/.next",
       "!**/generated",
       "!**/node_modules",
+      "!**/.turbo",
       "!**/coverage",
       "!.planning",
       "!.claude"

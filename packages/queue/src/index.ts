@@ -1,7 +1,12 @@
 import { Queue } from "bullmq";
 import { Redis } from "ioredis";
 
-export const connection = new Redis(process.env.REDIS_URL!, {
+const redisUrl = process.env.REDIS_URL;
+if (!redisUrl) {
+  throw new Error("REDIS_URL environment variable is required");
+}
+
+export const connection = new Redis(redisUrl, {
   maxRetriesPerRequest: null,
 });
 
