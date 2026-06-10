@@ -14,16 +14,24 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@omnisync/config": "workspace:*",
     "@omnisync/db": "workspace:*",
     "@omnisync/queue": "workspace:*",
-    "@omnisync/types": "workspace:*"
+    "@omnisync/types": "workspace:*",
+    "bullmq": "^5.77.0",
+    "ioredis": "5.10.1",
+    "pino": "^9.0.0",
+    "zod": "^4.4.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",
-    "tsx": "^4.0.0"
+    "@vitest/coverage-v8": "4.1.8",
+    "tsx": "^4.0.0",
+    "vitest": "4.1.8"
   }
 }
