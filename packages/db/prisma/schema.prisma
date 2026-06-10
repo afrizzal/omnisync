@@ -1,0 +1,56 @@
+// Prisma 7 schema — connection URL is in prisma.config.ts (not here)
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EventStatus {
+  RECEIVED
+  PROCESSING
+  COMPLETED
+  FAILED
+  DLQ
+}
+
+model Event {
+  id           String      @id @default(uuid())
+  fingerprint  String
+  source       String
+  eventType    String
+  externalId   String
+  occurredAt   DateTime
+  payload      Json
+  status       EventStatus @default(RECEIVED)
+  retryCount   Int         @default(0)
+  errorMessage String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@map("events")
+  @@unique([fingerprint], map: "events_fingerprint_unique")
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+}
+
+model DeadLetterEvent {
+  id            String   @id @default(uuid())
+  fingerprint   String
+  source        String
+  eventType     String
+  payload       Json
+  failureReason String
+  errorStack    String?
+  attempts      Int      @default(0)
+  resolved      Boolean  @default(false)
+  frozenAt      DateTime @default(now())
+  eventId       String?
+
+  @@map("dlq_events")
+  @@index([fingerprint])
+  @@index([resolved])
+}
