@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import { createHmac } from "node:crypto";
+import { describe, expect, it } from "vitest";
 import { verifySignature } from "../../src/lib/hmac.js";
 
 const SECRET = "test-webhook-secret";
@@ -20,9 +20,7 @@ describe("verifySignature", () => {
     const header = makeSignature(RAW_BODY, SECRET);
     // Flip the first hex character: '0'→'f', 'f'→'0', else flip last char
     const hex = header.slice(7);
-    const flipped = hex[0] === "f"
-      ? "0" + hex.slice(1)
-      : "f" + hex.slice(1);
+    const flipped = hex[0] === "f" ? `0${hex.slice(1)}` : `f${hex.slice(1)}`;
     const tamperedHeader = `sha256=${flipped}`;
     expect(verifySignature(RAW_BODY, SECRET, tamperedHeader)).toBe(false);
   });

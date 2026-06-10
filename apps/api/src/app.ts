@@ -1,6 +1,6 @@
-import Fastify from "fastify";
-import type { FastifyInstance } from "fastify";
 import type { Queue } from "bullmq";
+import type { FastifyInstance } from "fastify";
+import Fastify from "fastify";
 import type { Redis } from "ioredis";
 import { registerErrorHandler } from "./plugins/errorHandler.js";
 import { healthRoutes } from "./routes/health.js";

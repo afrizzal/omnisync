@@ -13,7 +13,7 @@ OmniSync is built in six phases that follow a strict dependency chain: shared in
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Local Infra** - Monorepo scaffold, shared Prisma schema (with `UNIQUE(fingerprint)`), Zod types, Docker Compose (Redis noeviction + Postgres), and CI skeleton (completed 2026-06-02)
-- [ ] **Phase 2: High-Speed Ingestion API** - Fastify ingestion endpoint with HMAC validation, Zod validation, SHA-256 fingerprint, Redis SET NX gate, BullMQ enqueue, and HTTP 202 fast-ACK
+- [x] **Phase 2: High-Speed Ingestion API** - Fastify ingestion endpoint with HMAC validation, Zod validation, SHA-256 fingerprint, Redis SET NX gate, BullMQ enqueue, and HTTP 202 fast-ACK (completed 2026-06-09)
 - [ ] **Phase 3: Worker Core & Idempotent Persistence** - Always-on BullMQ worker pool that normalizes events and persists them idempotently via `ON CONFLICT DO NOTHING`, completing the happy path end-to-end
 - [ ] **Phase 4: Resilience & Dynamic Routing** - Jittered exponential backoff, hand-built DLQ (BullMQ failed handler + Postgres mirror), mock CRM downstream, opossum circuit breaker, re-queue path, and runtime-reloadable routing rules
 - [ ] **Phase 5: Dashboard & Observability** - Next.js dashboard with live queue metrics, DLQ list with one-click re-queue and load-test visualization, plus OpenTelemetry structured logs and metrics wired to real events
@@ -106,7 +106,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Local Infra | 4/4 | Complete   | 2026-06-02 |
-| 2. High-Speed Ingestion API | 0/3 | Planned | - |
+| 2. High-Speed Ingestion API | 3/3 | Complete | 2026-06-09 |
 | 3. Worker Core & Idempotent Persistence | 0/TBD | Not started | - |
 | 4. Resilience & Dynamic Routing | 0/TBD | Not started | - |
 | 5. Dashboard & Observability | 0/TBD | Not started | - |

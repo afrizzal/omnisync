@@ -3,8 +3,8 @@ import { prisma } from "@omnisync/db";
 import { connection, eventsQueue } from "@omnisync/queue";
 import { buildApp } from "./app.js";
 
-const port = Number.parseInt(process.env["PORT"] ?? "3001", 10);
-const host = process.env["HOST"] ?? "0.0.0.0";
+const port = Number.parseInt(process.env.PORT ?? "3001", 10);
+const host = process.env.HOST ?? "0.0.0.0";
 
 const app = await buildApp({ queue: eventsQueue, redis: connection });
 await app.listen({ port, host });

@@ -11,7 +11,7 @@ progress:
   completed_phases: 2
   total_plans: 7
   completed_plans: 7
-  percent: 17
+  percent: 33
 ---
 
 # Project State
@@ -21,7 +21,7 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value:** No accepted event is ever silently lost — once acknowledged (HTTP 202), an event is durably queued and processed at-least-once and idempotently, surviving worker crashes, DB outages, and flaky downstream APIs, with a DLQ as the final safety net.
-**Current focus:** Phase 02 — high-speed-ingestion-api
+**Current focus:** Phase 03 — Worker Core & Idempotent Persistence
 
 ## Current Position
 
@@ -30,7 +30,7 @@ Plan: Not started
 Status: Ready to execute
 Last activity: 2026-06-09
 
-Progress: [█░░░░░] Phase 1 of 6 complete (17%) — runtime UAT green: Redis noeviction, live migration + fingerprint constraint, both Docker images build
+Progress: [██░░░░] Phase 2 of 6 complete (33%) — Phase 02 ingestion API complete: HMAC + Zod validation, SHA-256 fingerprint, Redis SET NX dedup gate, BullMQ enqueue, HTTP 202 fast-ACK
 
 ## Performance Metrics
 

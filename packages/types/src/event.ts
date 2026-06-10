@@ -6,7 +6,7 @@ export const InboundEvent = z.object({
   source: EventSource,
   eventType: z.string().min(1),
   externalId: z.string().min(1),
-  occurredAt: z.string().datetime(),
+  occurredAt: z.iso.datetime({ offset: true }),
   payload: z.record(z.string(), z.unknown()),
 });
 
