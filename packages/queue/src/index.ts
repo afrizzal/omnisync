@@ -1,23 +1,18 @@
 import { Queue } from "bullmq";
 import { Redis } from "ioredis";
 
-const redisUrl = process.env.REDIS_URL;
-if (!redisUrl) {
-  throw new Error("REDIS_URL environment variable is required");
-}
-
-export const connection = new Redis(redisUrl, {
-  maxRetriesPerRequest: null,
-});
-
-// Locked config from CONTEXT D-10 (free-tier Upstash command-quota viability)
-// These constants are consumed by the Worker in Phase 3 — do NOT change values.
 export const QUEUE_NAME = "events";
 
-export const queueOptions = {
-  guardInterval: 30_000,
-  stalledInterval: 300_000,
-  drainDelay: 30,
-} as const;
+export function createRedisConnection(url: string): Redis {
+  return new Redis(url, { maxRetriesPerRequest: null });
+}
 
-export const eventsQueue = new Queue(QUEUE_NAME, { connection });
+export function createEventsQueue(connection: Redis): Queue {
+  return new Queue(QUEUE_NAME, {
+    connection,
+    defaultJobOptions: {
+      removeOnComplete: { age: 3600, count: 1000 },
+      removeOnFail: { age: 7 * 24 * 3600 },
+    },
+  });
+}

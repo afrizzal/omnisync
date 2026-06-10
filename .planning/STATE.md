@@ -92,6 +92,8 @@ Recent decisions affecting current work:
 - [Phase 03-01]: $executeRaw chosen over createMany skipDuplicates — returns affected count 1/0 for duplicate-absorbed log (D-03/D-05); SQL proven against real Postgres
 - [Phase 03-01]: createPrismaClient({ max }) factory exported alongside prisma singleton — worker uses factory, API keeps singleton, zero breakage
 - [Phase 03-01]: packages/db vitest scaffold has no coverage thresholds — apps/worker owns 80% gate; packages/db is infrastructure test, not business logic
+- [Phase 03-02]: D-09 AMENDMENT: guardInterval removed from @omnisync/queue — dead config in BullMQ v5; stalledInterval + drainDelay relocate to buildWorker as WorkerOptions
+- [Phase 03-02]: @omnisync/queue createRedisConnection + createEventsQueue factories — import-safe, no socket on load; apps/api structurally db-free (ING-05 enforced by dependency graph)
 - [Phase 03-03]: vitest.setup.ts uses ?? operator so CI job-level env vars override local defaults without conditionals
 - [Phase 03-03]: CI publishes Postgres on 5432 (not 5433 locally) — service containers don't need custom port mapping
 - [Phase 03-03]: pino added as direct dep in Wave 0 so Plan 03-04 needs no package.json edit

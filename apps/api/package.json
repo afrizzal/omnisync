@@ -22,7 +22,6 @@
     "@fastify/helmet": "13.0.2",
     "@fastify/sensible": "6.0.4",
     "@omnisync/config": "workspace:*",
-    "@omnisync/db": "workspace:*",
     "@omnisync/queue": "workspace:*",
     "@omnisync/types": "workspace:*",
     "bullmq": "^5.77.0",
