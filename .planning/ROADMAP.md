@@ -59,7 +59,14 @@ Plans:
   2. Sending 50 identical webhooks simultaneously results in exactly one row in `events` (DB unique constraint absorbs all duplicates; no `INSERT` error surfaces to the caller)
   3. Re-queuing the same event after it has already been persisted marks the job complete without creating a duplicate row — idempotency holds across the re-queue path
   4. Worker concurrency is configurable via an environment variable and the worker processes multiple jobs in parallel without connection pool exhaustion on the local Postgres instance
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — DB foundation: schema migrations (D-01 canonical columns + D-06 standalone DLQ), createPrismaClient pool factory, $executeRaw enum-cast smoke (Wave 0)
+- [ ] 03-02-PLAN.md — Shared packages: side-effect-free queue factories + remove guardInterval (D-07/08/09), EventJobData contract (D-10), WORKER_CONCURRENCY (D-12), API rewire + drop @omnisync/db (D-14) (Wave 0)
+- [ ] 03-03-PLAN.md — Worker test scaffold (vitest config/setup/deps) + CI postgres/redis services block (Wave 0)
+- [ ] 03-04-PLAN.md — Worker core: normalize seam + idempotent persist + poison guard + buildWorker + graceful shutdown with unit tests (Wave 1)
+- [ ] 03-05-PLAN.md — Integration proof vs real Postgres+Redis: SC-2 (50→1), SC-3 (re-queue absorbed), QUE-02 end-to-end, SC-4 concurrency; coverage gate + nyquist sign-off (Wave 2)
 
 ### Phase 4: Resilience & Dynamic Routing
 **Goal**: The system survives failures gracefully: transient errors retry with jittered backoff, exhausted jobs land in a durable DLQ (Redis + Postgres mirror), a circuit breaker protects the mock CRM downstream, failed jobs can be re-queued idempotently, and routing/transformation rules can be updated in the DB and take effect in the running worker without a redeploy.
@@ -107,7 +114,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundation & Local Infra | 4/4 | Complete   | 2026-06-02 |
 | 2. High-Speed Ingestion API | 3/3 | Complete | 2026-06-09 |
-| 3. Worker Core & Idempotent Persistence | 0/TBD | Not started | - |
+| 3. Worker Core & Idempotent Persistence | 0/5 | Planned | - |
 | 4. Resilience & Dynamic Routing | 0/TBD | Not started | - |
 | 5. Dashboard & Observability | 0/TBD | Not started | - |
 | 6. Testing, CI/CD & Deployment | 0/TBD | Not started | - |
