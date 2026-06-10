@@ -4,7 +4,10 @@ import { createRedisConnection, createEventsQueue } from "@omnisync/queue";
 import { buildWorker } from "../../src/worker.js";
 
 const noopLogger = { info: () => {}, error: () => {} };
-const fingerprint = "d".repeat(64);
+
+// Unique fingerprint per test run — avoids BullMQ jobId dedup when the completed job
+// stays in Redis for up to 1 hour (removeOnComplete: { age: 3600 }). Must be 64 hex chars.
+const fingerprint = Date.now().toString(16).padStart(64, "0").slice(-64);
 const jobData = {
   source: "SHOPEE",
   payload: {
