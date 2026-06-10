@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 3 context gathered
-last_updated: "2026-06-10T16:23:27.903Z"
-last_activity: 2026-06-09
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-06-10T17:45:32.143Z"
+last_activity: 2026-06-10
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 7
+  total_plans: 12
   completed_plans: 7
   percent: 33
 ---
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value:** No accepted event is ever silently lost — once acknowledged (HTTP 202), an event is durably queued and processed at-least-once and idempotently, surviving worker crashes, DB outages, and flaky downstream APIs, with a DLQ as the final safety net.
-**Current focus:** Phase 03 — Worker Core & Idempotent Persistence
+**Current focus:** Phase 03 — worker-core-idempotent-persistence
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (worker-core-idempotent-persistence) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-06-09
+Last activity: 2026-06-10
 
 Progress: [██░░░░] Phase 2 of 6 complete (33%) — Phase 02 ingestion API complete: HMAC + Zod validation, SHA-256 fingerprint, Redis SET NX dedup gate, BullMQ enqueue, HTTP 202 fast-ACK
 
@@ -58,6 +58,7 @@ Progress: [██░░░░] Phase 2 of 6 complete (33%) — Phase 02 ingestio
 | Phase 02-high-speed-ingestion-api P01 | 9 | 3 tasks | 7 files |
 | Phase 02 P02 | 17 | 2 tasks | 9 files |
 | Phase 02-high-speed-ingestion-api P03 | 18 | 3 tasks | 10 files |
+| Phase 03 P02 | 23 | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,8 @@ Recent decisions affecting current work:
 - [260610-s0n]: Gate-then-enqueue rollback: AppDeps.redis widened to Pick<Redis, "set" | "del">; queue.add wrapped in try/catch with best-effort redis.del on failure
 - [260610-s0n]: buildFingerprint normalizes occurredAt via new Date(occurredAt).toISOString() — safe window (no persisted fingerprints yet); null-byte test updated to use valid ISO inputs
 - [260610-s0n]: Redis AOF enabled via --appendonly yes + redisdata named volume in docker-compose; --maxmemory-policy noeviction preserved
+- [Phase 03]: D-09 AMENDMENT: guardInterval removed from @omnisync/queue — dead config in BullMQ v5 (QueueScheduler removed in v2); stalledInterval + drainDelay relocate to buildWorker as WorkerOptions in Plan 03-04
+- [Phase 03]: @omnisync/queue createRedisConnection + createEventsQueue factories — import-safe, no socket on load; apps/api structurally db-free (ING-05 now enforced by dependency graph)
 
 ### Pending Todos
 
@@ -110,6 +113,6 @@ None yet.
 
 Last activity: 2026-06-10 - Completed quick task 260610-sw5: CI coverage gate, .claude gitignore, doc drift fixes, Zod v4 API migration
 
-Last session: 2026-06-10T16:23:27.898Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-worker-core-idempotent-persistence/03-CONTEXT.md
+Last session: 2026-06-10T17:45:32.137Z
+Stopped at: Completed 03-02-PLAN.md
+Resume file: None
