@@ -64,7 +64,7 @@ Plans:
 Plans:
 - [ ] 03-01-PLAN.md — DB foundation: schema migrations (D-01 canonical columns + D-06 standalone DLQ), createPrismaClient pool factory, $executeRaw enum-cast smoke (Wave 0)
 - [ ] 03-02-PLAN.md — Shared packages: side-effect-free queue factories + remove guardInterval (D-07/08/09), EventJobData contract (D-10), WORKER_CONCURRENCY (D-12), API rewire + drop @omnisync/db (D-14) (Wave 0)
-- [ ] 03-03-PLAN.md — Worker test scaffold (vitest config/setup/deps) + CI postgres/redis services block (Wave 0)
+- [x] 03-03-PLAN.md — Worker test scaffold (vitest config/setup/deps) + CI postgres/redis services block (Wave 0)
 - [ ] 03-04-PLAN.md — Worker core: normalize seam + idempotent persist + poison guard + buildWorker + graceful shutdown with unit tests (Wave 1)
 - [ ] 03-05-PLAN.md — Integration proof vs real Postgres+Redis: SC-2 (50→1), SC-3 (re-queue absorbed), QUE-02 end-to-end, SC-4 concurrency; coverage gate + nyquist sign-off (Wave 2)
 
@@ -114,7 +114,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundation & Local Infra | 4/4 | Complete   | 2026-06-02 |
 | 2. High-Speed Ingestion API | 3/3 | Complete | 2026-06-09 |
-| 3. Worker Core & Idempotent Persistence | 0/5 | Planned | - |
+| 3. Worker Core & Idempotent Persistence | 1/5 | In Progress | - |
 | 4. Resilience & Dynamic Routing | 0/TBD | Not started | - |
 | 5. Dashboard & Observability | 0/TBD | Not started | - |
 | 6. Testing, CI/CD & Deployment | 0/TBD | Not started | - |
