@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import type { EventJobData } from "@omnisync/types";
+import { describe, expect, it } from "vitest";
 import { normalize } from "../../src/normalizer/normalize.js";
 
 // Valid EventJobData fixture

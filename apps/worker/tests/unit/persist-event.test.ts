@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
 import type { PrismaClient } from "@omnisync/db";
+import { describe, expect, it, vi } from "vitest";
 import type { NormalizedEvent } from "../../src/normalizer/normalize.js";
 import { persistEvent } from "../../src/persistence/persist-event.js";
 

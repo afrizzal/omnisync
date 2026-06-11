@@ -1,9 +1,12 @@
-import { Worker } from "bullmq";
-import type { Job } from "bullmq";
-import type { Redis } from "ioredis";
 import type { PrismaClient } from "@omnisync/db";
 import { QUEUE_NAME } from "@omnisync/queue";
-import { buildProcessor, type ProcessorLogger } from "./processor/event.processor.js";
+import type { Job } from "bullmq";
+import { Worker } from "bullmq";
+import type { Redis } from "ioredis";
+import {
+  buildProcessor,
+  type ProcessorLogger,
+} from "./processor/event.processor.js";
 
 export interface WorkerDeps {
   prisma: PrismaClient;
@@ -17,6 +20,6 @@ export function buildWorker(deps: WorkerDeps, concurrency: number): Worker {
     connection: deps.connection,
     concurrency,
     stalledInterval: 300_000, // 5 min — Upstash free-tier tuning (D-09 WorkerOption)
-    drainDelay: 30,           // 30 s — Upstash free-tier tuning (D-09 WorkerOption)
+    drainDelay: 30, // 30 s — Upstash free-tier tuning (D-09 WorkerOption)
   });
 }

@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
 import type { PrismaClient } from "@omnisync/db";
+import { describe, expect, it, vi } from "vitest";
 import type { ProcessorLogger } from "../../src/processor/event.processor.js";
 import { buildProcessor } from "../../src/processor/event.processor.js";
 
@@ -37,7 +37,9 @@ describe("buildProcessor() — validate → normalize → persist pipeline (D-04
     const logger = makeSpyLogger();
     const processor = buildProcessor(prisma, logger);
 
-    await expect(processor({ id: "job-1", data: validJobData })).resolves.toBeUndefined();
+    await expect(
+      processor({ id: "job-1", data: validJobData }),
+    ).resolves.toBeUndefined();
 
     // persistEvent must have been invoked exactly once
     expect(prisma.$executeRaw).toHaveBeenCalledOnce();
@@ -45,7 +47,8 @@ describe("buildProcessor() — validate → normalize → persist pipeline (D-04
     // "completed" log emitted (not "duplicate absorbed")
     const infoCalls = (logger.info as ReturnType<typeof vi.fn>).mock.calls;
     const completedCall = infoCalls.find(
-      ([, msg]: [Record<string, unknown>, string]) => msg === "[worker] completed",
+      ([, msg]: [Record<string, unknown>, string]) =>
+        msg === "[worker] completed",
     );
     expect(completedCall).toBeDefined();
   });
@@ -56,14 +59,17 @@ describe("buildProcessor() — validate → normalize → persist pipeline (D-04
     const processor = buildProcessor(prisma, logger);
 
     // Conflict is SUCCESS (D-05) — must NOT throw
-    await expect(processor({ id: "job-2", data: validJobData })).resolves.toBeUndefined();
+    await expect(
+      processor({ id: "job-2", data: validJobData }),
+    ).resolves.toBeUndefined();
 
     expect(prisma.$executeRaw).toHaveBeenCalledOnce();
 
     // "duplicate absorbed" log emitted
     const infoCalls = (logger.info as ReturnType<typeof vi.fn>).mock.calls;
     const dupCall = infoCalls.find(
-      ([, msg]: [Record<string, unknown>, string]) => msg === "[worker] duplicate absorbed",
+      ([, msg]: [Record<string, unknown>, string]) =>
+        msg === "[worker] duplicate absorbed",
     );
     expect(dupCall).toBeDefined();
   });

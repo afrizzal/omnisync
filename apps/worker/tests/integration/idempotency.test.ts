@@ -1,5 +1,5 @@
-import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { createPrismaClient } from "@omnisync/db";
+import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { buildProcessor } from "../../src/processor/event.processor.js";
 
 const prisma = createPrismaClient({ max: 12 });

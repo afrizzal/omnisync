@@ -3,7 +3,8 @@
 // CI overrides DATABASE_URL/DIRECT_URL/REDIS_URL via the workflow `env:` block (service containers).
 process.env.NODE_ENV = "test";
 process.env.DATABASE_URL =
-  process.env.DATABASE_URL ?? "postgresql://omnisync:omnisync@localhost:5433/omnisync";
+  process.env.DATABASE_URL ??
+  "postgresql://omnisync:omnisync@localhost:5433/omnisync";
 process.env.DIRECT_URL = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
 process.env.REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 process.env.WEBHOOK_SECRET_SHOPEE = "test-secret-shopee";

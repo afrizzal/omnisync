@@ -1,6 +1,6 @@
-import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createPrismaClient } from "@omnisync/db";
-import { createRedisConnection, createEventsQueue } from "@omnisync/queue";
+import { createEventsQueue, createRedisConnection } from "@omnisync/queue";
+import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
 import { buildWorker } from "../../src/worker.js";
 
 const noopLogger = { info: () => {}, error: () => {} };
@@ -53,14 +53,12 @@ describe("QUE-02 end-to-end queue -> worker -> row", () => {
     await prisma.$disconnect();
   });
 
-  it(
-    "consumes a queued job and persists exactly 1 row",
-    { timeout: 20_000 },
-    async () => {
-      worker = buildWorker({ prisma, connection, logger: noopLogger }, 5);
-      await queue.add("process-event", jobData, { jobId: fingerprint });
-      const count = await waitForCount(1);
-      expect(count).toBe(1);
-    },
-  );
+  it("consumes a queued job and persists exactly 1 row", {
+    timeout: 20_000,
+  }, async () => {
+    worker = buildWorker({ prisma, connection, logger: noopLogger }, 5);
+    await queue.add("process-event", jobData, { jobId: fingerprint });
+    const count = await waitForCount(1);
+    expect(count).toBe(1);
+  });
 });

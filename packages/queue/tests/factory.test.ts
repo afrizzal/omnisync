@@ -2,8 +2,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import * as queue from "../src/index.js";
 
 // createRedisConnection requires a URL — use CI service container or local docker-compose default.
-const REDIS_URL =
-  process.env.REDIS_URL ?? "redis://localhost:6379";
+const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 
 describe("@omnisync/queue factories (D-07/D-08/D-09)", () => {
   it("imports without opening a socket or reading env", () => {

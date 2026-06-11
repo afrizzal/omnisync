@@ -18,7 +18,7 @@ async function shutdown(): Promise<void> {
     logger.error({}, "[worker] shutdown timeout — forcing exit");
     process.exit(1);
   }, SHUTDOWN_TIMEOUT_MS);
-  await worker.close();          // drains in-flight jobs (no built-in timeout)
+  await worker.close(); // drains in-flight jobs (no built-in timeout)
   await prisma.$disconnect();
   await connection.quit();
   clearTimeout(timer);
