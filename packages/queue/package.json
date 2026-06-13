@@ -17,6 +17,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@omnisync/config": "workspace:*",
     "bullmq": "^5.77.0",
     "ioredis": "5.10.1"
   },
