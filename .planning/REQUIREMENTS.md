@@ -31,8 +31,8 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 ### Resilience
 
 - [x] **RES-01**: Transient processing failures are retried automatically with jittered exponential backoff up to a max attempt count
-- [ ] **RES-02**: Events that exhaust retries are moved to a Dead-Letter Queue with the full error trace and original payload
-- [ ] **RES-03**: DLQ entries are mirrored to a durable PostgreSQL table so DLQ history survives Redis loss
+- [x] **RES-02**: Events that exhaust retries are moved to a Dead-Letter Queue with the full error trace and original payload
+- [x] **RES-03**: DLQ entries are mirrored to a durable PostgreSQL table so DLQ history survives Redis loss
 - [x] **RES-04**: A circuit breaker (opossum) wraps the external downstream (mock CRM) sync and opens when its failure rate exceeds a threshold within a time window
 - [x] **RES-05**: While the breaker is open, affected events route to retry/DLQ instead of hammering the failing downstream; the breaker recovers via half-open probing
 - [ ] **RES-06**: An operator can re-queue DLQ items individually and in bulk after a fault is resolved, and reprocessing is idempotent
@@ -116,8 +116,8 @@ Which phases cover which requirements. Populated during roadmap creation.
 | IDM-02 | Phase 3 | Complete |
 | IDM-03 | Phase 3 | Complete |
 | RES-01 | Phase 4 | Complete |
-| RES-02 | Phase 4 | Pending |
-| RES-03 | Phase 4 | Pending |
+| RES-02 | Phase 4 | Complete |
+| RES-03 | Phase 4 | Complete |
 | RES-04 | Phase 4 | Complete |
 | RES-05 | Phase 4 | Complete |
 | RES-06 | Phase 4 | Pending |
