@@ -1,0 +1,15 @@
+import { buildMockCrm } from "./app.js";
+
+const app = buildMockCrm();
+const port = Number.parseInt(process.env.PORT ?? "3002", 10);
+const host = process.env.HOST ?? "0.0.0.0";
+
+await app.listen({ port, host });
+app.log.info(`[mock-crm] listening on ${host}:${port}`);
+
+async function shutdown(): Promise<void> {
+  await app.close();
+  process.exit(0);
+}
+process.on("SIGINT", () => void shutdown());
+process.on("SIGTERM", () => void shutdown());
