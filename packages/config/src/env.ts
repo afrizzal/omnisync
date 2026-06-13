@@ -12,6 +12,12 @@ const Env = z.object({
   WEBHOOK_SECRET_META_ADS: z.string().min(1),
   WEBHOOK_SECRET_CRM: z.string().min(1),
   WORKER_CONCURRENCY: z.coerce.number().int().min(1).max(50).default(5),
+  RETRY_ATTEMPTS: z.coerce.number().int().min(1).max(20).default(5),
+  RETRY_BASE_DELAY_MS: z.coerce.number().int().min(100).default(1000),
+  RETRY_CAP_MS: z.coerce.number().int().min(1000).default(30000),
+  BREAKER_HALF_OPEN_MS: z.coerce.number().int().min(1000).default(10000),
+  RULE_CACHE_TTL_MS: z.coerce.number().int().min(1000).default(30000),
+  CRM_BASE_URL: z.url().default("http://mock-crm:3002"),
 });
 
 export const env = (() => {
