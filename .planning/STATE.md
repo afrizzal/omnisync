@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-06-13T09:32:46.348Z"
+stopped_at: Completed 04-04-PLAN.md
+last_updated: "2026-06-13T10:02:50.231Z"
 last_activity: 2026-06-13
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 14
+  completed_plans: 17
   percent: 40
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 04 (resilience-dynamic-routing) — EXECUTING
-Plan: 2 of 6
+Plan: 3 of 6
 Status: Ready to execute
 Last activity: 2026-06-13
 
@@ -63,6 +63,7 @@ Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progr
 | Phase 03-worker-core-idempotent-persistence P05 | 25 | 3 tasks | 5 files |
 | Phase 04 P01 | 12 | 3 tasks | 9 files |
 | Phase 04 P03 | 16 | 2 tasks | 6 files |
+| Phase 04 P04 | 14 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,7 @@ Recent decisions affecting current work:
 - [Phase 04]: cockatiel@^4 installed with --config.engine-strict=false since host Node is v20; containers use node:22-slim so runtime is unaffected
 - [Phase 04]: RoutingRule Zod discriminated union keyed on type — extensible by adding one variant + one dispatch entry, no if/else (D-18/D-19)
 - [Phase 04]: Lazy TTL rule cache: module-level singleton with Date.now() comparison, no setInterval (D-22) — resetRulesCache() for test isolation (Pitfall 7)
+- [Phase 04]: fullJitterBackoff params made optional to match BullMQ BackoffStrategy type; crmPolicy singleton injected via WorkerDeps; persistEvent outside crmPolicy.execute() for RES-07 invariant
 
 ### Pending Todos
 
@@ -134,6 +136,6 @@ None yet.
 
 Last activity: 2026-06-11 - Completed 03-03: worker test scaffold + CI service containers
 
-Last session: 2026-06-13T09:32:46.340Z
-Stopped at: Completed 04-03-PLAN.md
+Last session: 2026-06-13T10:02:50.225Z
+Stopped at: Completed 04-04-PLAN.md
 Resume file: None
