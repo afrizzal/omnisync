@@ -53,6 +53,21 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      mock-crm:
+        condition: service_healthy
+
+  mock-crm:
+    build:
+      context: .
+      dockerfile: apps/mock-crm/Dockerfile
+    env_file: .env
+    ports:
+      - "3002:3002"
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3002/admin/failure-mode').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
 volumes:
   pgdata:
