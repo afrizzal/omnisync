@@ -5,7 +5,7 @@ milestone_name: milestone
 status: executing
 stopped_at: Completed 04-01-PLAN.md
 last_updated: "2026-06-13T09:10:04.454Z"
-last_activity: 2026-06-10
+last_activity: 2026-06-13 -- Phase 04 execution started
 progress:
   total_phases: 6
   completed_phases: 3
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value:** No accepted event is ever silently lost — once acknowledged (HTTP 202), an event is durably queued and processed at-least-once and idempotently, surviving worker crashes, DB outages, and flaky downstream APIs, with a DLQ as the final safety net.
-**Current focus:** Phase 03 — Worker Core & Idempotent Persistence
+**Current focus:** Phase 04 — resilience-dynamic-routing
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-10
+Phase: 04 (resilience-dynamic-routing) — EXECUTING
+Plan: 1 of 6
+Status: Executing Phase 04
+Last activity: 2026-06-13 -- Phase 04 execution started
 
 Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progress: 03-03 worker test scaffold + CI service containers complete
 
