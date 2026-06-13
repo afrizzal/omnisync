@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-06-13T09:10:04.454Z"
-last_activity: 2026-06-13 -- Phase 04 execution started
+stopped_at: Completed 04-03-PLAN.md
+last_updated: "2026-06-13T09:32:46.348Z"
+last_activity: 2026-06-13
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 13
+  completed_plans: 14
   percent: 40
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 04 (resilience-dynamic-routing) — EXECUTING
-Plan: 1 of 6
-Status: Executing Phase 04
-Last activity: 2026-06-13 -- Phase 04 execution started
+Plan: 2 of 6
+Status: Ready to execute
+Last activity: 2026-06-13
 
 Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progress: 03-03 worker test scaffold + CI service containers complete
 
@@ -62,6 +62,7 @@ Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progr
 | Phase 03 P04 | 22 | 3 tasks | 9 files |
 | Phase 03-worker-core-idempotent-persistence P05 | 25 | 3 tasks | 5 files |
 | Phase 04 P01 | 12 | 3 tasks | 9 files |
+| Phase 04 P03 | 16 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,8 @@ Recent decisions affecting current work:
 - [Phase 03-05]: Bounded poll (max N * delayMs) for QUE-02 end-to-end test instead of BullMQ event listeners — prevents CI hang, cleaner teardown
 - [Phase 04]: Created Prisma migration SQL manually (Docker daemon unavailable) — SQL follows existing migration pattern; will apply on next docker compose up
 - [Phase 04]: cockatiel@^4 installed with --config.engine-strict=false since host Node is v20; containers use node:22-slim so runtime is unaffected
+- [Phase 04]: RoutingRule Zod discriminated union keyed on type — extensible by adding one variant + one dispatch entry, no if/else (D-18/D-19)
+- [Phase 04]: Lazy TTL rule cache: module-level singleton with Date.now() comparison, no setInterval (D-22) — resetRulesCache() for test isolation (Pitfall 7)
 
 ### Pending Todos
 
@@ -131,6 +134,6 @@ None yet.
 
 Last activity: 2026-06-11 - Completed 03-03: worker test scaffold + CI service containers
 
-Last session: 2026-06-13T09:10:04.449Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-06-13T09:32:46.340Z
+Stopped at: Completed 04-03-PLAN.md
 Resume file: None
