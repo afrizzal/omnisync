@@ -9,10 +9,11 @@ export const QUEUE_NAME = "events";
 // RES-01: Prevents thundering herd by randomizing each retry delay within the bounded window.
 // NOTE: This function is registered on the WORKER's `settings.backoffStrategy` (Plan 04-04),
 // not instantiated here. The Queue side only declares `backoff: { type: "custom" }` (Pitfall 2).
+// Parameters are optional to match BullMQ's BackoffStrategy type (type?: string, err?: Error).
 export function fullJitterBackoff(
   attemptsMade: number,
-  _type: string,
-  _err: Error,
+  _type?: string,
+  _err?: Error,
 ): number {
   const base = env.RETRY_BASE_DELAY_MS;
   const cap = env.RETRY_CAP_MS;
