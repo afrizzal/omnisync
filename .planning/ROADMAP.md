@@ -12,7 +12,7 @@ OmniSync is built in six phases that follow a strict dependency chain: shared in
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [x] **Phase 1: Foundation & Local Infra** - Monorepo scaffold, shared Prisma schema (with `UNIQUE(fingerprint)`), Zod types, Docker Compose (Redis noeviction + Postgres), and CI skeleton (completed 2026-06-02)
+- [x] **Phase 1: Foundation & Local Infra** - Monorepo scaffold, shared Prisma schema (with `UNIQUE(fingerprint)`), Zod types, Docker Compose (Redis noeviction + Postgres), and CI skeleton (completed 2026-06-02)
 - [x] **Phase 2: High-Speed Ingestion API** - Fastify ingestion endpoint with HMAC validation, Zod validation, SHA-256 fingerprint, Redis SET NX gate, BullMQ enqueue, and HTTP 202 fast-ACK (completed 2026-06-09)
 - [x] **Phase 3: Worker Core & Idempotent Persistence** - Always-on BullMQ worker pool that normalizes events and persists them idempotently via `ON CONFLICT DO NOTHING`, completing the happy path end-to-end (completed 2026-06-10)
 - [ ] **Phase 4: Resilience & Dynamic Routing** - Jittered exponential backoff, hand-built DLQ (BullMQ failed handler + Postgres mirror), mock CRM downstream, opossum circuit breaker, re-queue path, and runtime-reloadable routing rules
@@ -75,10 +75,18 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Injecting a transient error into the worker causes automatic retry with jittered exponential backoff — retry timestamps in logs are spread across a window, not synchronized (no thundering herd)
   2. After exhausting all retry attempts, the job appears in the `dlq_events` Postgres table with the original payload, full error stack, attempt count, and source channel — the DLQ entry survives a Redis restart
-  3. Configuring the mock CRM to return 5xx errors at a rate above the threshold causes the opossum circuit breaker to open; while open, affected events route to retry/DLQ without hammering the mock CRM; killing Postgres does NOT open the breaker
+  3. Configuring the mock CRM to return 5xx errors at a rate above the threshold causes the cockatiel circuit breaker to open (D-01 overrides the "opossum" naming); while open, affected events route to retry/DLQ without hammering the mock CRM; killing Postgres does NOT open the breaker
   4. Clicking "Re-queue" on a DLQ entry reprocesses the event through the normal worker pipeline and results in exactly one DB row — idempotency holds on re-queue
   5. Updating a routing rule in the `routing_rules` table (e.g., enabling E.164 phone normalization) takes effect in the running worker without restarting, and the next processed event reflects the updated rule
-**Plans**: TBD
+**Plans**: 6 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Foundation: Phase 4 env vars, install cockatiel@4, RoutingRule model + migration, apps/mock-crm scaffold (Wave 0)
+- [ ] 04-02-PLAN.md — Pure functions (TDD): full-jitter backoff (RES-01), CrmClient + cockatiel circuit breaker (RES-04/05), final-attempt-gated DLQ handler (RES-02/03) (Wave 0)
+- [ ] 04-03-PLAN.md — Routing rules (TDD): RoutingRule Zod union, dispatch-table engine (RTE-01), lazy TTL cache (RTE-02) (Wave 0)
+- [ ] 04-04-PLAN.md — Wire into worker: backoff on Worker, DLQ on failed handler, CRM breaker in processor (persist outside breaker → RES-07), rules at normalize() seam (Wave 1)
+- [ ] 04-05-PLAN.md — Re-queue service + POST /admin/dlq/:id/requeue (RES-06, fingerprint-as-jobId idempotency) + mock-crm docker-compose service (Wave 1)
+- [ ] 04-06-PLAN.md — Integration proof: DLQ Postgres mirror (RES-03) + re-queue idempotency (RES-06); coverage gate + Nyquist sign-off (Wave 2)
 
 ### Phase 5: Dashboard & Observability
 **Goal**: Operators can see the system's health in real time: a Next.js dashboard shows live queue throughput metrics, lists DLQ entries with full error detail and a one-click re-queue action, and visualizes a live load test — all backed by OpenTelemetry-instrumented structured logs and metrics covering every event lifecycle transition.
@@ -115,6 +123,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation & Local Infra | 4/4 | Complete   | 2026-06-02 |
 | 2. High-Speed Ingestion API | 3/3 | Complete | 2026-06-09 |
 | 3. Worker Core & Idempotent Persistence | 5/5 | Complete   | 2026-06-10 |
-| 4. Resilience & Dynamic Routing | 0/TBD | Not started | - |
+| 4. Resilience & Dynamic Routing | 0/6 | Planned | - |
 | 5. Dashboard & Observability | 0/TBD | Not started | - |
 | 6. Testing, CI/CD & Deployment | 0/TBD | Not started | - |
