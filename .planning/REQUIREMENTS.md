@@ -35,7 +35,7 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 - [ ] **RES-03**: DLQ entries are mirrored to a durable PostgreSQL table so DLQ history survives Redis loss
 - [x] **RES-04**: A circuit breaker (opossum) wraps the external downstream (mock CRM) sync and opens when its failure rate exceeds a threshold within a time window
 - [x] **RES-05**: While the breaker is open, affected events route to retry/DLQ instead of hammering the failing downstream; the breaker recovers via half-open probing
-- [ ] **RES-06**: An operator can re-queue DLQ items individually and in bulk after a fault is resolved, and reprocessing is idempotent
+- [x] **RES-06**: An operator can re-queue DLQ items individually and in bulk after a fault is resolved, and reprocessing is idempotent
 - [ ] **RES-07**: Killing PostgreSQL mid-processing preserves in-flight events in the queue with zero events dropped
 
 ### Routing & Transformation
@@ -120,7 +120,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | RES-03 | Phase 4 | Pending |
 | RES-04 | Phase 4 | Complete |
 | RES-05 | Phase 4 | Complete |
-| RES-06 | Phase 4 | Pending |
+| RES-06 | Phase 4 | Complete |
 | RES-07 | Phase 4 | Pending |
 | RTE-01 | Phase 4 | Complete |
 | RTE-02 | Phase 4 | Complete |
