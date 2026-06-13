@@ -82,8 +82,8 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — Foundation: Phase 4 env vars, install cockatiel@4, RoutingRule model + migration, apps/mock-crm scaffold (Wave 0)
-- [x] 04-02-PLAN.md — Pure functions (TDD): full-jitter backoff (RES-01), CrmClient + cockatiel circuit breaker (RES-04/05), final-attempt-gated DLQ handler (RES-02/03) (Wave 0)
-- [ ] 04-03-PLAN.md — Routing rules (TDD): RoutingRule Zod union, dispatch-table engine (RTE-01), lazy TTL cache (RTE-02) (Wave 0)
+- [ ] 04-02-PLAN.md — Pure functions (TDD): full-jitter backoff (RES-01), CrmClient + cockatiel circuit breaker (RES-04/05), final-attempt-gated DLQ handler (RES-02/03) (Wave 0)
+- [x] 04-03-PLAN.md — Routing rules (TDD): RoutingRule Zod union, dispatch-table engine (RTE-01), lazy TTL cache (RTE-02) (Wave 0)
 - [ ] 04-04-PLAN.md — Wire into worker: backoff on Worker, DLQ on failed handler, CRM breaker in processor (persist outside breaker → RES-07), rules at normalize() seam (Wave 1)
 - [ ] 04-05-PLAN.md — Re-queue service + POST /admin/dlq/:id/requeue (RES-06, fingerprint-as-jobId idempotency) + mock-crm docker-compose service (Wave 1)
 - [ ] 04-06-PLAN.md — Integration proof: DLQ Postgres mirror (RES-03) + re-queue idempotency (RES-06); coverage gate + Nyquist sign-off (Wave 2)
