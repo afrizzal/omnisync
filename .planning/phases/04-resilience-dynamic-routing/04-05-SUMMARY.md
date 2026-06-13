@@ -109,3 +109,11 @@ None - no external service configuration required. The `mock-crm` healthcheck us
 ---
 *Phase: 04-resilience-dynamic-routing*
 *Completed: 2026-06-13*
+
+## Self-Check: PASSED
+
+- FOUND: apps/api/src/services/requeue.ts
+- FOUND: apps/api/src/routes/admin.ts
+- FOUND: .planning/phases/04-resilience-dynamic-routing/04-05-SUMMARY.md
+- FOUND: commit 41a48eb (feat: re-queue service + admin route)
+- FOUND: commit 817917d (feat: mock-crm in docker-compose)
