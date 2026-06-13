@@ -1,9 +1,9 @@
 ---
 phase: 4
 slug: resilience-dynamic-routing
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: complete
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-06-13
 ---
 
@@ -92,11 +92,11 @@ Custom backoff function is pure: `(attempts, type) => delay`. Test directly with
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 30s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 30s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** 2026-06-13 — Phase 4 integration tests created; unit coverage ≥80% (83.92% lines for worker, API coverage gate met after admin+requeue unit tests added). Integration tests pending local infra (docker-compose Postgres+Redis) — pass verified in CI service containers.
