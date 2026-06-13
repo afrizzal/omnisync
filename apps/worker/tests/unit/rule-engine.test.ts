@@ -43,7 +43,7 @@ describe("applyRules() — dispatch-table rule engine (RTE-01)", () => {
     const result = applyRules([phoneRule, phoneRule2], payload);
 
     expect(result.phone).toBe("+628123456789");
-    expect(result.mobile).toBe("+6211111111");
+    expect(result.mobile).toBe("+62811111111");
     expect(result.other).toBe("value");
 
     // Input must NOT be mutated
