@@ -54,3 +54,18 @@ model DeadLetterEvent {
   @@index([fingerprint])
   @@index([resolved])
 }
+
+model RoutingRule {
+  id        String   @id @default(uuid())
+  type      String   // matches Zod discriminated-union "type" (e.g. "phone_normalize_e164")
+  field     String   // payload field to transform
+  enabled   Boolean  @default(true)
+  source    String?  // null = applies to all sources; set = source-specific filter
+  priority  Int      @default(0) // higher = applied first
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("routing_rules")
+  @@index([enabled])
+  @@index([source])
+}

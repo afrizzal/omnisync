@@ -24,6 +24,7 @@
     "@omnisync/queue": "workspace:*",
     "@omnisync/types": "workspace:*",
     "bullmq": "^5.77.0",
+    "cockatiel": "^4",
     "ioredis": "5.10.1",
     "pino": "^9.0.0",
     "zod": "^4.4.0"
