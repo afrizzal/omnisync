@@ -35,6 +35,9 @@ importers:
       '@omnisync/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@omnisync/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@omnisync/queue':
         specifier: workspace:*
         version: link:../../packages/queue
