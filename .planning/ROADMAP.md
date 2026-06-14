@@ -103,7 +103,7 @@ Plans:
 
 Plans:
 - [ ] 05-01-PLAN.md — API observability backend: GET /api/metrics, GET /api/dlq, POST /api/demo/start stub, [ingest] received log, CORS, Bull-Board (Wave 1)
-- [ ] 05-02-PLAN.md — Dashboard UI foundation: shadcn/ui + Tailwind v4, next-themes layout + NavBar, polling hooks (Wave 1)
+- [x] 05-02-PLAN.md — Dashboard UI foundation: shadcn/ui + Tailwind v4, next-themes layout + NavBar, polling hooks (Wave 1)
 - [ ] 05-03-PLAN.md — /dashboard metrics cards + /dlq table with one-click re-queue (Wave 2)
 - [ ] 05-04-PLAN.md — /demo live Recharts AreaChart + Start Load Test button (DSH-04) (Wave 2)
 
@@ -130,5 +130,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. High-Speed Ingestion API | 3/3 | Complete | 2026-06-09 |
 | 3. Worker Core & Idempotent Persistence | 5/5 | Complete   | 2026-06-10 |
 | 4. Resilience & Dynamic Routing | 5/6 | In Progress|  |
-| 5. Dashboard & Observability | 0/TBD | Not started | - |
+| 5. Dashboard & Observability | 1/4 | In Progress|  |
 | 6. Testing, CI/CD & Deployment | 0/TBD | Not started | - |
