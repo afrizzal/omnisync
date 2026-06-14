@@ -18,6 +18,8 @@ const Env = z.object({
   BREAKER_HALF_OPEN_MS: z.coerce.number().int().min(1000).default(10000),
   RULE_CACHE_TTL_MS: z.coerce.number().int().min(1000).default(30000),
   CRM_BASE_URL: z.url().default("http://mock-crm:3002"),
+  DASHBOARD_POLL_INTERVAL_MS: z.coerce.number().int().min(500).default(3000),
+  DASHBOARD_URL: z.string().optional(),
 });
 
 export const env = (() => {
