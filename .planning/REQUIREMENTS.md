@@ -53,7 +53,7 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 - [x] **DSH-01**: Dashboard shows live queue and throughput metrics
 - [x] **DSH-02**: Dashboard lists failed / DLQ jobs with error detail
 - [x] **DSH-03**: Dashboard provides a one-click re-queue action for a DLQ job
-- [ ] **DSH-04**: Dashboard visualizes a live load test (events processed vs. failed over time)
+- [x] **DSH-04**: Dashboard visualizes a live load test (events processed vs. failed over time)
 
 ### Testing & Quality
 
@@ -126,10 +126,10 @@ Which phases cover which requirements. Populated during roadmap creation.
 | RTE-02 | Phase 4 | Complete |
 | OBS-01 | Phase 5 | Complete |
 | OBS-02 | Phase 5 | Complete |
-| DSH-01 | Phase 5 | Partial (hooks done; page in 05-03) |
-| DSH-02 | Phase 5 | Partial (backend + hooks done; UI table in 05-03) |
+| DSH-01 | Phase 5 | Complete |
+| DSH-02 | Phase 5 | Complete |
 | DSH-03 | Phase 5 | Complete |
-| DSH-04 | Phase 5 | Pending |
+| DSH-04 | Phase 5 | Complete |
 | TST-01 | Phase 6 | Pending |
 | TST-02 | Phase 6 | Pending |
 | TST-03 | Phase 6 | Pending |

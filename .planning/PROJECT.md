@@ -35,22 +35,22 @@ If everything else is stripped away, this guarantee — and the ability to *demo
 - [x] Distributed worker pool that consumes events, normalizes them, and persists to PostgreSQL *(Validated in Phase 03)*
 - [x] Idempotent processing — duplicate events (same fingerprint) are detected and never double-stored *(Validated in Phase 03)*
 
-**Resilience**
-- [ ] Automatic retry with jittered exponential backoff on transient failures
-- [ ] Dead-Letter Queue capturing events that exhaust retries, with full error trace
-- [ ] Circuit breaker that halts deliveries to a failing downstream dependency above a failure threshold and recovers automatically
-- [ ] One-click (and programmatic) re-queue of DLQ items after a fault is resolved
+**Resilience** — Validated in Phase 04: Resilience & Dynamic Routing
+- [x] Automatic retry with jittered exponential backoff on transient failures *(Validated in Phase 04)*
+- [x] Dead-Letter Queue capturing events that exhaust retries, with full error trace *(Validated in Phase 04)*
+- [x] Circuit breaker that halts deliveries to a failing downstream dependency above a failure threshold and recovers automatically *(Validated in Phase 04)*
+- [x] One-click (and programmatic) re-queue of DLQ items after a fault is resolved *(Validated in Phase 04)*
 
-**Routing & Transformation**
-- [ ] Dynamic event-routing / transformation rules (e.g. normalize phone numbers to E.164) configurable without redeploying
+**Routing & Transformation** — Validated in Phase 04: Resilience & Dynamic Routing
+- [x] Dynamic event-routing / transformation rules (e.g. normalize phone numbers to E.164) configurable without redeploying *(Validated in Phase 04)*
 
-**Observability**
-- [ ] Structured logs + metrics for processing throughput, queue latency, retry counts, and error distribution
+**Observability** — Validated in Phase 05: Dashboard & Observability
+- [x] Structured logs + metrics for processing throughput, queue latency, retry counts, and error distribution *(Validated in Phase 05)*
 
-**Dashboard (Next.js)**
-- [ ] Live queue & throughput metrics view
-- [ ] Failed-job (DLQ) list with error detail and one-click re-queue
-- [ ] Load-test / live-demo visualization (events processed vs. failed in real time)
+**Dashboard (Next.js)** — Validated in Phase 05: Dashboard & Observability
+- [x] Live queue & throughput metrics view *(Validated in Phase 05)*
+- [x] Failed-job (DLQ) list with error detail and one-click re-queue *(Validated in Phase 05)*
+- [x] Load-test / live-demo visualization (events processed vs. failed in real time) *(Validated in Phase 05)*
 
 **Engineering Standards**
 - [ ] Automated test suite (Vitest unit + integration, Playwright E2E) with ≥80% line coverage
