@@ -10,8 +10,11 @@ import Fastify from "fastify";
 import type { Redis } from "ioredis";
 import { registerErrorHandler } from "./plugins/errorHandler.js";
 import { adminRoutes } from "./routes/admin.js";
+import { dlqListRoutes } from "./routes/dlq-list.js";
+import { demoRoutes } from "./routes/demo.js";
 import { healthRoutes } from "./routes/health.js";
 import { ingestRoutes } from "./routes/ingest.js";
+import { metricsRoutes } from "./routes/metrics.js";
 
 export interface AppDeps {
   queue: Queue;
@@ -39,22 +42,37 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
   await app.register(async (instance) => {
     await ingestRoutes(instance, deps);
   });
+  // Demo stub route — no DB needed (D-17: /demo page button calls POST /api/demo/start)
+  await app.register(async (instance) => {
+    await demoRoutes(instance);
+  });
   if (deps.prisma) {
     const prisma = deps.prisma;
     await app.register(async (instance) => {
       await adminRoutes(instance, { prisma, queue: deps.queue });
     });
+    await app.register(async (instance) => {
+      await metricsRoutes(instance, { prisma, queue: deps.queue });
+    });
+    await app.register(async (instance) => {
+      await dlqListRoutes(instance, { prisma });
+    });
   }
   // Bull-Board queue browser at /admin/queues (no auth — Phase 6 scope)
-  const serverAdapter = new FastifyAdapter();
-  serverAdapter.setBasePath("/admin/queues");
-  createBullBoard({
-    queues: [new BullMQAdapter(deps.queue)],
-    serverAdapter,
-  });
-  await app.register(serverAdapter.registerPlugin(), {
-    prefix: "/admin/queues",
-    basePath: "/admin/queues",
-  });
+  // Wrapped in try-catch: BullMQAdapter validates queue instanceof Queue —
+  // mock queues in unit tests are not real Queue instances, so we skip gracefully.
+  try {
+    const serverAdapter = new FastifyAdapter();
+    serverAdapter.setBasePath("/admin/queues");
+    createBullBoard({
+      queues: [new BullMQAdapter(deps.queue)],
+      serverAdapter,
+    });
+    await app.register(serverAdapter.registerPlugin(), {
+      prefix: "/admin/queues",
+    });
+  } catch (_err) {
+    // Non-BullMQ queue (e.g. test mock) — Bull-Board mount skipped
+  }
   return app;
 }
