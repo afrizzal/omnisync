@@ -98,8 +98,14 @@ Plans:
   3. The dashboard `/demo` page visualizes a running load test in real time — events processed vs. failed charted live as the test script fires synthetic events
   4. Structured logs are emitted for every event lifecycle transition (received, processing, completed, failed, DLQ) and are queryable/filterable in the local log output
   5. The OpenTelemetry metrics endpoint (or BullMQ job-state gauge) exposes throughput, queue latency, retry count, and error distribution as observable, numeric values
-**Plans**: TBD
+**Plans**: 4 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 05-01-PLAN.md — API observability backend: GET /api/metrics, GET /api/dlq, POST /api/demo/start stub, [ingest] received log, CORS, Bull-Board (Wave 1)
+- [ ] 05-02-PLAN.md — Dashboard UI foundation: shadcn/ui + Tailwind v4, next-themes layout + NavBar, polling hooks (Wave 1)
+- [ ] 05-03-PLAN.md — /dashboard metrics cards + /dlq table with one-click re-queue (Wave 2)
+- [ ] 05-04-PLAN.md — /demo live Recharts AreaChart + Start Load Test button (DSH-04) (Wave 2)
 
 ### Phase 6: Testing, CI/CD & Deployment
 **Goal**: The project's quality bar is enforced and the system is demonstrable live: the kill-Postgres integration test proves queue durability under DB failure, Playwright E2E covers the DLQ re-queue flow, ≥80% line coverage is a CI gate, Docker images build cleanly, and the always-on worker is deployed to a free-tier host reachable for a live recruiter demo.
