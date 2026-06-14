@@ -76,6 +76,12 @@ export async function ingestRoutes(
       await redis.del(`idem:${fingerprint}`).catch(() => undefined);
       throw err; // centralized error handler returns 500 → sender retries
     }
+    // OBS-01: structured log covering the "received" lifecycle step (D-07/D-08)
+    // Uses the Fastify per-request pino child logger (request-enriched).
+    request.log.info(
+      { fingerprint, source, eventType },
+      "[ingest] received",
+    );
     return reply.code(202).send({ status: "queued", fingerprint });
   });
 }
