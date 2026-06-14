@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Completed 05-01 + 05-02 (Wave 1): API observability backend + Dashboard UI foundation"
-last_updated: "2026-06-14T17:34:41.740Z"
+stopped_at: "Completed 05-03-PLAN.md: dashboard metrics + DLQ pages"
+last_updated: "2026-06-14T18:03:30.529Z"
 last_activity: 2026-06-14
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 22
-  completed_plans: 19
-  percent: 43
+  completed_plans: 21
+  percent: 40
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 05 (dashboard-observability) — EXECUTING
-Plan: 2 of 4 (05-01 complete)
-Status: Executing Phase 05
-Last activity: 2026-06-14 — Completed 05-01: API observability backend
+Plan: 3 of 4 (05-01 complete)
+Status: Ready to execute
+Last activity: 2026-06-14
 
 Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progress: 03-03 worker test scaffold + CI service containers complete
 
@@ -67,6 +67,7 @@ Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progr
 | Phase 04 P06 | 25 | 3 tasks | 6 files |
 | Phase 05 P01 | 30 | 3 tasks | 10 files |
 | Phase 05 P02 | 27 | 3 tasks | 17 files |
+| Phase 05 P03 | 14 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,7 @@ Recent decisions affecting current work:
 - [Phase 05-02]: shadcn CLI bypassed due to SSL; components scaffolded manually from source patterns
 - [Phase 05-02]: tw-animate-css @import removed from globals.css — CSS-only package causes Turbopack module-not-found in worktree builds
 - [Phase 05-02]: turbopack.root set in next.config.js to fix dual pnpm-workspace.yaml confusion in git worktree
+- [Phase 05]: Badge variant='destructive' for Failed/Unresolved DLQ > 0; inline p feedback for re-queue (no toast lib); body cast to {status?:string} for TS strict mode; block class on truncate span for max-w-xs to work
 
 ### Pending Todos
 
@@ -148,6 +150,6 @@ None yet.
 
 Last activity: 2026-06-14 - Completed 05-01: API observability backend
 
-Last session: 2026-06-14T17:34:41.740Z
-Stopped at: Completed Wave 1 (05-01 + 05-02)
-Resume file: .planning/phases/05-dashboard-observability/05-03-PLAN.md
+Last session: 2026-06-14T18:03:30.523Z
+Stopped at: Completed 05-03-PLAN.md: dashboard metrics + DLQ pages
+Resume file: None
