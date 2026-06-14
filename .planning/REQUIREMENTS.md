@@ -45,8 +45,8 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 
 ### Observability
 
-- [ ] **OBS-01**: System emits structured logs for each event lifecycle transition (received, processing, completed, failed, DLQ)
-- [ ] **OBS-02**: System exposes metrics for throughput, queue latency, retry counts, and error distribution (OpenTelemetry / BullMQ job-state gauge)
+- [x] **OBS-01**: System emits structured logs for each event lifecycle transition (received, processing, completed, failed, DLQ)
+- [x] **OBS-02**: System exposes metrics for throughput, queue latency, retry counts, and error distribution (OpenTelemetry / BullMQ job-state gauge)
 
 ### Dashboard
 
@@ -124,10 +124,10 @@ Which phases cover which requirements. Populated during roadmap creation.
 | RES-07 | Phase 4 | Complete |
 | RTE-01 | Phase 4 | Complete |
 | RTE-02 | Phase 4 | Complete |
-| OBS-01 | Phase 5 | Pending |
-| OBS-02 | Phase 5 | Pending |
+| OBS-01 | Phase 5 | Complete |
+| OBS-02 | Phase 5 | Complete |
 | DSH-01 | Phase 5 | Pending |
-| DSH-02 | Phase 5 | Pending |
+| DSH-02 | Phase 5 | Partial (backend endpoint complete; frontend table in 05-03) |
 | DSH-03 | Phase 5 | Pending |
 | DSH-04 | Phase 5 | Pending |
 | TST-01 | Phase 6 | Pending |

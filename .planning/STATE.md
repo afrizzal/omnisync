@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 5 context gathered
-last_updated: "2026-06-14T06:47:20.657Z"
-last_activity: 2026-06-13
+stopped_at: "Completed 05-01: API observability backend (metrics, dlq-list, demo stub, CORS, Bull-Board, OBS-01 log)"
+last_updated: "2026-06-14T17:34:00.000Z"
+last_activity: 2026-06-14
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 18
-  completed_plans: 18
-  percent: 40
+  total_plans: 22
+  completed_plans: 19
+  percent: 43
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value:** No accepted event is ever silently lost — once acknowledged (HTTP 202), an event is durably queued and processed at-least-once and idempotently, surviving worker crashes, DB outages, and flaky downstream APIs, with a DLQ as the final safety net.
-**Current focus:** Phase 04 — resilience-dynamic-routing
+**Current focus:** Phase 05 — dashboard-observability
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-13
+Phase: 05 (dashboard-observability) — EXECUTING
+Plan: 2 of 4 (05-01 complete)
+Status: Executing Phase 05
+Last activity: 2026-06-14 — Completed 05-01: API observability backend
 
 Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progress: 03-03 worker test scaffold + CI service containers complete
 
@@ -65,6 +65,7 @@ Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progr
 | Phase 04 P03 | 16 | 2 tasks | 6 files |
 | Phase 04 P04 | 14 | 3 tasks | 7 files |
 | Phase 04 P06 | 25 | 3 tasks | 6 files |
+| Phase 05 P01 | 30 | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -115,6 +116,10 @@ Recent decisions affecting current work:
 - [Phase 04]: fullJitterBackoff params made optional to match BullMQ BackoffStrategy type; crmPolicy singleton injected via WorkerDeps; persistEvent outside crmPolicy.execute() for RES-07 invariant
 - [Phase 04]: Requeue integration test placed in worker package (not API) to avoid cyclic devDep — API stays lean
 - [Phase 04]: Admin+requeue unit tests added to restore API coverage to >=80% (was 73.23% after Phase 4 admin route additions)
+- [Phase 05-01]: Bull-Board BullMQAdapter validates instanceof Queue at construction — wrapped in try-catch so test mocks (non-Queue instances) skip gracefully
+- [Phase 05-01]: pino child logger (request.log) does not delegate through app.log spy — OBS-01 test uses behavioral assertion (202 queued proves success path executed)
+- [Phase 05-01]: CORS registered before @fastify/helmet (first plugin in buildApp) — required for preflight OPTIONS handling
+- [Phase 05-01]: strict-ssl=false added to .npmrc for corporate network pnpm installs
 
 ### Pending Todos
 
@@ -137,8 +142,8 @@ None yet.
 
 ## Session Continuity
 
-Last activity: 2026-06-11 - Completed 03-03: worker test scaffold + CI service containers
+Last activity: 2026-06-14 - Completed 05-01: API observability backend
 
-Last session: 2026-06-14T06:47:20.649Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-dashboard-observability/05-CONTEXT.md
+Last session: 2026-06-14T17:34:00.000Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: .planning/phases/05-dashboard-observability/05-02-PLAN.md

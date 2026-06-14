@@ -102,7 +102,7 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 05-01-PLAN.md — API observability backend: GET /api/metrics, GET /api/dlq, POST /api/demo/start stub, [ingest] received log, CORS, Bull-Board (Wave 1)
+- [x] 05-01-PLAN.md — API observability backend: GET /api/metrics, GET /api/dlq, POST /api/demo/start stub, [ingest] received log, CORS, Bull-Board (Wave 1)
 - [ ] 05-02-PLAN.md — Dashboard UI foundation: shadcn/ui + Tailwind v4, next-themes layout + NavBar, polling hooks (Wave 1)
 - [ ] 05-03-PLAN.md — /dashboard metrics cards + /dlq table with one-click re-queue (Wave 2)
 - [ ] 05-04-PLAN.md — /demo live Recharts AreaChart + Start Load Test button (DSH-04) (Wave 2)
