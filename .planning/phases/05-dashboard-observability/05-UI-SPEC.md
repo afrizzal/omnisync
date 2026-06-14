@@ -68,13 +68,13 @@ Declared values (all multiples of 4 — 8-point grid via Tailwind v4 utility cla
 | Body | 14px (`text-sm`) | 400 (regular) | 1.5 | Table cell content, badge labels, error messages |
 | Label | 16px (`text-base`) | 400 (regular) | 1.5 | Card titles, form labels, nav links |
 | Heading | 20px (`text-xl`) | 600 (semibold) | 1.2 | Page headings (h1 equivalent per page) |
-| Display | 36px (`text-4xl`) | 700 (bold) | 1.0 | Metric stat numbers (queue count, throughput) |
+| Display | 36px (`text-4xl`) | 600 (semibold) | 1.0 | Metric stat numbers (queue count, throughput) |
 
-**Weights declared:** regular (400) + semibold (600) + bold (700) for the display stat number only.
+**Weights declared:** regular (400) + semibold (600) — exactly 2 weights.
 
-**Note:** shadcn/ui `CardTitle` uses `font-semibold` by default (600). Metric stat numbers inside `CardContent` use `font-bold` (700) for visual impact — this is the single exception to the 2-weight maximum and is justified by the dashboard's core purpose of surfacing counts at a glance.
+**Note:** shadcn/ui `CardTitle` uses `font-semibold` by default (600). Metric stat numbers inside `CardContent` also use `font-semibold` (600). The `text-4xl` size (36px) provides sufficient visual hierarchy for at-a-glance count scanning without a third weight. Use `className="text-4xl font-semibold"` for Display role elements.
 
-**Source:** shadcn/ui default component styles (CardTitle = semibold); RESEARCH.md Pattern code examples (`text-4xl font-bold` for stat numbers); standard body/label convention.
+**Source:** shadcn/ui default component styles (CardTitle = semibold); RESEARCH.md Pattern code examples; standard body/label convention.
 
 ---
 
@@ -112,7 +112,7 @@ Declared values (all multiples of 4 — 8-point grid via Tailwind v4 utility cla
 | Element | Copy |
 |---------|------|
 | Primary CTA (`/demo` page) | "Start Load Test" |
-| Secondary CTA (`/dlq` page) | "Re-queue" |
+| Secondary CTA (`/dlq` page) | "Re-queue Job" |
 | `/dashboard` page heading | "Queue Dashboard" |
 | `/dlq` page heading | "Dead Letter Queue" |
 | `/demo` page heading | "Live Load Test" |
@@ -148,7 +148,7 @@ Components to install from shadcn official registry:
 | Card | `card` | Metric stat blocks on `/dashboard` — one Card per metric (waiting/active/completed/failed/throughput/DLQ unresolved) |
 | Table | `table` | DLQ entry list on `/dlq` — columns: Source, Event Type, Attempts, Failure Reason, Frozen At, Action |
 | Badge | `badge` | Status indicators: FAILED (destructive), RESOLVED (secondary), attempt counts (destructive) |
-| Button | `button` | Re-queue action (outline variant, size sm); Start Load Test (default variant, size default) |
+| Button | `button` | Re-queue Job action (outline variant, size sm); Start Load Test (default variant, size default) |
 
 **Custom components (not from shadcn registry):**
 
@@ -205,7 +205,7 @@ Components to install from shadcn official registry:
   <TableBody>
     {entries.map → <TableRow>
       <Badge variant="destructive">{attempts} attempts</Badge>
-      <Button variant="outline" size="sm">Re-queue</Button>
+      <Button variant="outline" size="sm">Re-queue Job</Button>
     </TableRow>}
   </TableBody>
 </Table>
