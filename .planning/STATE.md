@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Completed 05-01: API observability backend (metrics, dlq-list, demo stub, CORS, Bull-Board, OBS-01 log)"
-last_updated: "2026-06-14T17:34:00.000Z"
+stopped_at: "Completed 05-01 + 05-02 (Wave 1): API observability backend + Dashboard UI foundation"
+last_updated: "2026-06-14T17:34:41.740Z"
 last_activity: 2026-06-14
 progress:
   total_phases: 6
@@ -66,6 +66,7 @@ Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progr
 | Phase 04 P04 | 14 | 3 tasks | 7 files |
 | Phase 04 P06 | 25 | 3 tasks | 6 files |
 | Phase 05 P01 | 30 | 3 tasks | 10 files |
+| Phase 05 P02 | 27 | 3 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,9 @@ Recent decisions affecting current work:
 - [Phase 05-01]: pino child logger (request.log) does not delegate through app.log spy — OBS-01 test uses behavioral assertion (202 queued proves success path executed)
 - [Phase 05-01]: CORS registered before @fastify/helmet (first plugin in buildApp) — required for preflight OPTIONS handling
 - [Phase 05-01]: strict-ssl=false added to .npmrc for corporate network pnpm installs
+- [Phase 05-02]: shadcn CLI bypassed due to SSL; components scaffolded manually from source patterns
+- [Phase 05-02]: tw-animate-css @import removed from globals.css — CSS-only package causes Turbopack module-not-found in worktree builds
+- [Phase 05-02]: turbopack.root set in next.config.js to fix dual pnpm-workspace.yaml confusion in git worktree
 
 ### Pending Todos
 
@@ -144,6 +148,6 @@ None yet.
 
 Last activity: 2026-06-14 - Completed 05-01: API observability backend
 
-Last session: 2026-06-14T17:34:00.000Z
-Stopped at: Completed 05-01-PLAN.md
-Resume file: .planning/phases/05-dashboard-observability/05-02-PLAN.md
+Last session: 2026-06-14T17:34:41.740Z
+Stopped at: Completed Wave 1 (05-01 + 05-02)
+Resume file: .planning/phases/05-dashboard-observability/05-03-PLAN.md
