@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.0.0
