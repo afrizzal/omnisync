@@ -138,6 +138,8 @@ Recent decisions affecting current work:
 - [Phase 06-05]: HMAC in CI seed via openssl dgst -hmac + printf '%s' (no trailing newline) + sed to strip prefix — matches Node.js createHmac exactly
 - [Phase 06-06]: TST-03 label added as comment + describe/it title changes only — test logic and 5-arg buildProcessor call unchanged
 - [Phase 06-06]: README deployment-decision section frames "no $0 always-on-worker tier in 2026" as informed call, not a gap — per D-01 interview talking point
+- [260621-j8p]: Dockerized api/worker need an `environment:` override (`postgres:5432` / `redis:6379`) — the shared `.env` is host-facing (`localhost:5433`/`6379`), correct for native `pnpm dev` but unreachable inside containers; `env_file` alone breaks in-container DNS. On a fresh DB the volume must be migrated separately: `pnpm --filter @omnisync/db exec prisma migrate deploy` with `DATABASE_URL` → host `localhost:5433` (no auto-migrate on container boot)
+- [260621-j8p]: /api/demo/start (OPS-04) self-drives the real pipeline via `app.inject` to `/ingest/:source` with `sha256=`-prefixed HMAC — one-click live demo, no separate loadtest process needed
 
 ### Pending Todos
 
@@ -157,10 +159,11 @@ None yet.
 | 260610-s0n | P0 correctness: ingest gate rollback, fingerprint normalization, Redis AOF persistence | 2026-06-10 | 3a8cb7d | [260610-s0n-p0-correctness-ingest-gate-rollback-on-e](.planning/quick/260610-s0n-p0-correctness-ingest-gate-rollback-on-e/) |
 | 260610-sw5 | Housekeeping: CI test+coverage gate, gitignore .claude, fix ROADMAP/STATE drift, migrate deprecated Zod v4 APIs | 2026-06-10 | bb49354 | [260610-sw5-housekeeping-ci-test-coverage-gate-gitig](.planning/quick/260610-sw5-housekeeping-ci-test-coverage-gate-gitig/) |
 | 260611-fast | Declare test-task env vars in turbo.json — turbo v2 strict env mode filtered CI's DATABASE_URL (red CI fix) | 2026-06-11 | see ci(03) commit | — (inline /gsd:fast) |
+| 260621-j8p | Fix /demo load test: dockerized api/worker compose service-DNS override + migrate deploy + OPS-04 button wiring (signed burst via app.inject) + loadtest sha256= prefix | 2026-06-21 | c443499→98f8762 (3 commits) | [260621-j8p-fix-demo-load-test-docker-db-redis-conne](.planning/quick/260621-j8p-fix-demo-load-test-docker-db-redis-conne/) |
 
 ## Session Continuity
 
-Last activity: 2026-06-21 - Completed 06-05 (TST-04 E2E + CI e2e job); executed 06-06 Tasks 1+2 (TST-03 label, README); paused at Task 3 demo recording checkpoint
+Last activity: 2026-06-21 - Quick task 260621-j8p: fixed /demo Live Load Test (Docker DB/Redis service-DNS override + migrate deploy + OPS-04 button wiring) — chart now climbs 0→240 live; unblocks 06-06 Task 3 demo recording. Prior: completed 06-05; executed 06-06 Tasks 1+2; paused at Task 3 demo recording checkpoint
 
 Last session: 2026-06-21T08:00:00Z
 Stopped at: Paused at 06-06-PLAN.md Task 3 (human-verify — record demo walkthrough to docs/demo.gif)
