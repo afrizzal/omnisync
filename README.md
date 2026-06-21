@@ -1,14 +1,65 @@
+<div align="center">
+
 # OmniSync
 
-**No accepted event is ever silently lost.** Once OmniSync acknowledges a webhook (HTTP 202), that event is durably queued and processed *at-least-once and idempotently* — surviving worker crashes, database outages, and flaky downstream APIs, with a Dead-Letter Queue as the final safety net and a one-click path back to reprocessing.
+### *No accepted event is ever silently lost.*
 
-OmniSync is a **distributed, event-driven Customer Data Platform (CDP)** built to prove production-grade distributed-systems engineering: decoupled ingestion (Fastify), background worker queues (BullMQ + Redis), idempotent persistence (PostgreSQL + Prisma), automated resilience patterns (retry/backoff, circuit breaker, DLQ), observability, and a rigorous automated test suite. Built for a **Senior Backend / Distributed Systems / Lead Full-Stack** portfolio showcase.
+[![CI](https://github.com/afrizzal/omnisync/actions/workflows/ci.yml/badge.svg)](https://github.com/afrizzal/omnisync/actions/workflows/ci.yml)
+![Coverage](https://img.shields.io/badge/coverage-%E2%89%A580%25-brightgreen)
+![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=nodedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-required-2496ED?logo=docker&logoColor=white)
+![BullMQ](https://img.shields.io/badge/BullMQ-5-FF6B6B)
+![Fastify](https://img.shields.io/badge/Fastify-5-000000?logo=fastify&logoColor=white)
+
+A **distributed, event-driven Customer Data Platform (CDP)** — ingests high-volume webhooks from multiple channels, normalizes and deduplicates them, and routes to a central store with ironclad delivery guarantees even when the database goes down, the worker crashes, or the downstream API flakes.
+
+**Built as a senior engineering portfolio:** decoupled ingestion · idempotent persistence · circuit breaker · DLQ · live observability dashboard · ≥ 80% CI-gated test coverage.
+
+[Quick Start](#-quick-start) · [Demo Video](#-demo) · [Architecture](#-architecture) · [Testing Story](#-testing) · [Design Decisions](#-deployment-decision)
+
+</div>
 
 ---
 
-## Quick Demo (one command)
+## Demo
 
-Requires Docker, Node 22, and pnpm.
+<video src="docs/demo-omnisync.mp4" controls width="100%"></video>
+
+> Four scenes in order: **(1)** autocannon load test driving the live /demo chart — **(2)** 50 concurrent identical webhooks → exactly 1 stored row (TST-03 idempotency proof) — **(3)** circuit breaker opening and auto-recovering under mock-CRM failure — **(4)** `docker pause postgres` mid-load → zero events dropped → unpause → full drain.
+
+---
+
+## The Core Guarantee
+
+Once OmniSync acknowledges a webhook with **HTTP 202**, that event is durably queued and processed *at-least-once and idempotently* — no matter what breaks:
+
+| Failure Scenario | What OmniSync Does |
+|---|---|
+| Worker process crashes mid-job | BullMQ re-locks the job and retries on restart |
+| Postgres goes down during processing | Events stay durably in Redis; drain completely on recovery |
+| Downstream CRM flaking or slow | Circuit breaker opens; events accumulate in DLQ, not silently dropped |
+| 50 identical webhooks arrive simultaneously | Exactly 1 row stored — SHA-256 fingerprint + BullMQ `jobId` dedup under real race conditions |
+| Event fails after exhausted retries | Moves to Dead-Letter Queue; one-click re-queue from the dashboard |
+
+---
+
+## Highlights
+
+- **< 5 ms acknowledgment** — Fastify returns HTTP 202 before any downstream work begins; ingestion never blocks on processing
+- **HMAC-SHA256 signature validation** on every incoming webhook before any work is done
+- **Idempotent by design** — `SHA-256(channel + payload)` fingerprint becomes the BullMQ `jobId`; the database enforces `UNIQUE(fingerprint)` as the final backstop
+- **Retry + exponential backoff** — configurable per-queue; exhausted retries move jobs to the BullMQ failed set (the DLQ)
+- **Circuit breaker (cockatiel)** — wraps every downstream CRM call; opens automatically under sustained failure, half-opens for recovery probing
+- **Dead-Letter Queue with one-click re-queue** — dashboard `/dlq` page lists all failed events with re-queue button; re-queued events flow through the full pipeline idempotently
+- **Live observability dashboard** — real-time throughput waveform, queue depth + latency stat cards, error rate, DLQ list with auto-poll, Bull-Board job browser
+- **≥ 80% line coverage enforced in CI** — coverage gate fails the build; Testcontainers kill-Postgres integration test + Playwright E2E on every push
+
+---
+
+## Quick Start
+
+> **Requires:** Docker Desktop · Node.js 22 · pnpm
 
 ```bash
 cp .env.example .env
@@ -16,122 +67,143 @@ pnpm install
 pnpm demo
 ```
 
-This single command:
+This single command brings up the full stack, waits for health checks, and fires a multi-channel load test automatically:
 
-1. Brings up the full stack via `docker compose up` — api, worker, postgres, redis, mock-crm, and the Next.js dashboard.
-2. Waits for the API health check on `:3001` and dashboard on `:3000`.
-3. Runs a multi-channel autocannon load test (Shopee / Tokopedia / Meta Ads / CRM events with real HMAC signatures).
+1. `docker compose up` — api · worker · postgres · redis · mock-crm · dashboard
+2. Health check polling on `:3001` (API) and `:3000` (dashboard)
+3. Autocannon load test — Shopee / Tokopedia / Meta Ads / CRM webhooks with real HMAC signatures
 
 Open **http://localhost:3000/demo** to watch events flow live through the ingestion pipeline while the load test runs.
 
-**Stop and clean up:**
-
 ```bash
+# Tear down everything (including volumes)
 docker compose down -v
 ```
 
----
-
-## Recorded Walkthrough
-
-> Recording: see docs/demo.gif (capture via `pnpm demo`).
-
-![OmniSync demo](docs/demo.gif)
-
-The walkthrough covers four scenes in order:
-
-1. **Load-test driving the /demo chart** — autocannon blasts multi-channel events; the dashboard chart updates in real time showing events processed vs. failed.
-2. **50 concurrent identical webhooks → exactly 1 stored row** — the TST-03 concurrent-dedup proof runs visibly; the database shows a single event record despite 50 parallel submissions.
-3. **Circuit breaker opening and recovering under mock-crm failure** — toggle the mock-crm into failure mode:
-   ```bash
-   curl -X POST http://localhost:3002/admin/failure-mode \
-     -H 'content-type: application/json' \
-     -d '{"mode":"fail","rate":1}'
-   ```
-   Watch the DLQ fill as the breaker opens, then set `rate` back to `0` and observe automatic recovery.
-4. **Kill-Postgres durability scenario** — `docker pause <postgres-container>` mid-load; events remain queued in Redis (zero dropped), `docker unpause` resumes and they drain completely to the database.
-
----
-
-## Container Images (GHCR)
-
-Images are built and pushed to GitHub Container Registry on every merge to `master` (build-only on PRs).
+### Try the failure scenarios yourself
 
 ```bash
-docker pull ghcr.io/afrizzal/omnisync-api:latest
-docker pull ghcr.io/afrizzal/omnisync-worker:latest
-docker pull ghcr.io/afrizzal/omnisync-mock-crm:latest
+# Toggle mock-CRM into 100% failure mode — watch circuit breaker open and DLQ fill
+curl -X POST http://localhost:3002/admin/failure-mode \
+  -H 'content-type: application/json' \
+  -d '{"mode":"fail","rate":1}'
+
+# Restore — watch circuit breaker recover and DLQ drain
+curl -X POST http://localhost:3002/admin/failure-mode \
+  -H 'content-type: application/json' \
+  -d '{"mode":"fail","rate":0}'
+
+# Kill Postgres mid-load — events stay in Redis, zero dropped
+docker pause $(docker ps -qf name=postgres)
+
+# Restore — all queued events drain to the database
+docker unpause $(docker ps -qf name=postgres)
 ```
-
-SHA-tagged images are also published for pinned deployments: `:sha-<commit-sha>`.
-
-The `docker-compose.yml` at the root references these images and is the one-command demo substrate — `pnpm demo` uses it directly.
 
 ---
 
-## Deployment Decision: Why No Live Public URL
+## Architecture
 
-As of 2026 there is no $0 always-on background-worker tier: Render background workers are paid ($7/month each), Fly.io's free tier is gone (~$2–5/month pay-as-you-go), Railway's free credit is insufficient for two always-on services, and Koyeb's free tier scales to zero. A BullMQ worker that sleeps breaks the at-least-once delivery guarantee — queued jobs pile up unprocessed and the core value proposition collapses.
+```
+Webhook Sources              Ingestion API (Fastify · :3001)
+────────────────   →   ──────────────────────────────────────
+Shopee              HMAC-SHA256 validation → reject if invalid
+Tokopedia           Zod v4 schema validation (14× faster than v3)
+Meta Ads            SHA-256(channel + payload) fingerprint
+CRM Webhooks        Queue.add(jobId = fingerprint) → HTTP 202 in < 5ms
 
-So OmniSync ships as **published GHCR images + a one-command reproducible demo + a recorded walkthrough** — a more reliable recruiter artifact than a free-tier URL that may be cold or down at review time. The `docker-compose.yml` and images make a live deploy a straightforward drop-in later (Oracle Cloud Always Free ARM VM, or ~$2–5/month on Fly.io) when budget allows.
+                               ↓
 
-This is an **informed engineering decision**, not a gap: the research finding ("no $0 always-on worker in 2026") is itself the interview talking point.
+             BullMQ Queue (Redis · :6379)
+             ──────────────────────────────────────
+             at-least-once delivery guarantee
+             idempotency by jobId (fingerprint)
+             retry + exponential backoff (configurable)
+             circuit breaker via cockatiel
+             DLQ = BullMQ failed set on exhausted retries
+
+                               ↓
+
+        BullMQ Worker                     PostgreSQL 15 (Prisma 7)
+        ─────────────────   →   ──────────────────────────────────
+        normalize event                   events (UNIQUE fingerprint)
+        deduplicate (DB UNIQUE)           routing_rules
+        apply routing rules               dlq_entries
+        sync to mock-CRM
+        (circuit-breaker guarded)
+
+                               ↓
+
+             Next.js Dashboard (:3000)
+             ──────────────────────────────────────
+             /demo          live throughput waveform + stat cards
+             /dlq           DLQ list + one-click re-queue
+             /metrics       queue depth · latency · error rate
+             /admin/queues  Bull-Board live job browser
+```
+
+**Full stack:**
+
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js 22 LTS · TypeScript 5 |
+| Ingestion | Fastify 5 (v5 — Node 20+ only, 5–10% faster than v4) |
+| Queue | BullMQ 5 + ioredis 5 (Redis Streams, durable at-least-once) |
+| Resilience | cockatiel (TypeScript-first circuit breaker + retry policies) |
+| Database | PostgreSQL 15 + Prisma 7 (Rust-free, ESM-native) |
+| Validation | Zod 4 (14× faster than v3, native `.toJSONSchema()`) |
+| Dashboard | Next.js 16 + React 19 |
+| Testing | Vitest 4 · Playwright · Testcontainers |
+| CI/CD | GitHub Actions · Docker · GHCR |
 
 ---
 
 ## Testing
 
-OmniSync has a rigorous automated test suite with ≥80% line coverage enforced as a CI gate.
-
-**Signature tests:**
+Four named deliverables define the reliability proof:
 
 | ID | Test | What It Proves |
-|----|------|----------------|
-| TST-01 | `pnpm test -- --coverage` | ≥80% line coverage on `apps/api` + `apps/worker`; fails CI below threshold |
-| TST-02 | Testcontainers kill-Postgres integration test | In-flight events survive a Postgres outage mid-processing — zero events dropped from the BullMQ queue, they drain after unpause |
-| TST-03 | `idempotency.test.ts`: 50 concurrent identical jobs → exactly 1 events row | Concurrent duplicate webhooks result in exactly one stored record (DB-level idempotency under race conditions) |
-| TST-04 | Playwright E2E DLQ re-queue flow | Dashboard `/dlq` page loads, re-queue button fires, event appears in the events table exactly once |
+|---|---|---|
+| **TST-01** | `pnpm test -- --coverage` (CI gate) | ≥ 80% line coverage on `apps/api` + `apps/worker`; build fails below threshold |
+| **TST-02** | Testcontainers kill-Postgres integration | `docker pause postgres` mid-processing → zero events dropped from Redis queue → all drain after unpause |
+| **TST-03** | `idempotency.test.ts` — 50 concurrent identical jobs → exactly 1 `events` row | DB-level idempotency holds under real parallel race conditions (not mocked) |
+| **TST-04** | Playwright E2E — DLQ re-queue operator path | Dashboard `/dlq` renders failed events, re-queue button fires, event appears in `events` table exactly once |
 
-**Run tests:**
+CI runs all four against real Postgres 16 and Redis service containers on every push and pull request.
 
 ```bash
-# Unit + integration (with coverage gate)
+# Unit + integration with coverage gate
 pnpm test -- --coverage
 
-# E2E (requires the full stack to be up: pnpm demo first)
+# E2E (start the full stack first with pnpm demo)
 pnpm exec playwright test
 ```
 
-CI runs both on every push against real Postgres and Redis service containers.
-
 ---
 
-## Architecture Overview
+## Deployment Decision
 
-```
-Webhook Sources          Ingestion API (Fastify)       Queue (BullMQ + Redis)
-─────────────────   →   ─────────────────────────   →  ──────────────────────
-Shopee / Tokopedia       • HMAC-SHA256 validation        • At-least-once delivery
-Meta Ads / CRM           • Zod schema validation         • Idempotency by jobId
-                         • Fingerprint generation         • Retry + exponential backoff
-                         • HTTP 202 (< 5ms)               • Circuit breaker (cockatiel)
-                                                          • Dead-Letter Queue
-                              ↓
-                       Worker (BullMQ)                  PostgreSQL (Prisma)
-                       ─────────────────   →            ─────────────────────
-                       • Normalize event                 • events table
-                       • Deduplicate (UNIQUE fingerprint) • routing_rules table
-                       • Apply routing rules             • dlq_entries table
-                       • Sync to mock-CRM
-                              ↓
-                       Next.js Dashboard (Port 3000)
-                       ─────────────────────────────
-                       • /demo  — live throughput chart
-                       • /dlq   — DLQ list + one-click re-queue
-                       • /metrics — queue depth, latency, error rate
+As of 2026, **there is no $0 always-on background-worker tier**:
+
+| Platform | Reality |
+|---|---|
+| Render background workers | Paid — $7/month per service (free tier is web services only, and they sleep after 15 min) |
+| Fly.io | No permanent free tier — pay-as-you-go ~$2–5/month, requires credit card |
+| Railway | No permanent free tier — $5/month minimum base charge |
+| Cloud Run / Koyeb | Scale-to-zero — a sleeping BullMQ worker means queued jobs pile up unprocessed; the delivery guarantee collapses |
+
+A BullMQ worker that sleeps breaks the core promise. OmniSync therefore ships as **pre-built GHCR images + a one-command reproducible demo + this recorded walkthrough** — a more reliable recruiter artifact than a free-tier URL that may be cold, paused, or down at review time.
+
+This is an **informed engineering decision**, not a gap. The research finding ("no $0 always-on worker in 2026") is the interview talking point. A live deployment is a straightforward drop-in later — the `docker-compose.yml` and published images make it a single config change to target an Oracle Cloud Always Free ARM VM or Fly.io.
+
+```bash
+# Pre-built images — pull and run without cloning the repo
+docker pull ghcr.io/afrizzal/omnisync-api:latest
+docker pull ghcr.io/afrizzal/omnisync-worker:latest
+docker pull ghcr.io/afrizzal/omnisync-mock-crm:latest
 ```
 
-**Tech stack:** Node.js 22 · TypeScript 5 · Fastify 5 · BullMQ 5 · ioredis 5 · PostgreSQL 15 · Prisma 7 · Zod 4 · Next.js 16 · Vitest 4 · Playwright · Testcontainers · Docker · GitHub Actions
+Images are published to GHCR on every merge to `master`; SHA-tagged images are also pushed for pinned production deploys.
 
 ---
 
@@ -139,16 +211,29 @@ Meta Ads / CRM           • Zod schema validation         • Idempotency by jo
 
 ```
 apps/
-  api/          Fastify ingestion API (webhook receiver)
-  worker/       BullMQ worker (event processor)
-  dashboard/    Next.js observability dashboard
-  mock-crm/     Controllable downstream CRM stub (failure toggle)
+  api/          Fastify ingestion API — HMAC validation, Zod parsing, fingerprint, enqueue → HTTP 202
+  worker/       BullMQ worker — normalize, deduplicate, route, circuit-break to mock-CRM
+  dashboard/    Next.js dashboard — /demo throughput chart, /dlq re-queue, /metrics, Bull-Board
+  mock-crm/     Controllable downstream CRM stub — toggleable failure mode via admin endpoint
 packages/
-  db/           Prisma schema + client factory
-  queue/        BullMQ queue + worker factories
-  config/       Shared env-var validation (Zod)
+  db/           Prisma schema + generated client factory (shared by api and worker)
+  queue/        BullMQ Queue + Worker factories (shared queue config, job type definitions)
+  config/       Shared Zod env-var validation — fails fast on startup if misconfigured
 scripts/
-  demo.sh       One-command demo entrypoint (compose up + load test)
-  loadtest.ts   Autocannon multi-channel load test (OPS-04)
-e2e/            Playwright E2E tests (TST-04)
+  demo.sh       One-command demo orchestrator: compose up → health checks → autocannon load test
+  loadtest.ts   Multi-channel autocannon load test with real HMAC-signed payloads
+e2e/            Playwright E2E test suite (TST-04 DLQ re-queue flow)
+.github/
+  workflows/
+    ci.yml      Verify (typecheck + lint + test:coverage + E2E) + Docker build + GHCR publish
 ```
+
+---
+
+<div align="center">
+
+Built by **[@afrizzal](https://github.com/afrizzal)**
+
+*Open to Senior Backend / Distributed Systems / Lead Full-Stack roles — [afrizzal](https://github.com/afrizzal)*
+
+</div>
