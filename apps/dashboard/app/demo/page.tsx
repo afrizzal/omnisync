@@ -219,7 +219,7 @@ export default function DemoPage() {
           <ResponsiveContainer width="100%" height={320}>
             <AreaChart
               data={points}
-              margin={{ top: 8, right: 8, bottom: 0, left: 8 }}
+              margin={{ top: 8, right: 12, bottom: 4, left: 0 }}
             >
               <defs>
                 <linearGradient id="rateFill" x1="0" y1="0" x2="0" y2="1">
@@ -230,21 +230,40 @@ export default function DemoPage() {
               <CartesianGrid
                 vertical={false}
                 stroke="currentColor"
-                strokeOpacity={0.08}
+                strokeOpacity={0.1}
               />
               <XAxis
                 dataKey="t"
                 type="number"
+                scale="time"
                 domain={["dataMin", "dataMax"]}
-                tick={false}
+                tickFormatter={(t: number) =>
+                  new Date(t).toLocaleTimeString([], { hour12: false })
+                }
+                tick={{ fontSize: 11, fill: "currentColor", opacity: 0.55 }}
+                tickLine={false}
                 axisLine={false}
-                height={0}
+                minTickGap={56}
+                height={20}
               />
               <YAxis
-                tick={false}
+                domain={[0, (max: number) => Math.max(10, Math.ceil((max * 1.25) / 5) * 5)]}
+                allowDecimals={false}
+                width={40}
+                tick={{ fontSize: 11, fill: "currentColor", opacity: 0.55 }}
+                tickLine={false}
                 axisLine={false}
-                width={0}
-                domain={[0, "auto"]}
+                label={{
+                  value: "ev/s",
+                  angle: -90,
+                  position: "insideLeft",
+                  style: {
+                    fontSize: 11,
+                    fill: "currentColor",
+                    opacity: 0.45,
+                    textAnchor: "middle",
+                  },
+                }}
               />
               <Tooltip content={<RateTooltip />} cursor={false} />
               <Area
