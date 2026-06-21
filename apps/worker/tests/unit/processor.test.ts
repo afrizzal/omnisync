@@ -1,11 +1,16 @@
 import type { PrismaClient } from "@omnisync/db";
-import { BrokenCircuitError, circuitBreaker, ConsecutiveBreaker, handleAll } from "cockatiel";
+import {
+  BrokenCircuitError,
+  ConsecutiveBreaker,
+  circuitBreaker,
+  handleAll,
+} from "cockatiel";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { CrmClient } from "../../src/crm/crm-client.js";
 import { createCrmPolicy } from "../../src/crm/crm-policy.js";
+import { resetRulesCache } from "../../src/normalizer/rule-cache.js";
 import type { ProcessorLogger } from "../../src/processor/event.processor.js";
 import { buildProcessor } from "../../src/processor/event.processor.js";
-import { resetRulesCache } from "../../src/normalizer/rule-cache.js";
 
 // Build a spy logger satisfying ProcessorLogger
 function makeSpyLogger(): ProcessorLogger {
@@ -27,7 +32,9 @@ function makeMockPrisma(executeRawResult: number): PrismaClient {
 
 // Pass-through policy: executes fn directly, no circuit breaking
 function makePassthroughPolicy() {
-  return { execute: (fn: () => Promise<void>) => fn() } as unknown as ReturnType<typeof createCrmPolicy>;
+  return {
+    execute: (fn: () => Promise<void>) => fn(),
+  } as unknown as ReturnType<typeof createCrmPolicy>;
 }
 
 // Fake CRM client that always succeeds
@@ -60,7 +67,13 @@ describe("buildProcessor() — validate → normalize → persist pipeline (D-04
     const logger = makeSpyLogger();
     const fakeCrm = makeFakeCrm();
     const crmPolicy = makePassthroughPolicy();
-    const processor = buildProcessor(prisma, logger, fakeCrm, crmPolicy, TTL_MS);
+    const processor = buildProcessor(
+      prisma,
+      logger,
+      fakeCrm,
+      crmPolicy,
+      TTL_MS,
+    );
 
     await expect(
       processor({ id: "job-1", data: validJobData }),
@@ -86,7 +99,13 @@ describe("buildProcessor() — validate → normalize → persist pipeline (D-04
     const logger = makeSpyLogger();
     const fakeCrm = makeFakeCrm();
     const crmPolicy = makePassthroughPolicy();
-    const processor = buildProcessor(prisma, logger, fakeCrm, crmPolicy, TTL_MS);
+    const processor = buildProcessor(
+      prisma,
+      logger,
+      fakeCrm,
+      crmPolicy,
+      TTL_MS,
+    );
 
     // Conflict is SUCCESS (D-05) — must NOT throw
     await expect(
@@ -109,7 +128,13 @@ describe("buildProcessor() — validate → normalize → persist pipeline (D-04
     const logger = makeSpyLogger();
     const fakeCrm = makeFakeCrm();
     const crmPolicy = makePassthroughPolicy();
-    const processor = buildProcessor(prisma, logger, fakeCrm, crmPolicy, TTL_MS);
+    const processor = buildProcessor(
+      prisma,
+      logger,
+      fakeCrm,
+      crmPolicy,
+      TTL_MS,
+    );
 
     // Bad job data: missing fingerprint and payload shape
     const badJobData = { nope: true };
@@ -137,7 +162,13 @@ describe("buildProcessor() — validate → normalize → persist pipeline (D-04
     // Real circuit breaker that trips after 5 consecutive failures
     const crmPolicy = createCrmPolicy(10_000);
 
-    const processor = buildProcessor(prismaDown, logger, fakeCrm, crmPolicy, TTL_MS);
+    const processor = buildProcessor(
+      prismaDown,
+      logger,
+      fakeCrm,
+      crmPolicy,
+      TTL_MS,
+    );
 
     // Call 6 times — each should fail due to Postgres, NOT due to breaker
     for (let i = 1; i <= 6; i++) {
@@ -151,7 +182,10 @@ describe("buildProcessor() — validate → normalize → persist pipeline (D-04
 
     // The 7th call must STILL fail with DB error, NOT BrokenCircuitError
     // (breaker must remain closed because it was never consulted)
-    const seventhError = await processor({ id: "job-db-down-7", data: validJobData }).catch((e) => e as Error);
+    const seventhError = await processor({
+      id: "job-db-down-7",
+      data: validJobData,
+    }).catch((e) => e as Error);
     expect(seventhError).not.toBeInstanceOf(BrokenCircuitError);
     expect(seventhError.message).toMatch("connection refused");
   });

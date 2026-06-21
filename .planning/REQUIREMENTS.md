@@ -58,16 +58,16 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 ### Testing & Quality
 
 - [ ] **TST-01**: Unit + integration test suite (Vitest) achieves ≥80% line coverage, enforced as a CI gate
-- [ ] **TST-02**: Integration test proves queue durability when PostgreSQL is killed mid-process (Testcontainers)
-- [ ] **TST-03**: Integration test proves concurrent duplicate webhooks result in exactly one stored record
-- [ ] **TST-04**: Playwright E2E test covers the DLQ dashboard re-queue flow
+- [x] **TST-02**: Integration test proves queue durability when PostgreSQL is killed mid-process (Testcontainers)
+- [x] **TST-03**: Integration test proves concurrent duplicate webhooks result in exactly one stored record
+- [x] **TST-04**: Playwright E2E test covers the DLQ dashboard re-queue flow
 
 ### Ops & Delivery
 
 - [ ] **OPS-01**: GitHub Actions CI runs type-check, tests, and Docker build on every push
 - [x] **OPS-02**: API and worker each build as a multi-stage Docker image and run together via docker-compose locally
-- [ ] **OPS-03**: The system is deployed to a free-tier host with the always-on worker kept alive and reachable for a live demo
-- [ ] **OPS-04**: A load-test/demo script blasts a high volume of synthetic multi-channel events to drive the demo scenario
+- [x] **OPS-03**: The system is deployed to a free-tier host with the always-on worker kept alive and reachable for a live demo
+- [x] **OPS-04**: A load-test/demo script blasts a high volume of synthetic multi-channel events to drive the demo scenario
 
 ## v2 Requirements
 
@@ -131,12 +131,12 @@ Which phases cover which requirements. Populated during roadmap creation.
 | DSH-03 | Phase 5 | Complete |
 | DSH-04 | Phase 5 | Complete |
 | TST-01 | Phase 6 | Pending |
-| TST-02 | Phase 6 | Pending |
-| TST-03 | Phase 6 | Pending |
-| TST-04 | Phase 6 | Pending |
+| TST-02 | Phase 6 | Complete |
+| TST-03 | Phase 6 | Complete |
+| TST-04 | Phase 6 | Complete |
 | OPS-01 | Phase 6 | Pending |
-| OPS-03 | Phase 6 | Pending |
-| OPS-04 | Phase 6 | Pending |
+| OPS-03 | Phase 6 | Complete |
+| OPS-04 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 33 total

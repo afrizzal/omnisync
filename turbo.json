@@ -15,7 +15,8 @@
         "DATABASE_URL",
         "DIRECT_URL",
         "REDIS_URL",
-        "WORKER_CONCURRENCY"
+        "WORKER_CONCURRENCY",
+        "TESTCONTAINERS_RYUK_DISABLED"
       ]
     },
     "lint": {},

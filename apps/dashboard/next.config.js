@@ -5,6 +5,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   transpilePackages: ["@omnisync/types"],
   turbopack: {
     root: path.resolve(__dirname, "../.."),

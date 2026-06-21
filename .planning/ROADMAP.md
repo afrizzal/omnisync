@@ -120,7 +120,7 @@ Plans:
 **Plans**: 6 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Wave 0 foundation: install test/CI deps, FIX broken 5-arg buildProcessor calls in existing integration tests, dashboard Dockerfile + compose service, .env.example + stubs
+- [x] 06-01-PLAN.md — Wave 0 foundation: install test/CI deps, FIX broken 5-arg buildProcessor calls in existing integration tests, dashboard Dockerfile + compose service, .env.example + stubs
 - [ ] 06-02-PLAN.md — TST-02: Testcontainers kill-Postgres durability test (dockerode pause/unpause, 5-arg processor)
 - [ ] 06-03-PLAN.md — OPS-04 autocannon multi-channel load-test (real per-source HMAC) + OPS-03 one-command pnpm demo entrypoint
 - [ ] 06-04-PLAN.md — OPS-01: CI docker build+push job to GHCR (push on master, build-only on PRs)
@@ -139,4 +139,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Worker Core & Idempotent Persistence | 5/5 | Complete   | 2026-06-10 |
 | 4. Resilience & Dynamic Routing | 6/6 | Complete | 2026-06-13 |
 | 5. Dashboard & Observability | 4/4 | Complete | 2026-06-15 |
-| 6. Testing, CI/CD & Deployment | 0/6 | Planned | - |
+| 6. Testing, CI/CD & Deployment | 1/6 | In Progress | - |

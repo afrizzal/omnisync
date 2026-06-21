@@ -1,9 +1,14 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { RoutingRule } from "@omnisync/types";
-import { getActiveRules, resetRulesCache } from "../../src/normalizer/rule-cache.js";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  getActiveRules,
+  resetRulesCache,
+} from "../../src/normalizer/rule-cache.js";
 
 // Minimal fake PrismaClient — only the methods the cache uses
-function makeFakePrisma(rows: RoutingRule[] = [{ type: "phone_normalize_e164", field: "phone" }]) {
+function makeFakePrisma(
+  rows: RoutingRule[] = [{ type: "phone_normalize_e164", field: "phone" }],
+) {
   return {
     routingRule: {
       findMany: vi.fn().mockResolvedValue(rows),

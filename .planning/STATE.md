@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 6 context gathered
-last_updated: "2026-06-21T02:04:03.925Z"
-last_activity: 2026-06-21 -- Phase 06 execution started
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-06-21T02:24:26Z"
+last_activity: 2026-06-21
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 28
-  completed_plans: 22
-  percent: 83
+  completed_plans: 23
+  percent: 85
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 
 ## Current Position
 
-Phase: 06 (testing-ci-cd-deployment) — EXECUTING
-Plan: 1 of 6
-Status: Executing Phase 06
-Last activity: 2026-06-21 -- Phase 06 execution started
+Phase: 6
+Plan: 1 of 6 complete
+Status: Executing Phase 06 — Plan 01 complete
+Last activity: 2026-06-21
 
-Progress: [█████░] Phase 5 of 6 complete (83%) — Phases 1–5 shipped & verified; Phase 6 (Testing/CI-CD/Deployment) not started
+Progress: [█████░] 23/28 plans complete (85%) — Phases 1–5 shipped; Phase 6 Plan 01 (Wave 0 foundation) complete
 
 ## Performance Metrics
 
@@ -126,6 +126,11 @@ Recent decisions affecting current work:
 - [Phase 05-02]: tw-animate-css @import removed from globals.css — CSS-only package causes Turbopack module-not-found in worktree builds
 - [Phase 05-02]: turbopack.root set in next.config.js to fix dual pnpm-workspace.yaml confusion in git worktree
 - [Phase 05]: Badge variant='destructive' for Failed/Unresolved DLQ > 0; inline p feedback for re-queue (no toast lib); body cast to {status?:string} for TS strict mode; block class on truncate span for max-w-xs to work
+- [Phase 06-01]: noopLogger must use (obj,msg) two-parameter shape to satisfy ProcessorLogger interface — zero-param () => {} was structurally incompatible, caused 2-arg buildProcessor calls in integration tests
+- [Phase 06-01]: passThroughPolicy = createCrmPolicy(10_000) reuses production factory for test stubs — noopCrmClient never throws, so breaker never opens; no mocking of cockatiel needed
+- [Phase 06-01]: Dashboard Dockerfile omits COPY public/ — apps/dashboard/public does not exist in this project
+- [Phase 06-01]: External-stack Playwright config: no webServer block, PLAYWRIGHT_BASE_URL env override — compose started externally by CI/demo.sh
+- [Phase 06-01]: TESTCONTAINERS_RYUK_DISABLED declared in turbo.json test.env — turbo v2 strict env mode strips undeclared vars; Pitfall 7
 
 ### Pending Todos
 
@@ -148,8 +153,9 @@ None yet.
 
 ## Session Continuity
 
-Last activity: 2026-06-14 - Completed 05-01: API observability backend
+Last activity: 2026-06-21 - Completed 06-01: Wave 0 foundation (deps, test fixes, dashboard Dockerfile, stubs)
 
-Last session: 2026-06-21T01:12:24.774Z
-Stopped at: Phase 6 context gathered
+Last session: 2026-06-21T02:24:26Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: .planning/phases/06-testing-ci-cd-deployment/06-02-PLAN.md
 Resume file: .planning/phases/06-testing-ci-cd-deployment/06-CONTEXT.md

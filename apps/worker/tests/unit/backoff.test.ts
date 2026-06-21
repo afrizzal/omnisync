@@ -15,7 +15,10 @@ describe("fullJitterBackoff (RES-01) — AWS full-jitter strategy", () => {
 
   it("Test 2: attempt=3 returns a number <= min(cap, base * 2^3) = min(30000, 8000) = 8000", () => {
     const result = fullJitterBackoff(3, "custom", new Error());
-    const maxExpected = Math.min(env.RETRY_CAP_MS, env.RETRY_BASE_DELAY_MS * 2 ** 3);
+    const maxExpected = Math.min(
+      env.RETRY_CAP_MS,
+      env.RETRY_BASE_DELAY_MS * 2 ** 3,
+    );
     expect(result).toBeGreaterThanOrEqual(0);
     expect(result).toBeLessThanOrEqual(maxExpected);
   });
