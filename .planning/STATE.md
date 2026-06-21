@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-06-21T02:24:26Z"
+stopped_at: Completed 06-05-PLAN.md
+last_updated: "2026-06-21T03:25:00Z"
 last_activity: 2026-06-21
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 28
-  completed_plans: 23
-  percent: 85
+  completed_plans: 24
+  percent: 86
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 6
-Plan: 1 of 6 complete
-Status: Executing Phase 06 — Plan 01 complete
+Plan: 5 of 6 complete
+Status: Executing Phase 06 — Plans 01-05 complete
 Last activity: 2026-06-21
 
-Progress: [█████░] 23/28 plans complete (85%) — Phases 1–5 shipped; Phase 6 Plan 01 (Wave 0 foundation) complete
+Progress: [█████░] 24/28 plans complete (86%) — Phases 1–5 shipped; Phase 6 Plans 01-05 complete (Wave 0 + Wave 1 + Wave 2 E2E)
 
 ## Performance Metrics
 
@@ -68,6 +68,7 @@ Progress: [█████░] 23/28 plans complete (85%) — Phases 1–5 shipp
 | Phase 05 P01 | 30 | 3 tasks | 10 files |
 | Phase 05 P02 | 27 | 3 tasks | 17 files |
 | Phase 05 P03 | 14 | 2 tasks | 3 files |
+| Phase 06 P05 | 15 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -131,6 +132,10 @@ Recent decisions affecting current work:
 - [Phase 06-01]: Dashboard Dockerfile omits COPY public/ — apps/dashboard/public does not exist in this project
 - [Phase 06-01]: External-stack Playwright config: no webServer block, PLAYWRIGHT_BASE_URL env override — compose started externally by CI/demo.sh
 - [Phase 06-01]: TESTCONTAINERS_RYUK_DISABLED declared in turbo.json test.env — turbo v2 strict env mode strips undeclared vars; Pitfall 7
+- [Phase 06-05]: Option A assertion (poll /api/dlq for fingerprint absence) chosen — resolved=true already filters the row; no new API endpoint needed; proven by TST-03
+- [Phase 06-05]: DLQ seeding via mock-crm fail mode + real signed shopee webhook exercises full ingestion->worker->retry->DLQ path (not a direct DB shortcut)
+- [Phase 06-05]: CI polls /api/dlq (timeout 120s, 3s intervals) before playwright runs — prevents seeding race where Playwright loads /dlq before retries exhaust
+- [Phase 06-05]: HMAC in CI seed via openssl dgst -hmac + printf '%s' (no trailing newline) + sed to strip prefix — matches Node.js createHmac exactly
 
 ### Pending Todos
 
@@ -153,9 +158,9 @@ None yet.
 
 ## Session Continuity
 
-Last activity: 2026-06-21 - Completed 06-01: Wave 0 foundation (deps, test fixes, dashboard Dockerfile, stubs)
+Last activity: 2026-06-21 - Completed 06-05: TST-04 Playwright E2E DLQ re-queue spec + CI e2e job
 
-Last session: 2026-06-21T02:24:26Z
-Stopped at: Completed 06-01-PLAN.md
-Resume file: .planning/phases/06-testing-ci-cd-deployment/06-02-PLAN.md
+Last session: 2026-06-21T03:25:00Z
+Stopped at: Completed 06-05-PLAN.md
+Resume file: .planning/phases/06-testing-ci-cd-deployment/06-06-PLAN.md
 Resume file: .planning/phases/06-testing-ci-cd-deployment/06-CONTEXT.md
