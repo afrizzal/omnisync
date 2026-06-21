@@ -10,6 +10,7 @@ FROM node:22-slim AS build
 RUN corepack enable
 WORKDIR /app
 COPY --from=prune /app/out/json/ .
+COPY --from=prune /app/.npmrc .
 RUN pnpm install --frozen-lockfile
 COPY --from=prune /app/out/full/ .
 COPY tsconfig.base.json ./

@@ -12,6 +12,7 @@ RUN corepack enable
 WORKDIR /app
 # Install deps from pruned manifest (faster than full workspace)
 COPY --from=prune /app/out/json/ .
+COPY --from=prune /app/.npmrc .
 RUN pnpm install --frozen-lockfile
 # Copy full pruned source and build
 COPY --from=prune /app/out/full/ .
