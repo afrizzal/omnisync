@@ -1,3 +1,4 @@
+// TST-03: concurrent duplicate webhooks result in exactly one stored record (the named, CI-gated proof).
 import { createPrismaClient } from "@omnisync/db";
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import type { CrmClient } from "../../src/crm/crm-client.js";
@@ -32,7 +33,7 @@ const jobData = {
   fingerprint,
 };
 
-describe("SC-2 / SC-3 idempotent persistence (IDM-02 / IDM-03)", () => {
+describe("TST-03 / SC-2 / SC-3 idempotent persistence (IDM-02 / IDM-03)", () => {
   beforeEach(async () => {
     await prisma.event.deleteMany({ where: { fingerprint } });
   });
@@ -41,7 +42,7 @@ describe("SC-2 / SC-3 idempotent persistence (IDM-02 / IDM-03)", () => {
     await prisma.$disconnect();
   });
 
-  it("SC-2: 50 concurrent identical jobs -> exactly 1 events row", async () => {
+  it("TST-03: 50 concurrent identical jobs -> exactly 1 events row", async () => {
     await Promise.all(
       Array.from({ length: 50 }, (_, i) =>
         processEvent({ id: `job-${i}`, data: jobData }),

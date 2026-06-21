@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-05-PLAN.md
-last_updated: "2026-06-21T03:25:00Z"
+stopped_at: Paused at 06-06-PLAN.md Task 3 (human-verify checkpoint — record demo walkthrough)
+last_updated: "2026-06-21T08:00:00Z"
 last_activity: 2026-06-21
 progress:
   total_phases: 6
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-02)
 ## Current Position
 
 Phase: 6
-Plan: 5 of 6 complete
-Status: Executing Phase 06 — Plans 01-05 complete
+Plan: 5 of 6 complete (06-06 paused at Task 3 human-verify checkpoint)
+Status: Executing Phase 06 — Plans 01-05 complete; Plan 06 paused at demo recording checkpoint
 Last activity: 2026-06-21
 
-Progress: [█████░] 24/28 plans complete (86%) — Phases 1–5 shipped; Phase 6 Plans 01-05 complete (Wave 0 + Wave 1 + Wave 2 E2E)
+Progress: [█████░] 24/28 plans complete (86%) — Phases 1–5 shipped; Phase 6 Plans 01-05 done; Plan 06 at demo checkpoint
 
 ## Performance Metrics
 
@@ -136,6 +136,8 @@ Recent decisions affecting current work:
 - [Phase 06-05]: DLQ seeding via mock-crm fail mode + real signed shopee webhook exercises full ingestion->worker->retry->DLQ path (not a direct DB shortcut)
 - [Phase 06-05]: CI polls /api/dlq (timeout 120s, 3s intervals) before playwright runs — prevents seeding race where Playwright loads /dlq before retries exhaust
 - [Phase 06-05]: HMAC in CI seed via openssl dgst -hmac + printf '%s' (no trailing newline) + sed to strip prefix — matches Node.js createHmac exactly
+- [Phase 06-06]: TST-03 label added as comment + describe/it title changes only — test logic and 5-arg buildProcessor call unchanged
+- [Phase 06-06]: README deployment-decision section frames "no $0 always-on-worker tier in 2026" as informed call, not a gap — per D-01 interview talking point
 
 ### Pending Todos
 
@@ -158,9 +160,8 @@ None yet.
 
 ## Session Continuity
 
-Last activity: 2026-06-21 - Completed 06-05: TST-04 Playwright E2E DLQ re-queue spec + CI e2e job
+Last activity: 2026-06-21 - Completed 06-05 (TST-04 E2E + CI e2e job); executed 06-06 Tasks 1+2 (TST-03 label, README); paused at Task 3 demo recording checkpoint
 
-Last session: 2026-06-21T03:25:00Z
-Stopped at: Completed 06-05-PLAN.md
-Resume file: .planning/phases/06-testing-ci-cd-deployment/06-06-PLAN.md
-Resume file: .planning/phases/06-testing-ci-cd-deployment/06-CONTEXT.md
+Last session: 2026-06-21T08:00:00Z
+Stopped at: Paused at 06-06-PLAN.md Task 3 (human-verify — record demo walkthrough to docs/demo.gif)
+Resume signal: Type "approved" once docs/demo.gif is committed and embedded in README, or describe what is blocking the recording.
