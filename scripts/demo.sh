@@ -22,8 +22,15 @@ echo "==> Waiting for dashboard on :3000 ..."
 timeout 120 bash -c 'until curl -sf http://localhost:3000 >/dev/null; do sleep 2; done'
 
 echo "==> Running load test (${LOAD_DURATION_S:-30}s)..."
-INGEST_BASE_URL="${INGEST_BASE_URL:-http://localhost:3001}" \
-  tsx scripts/loadtest.ts
+if command -v node >/dev/null 2>&1; then
+  INGEST_BASE_URL="${INGEST_BASE_URL:-http://localhost:3001}" \
+    tsx scripts/loadtest.ts
+else
+  echo "    NOTE: node not found in this shell (WSL without Node.js)."
+  echo "    Stack is running. Run the load test separately from PowerShell:"
+  echo "      pnpm --filter @omnisync/api tsx scripts/loadtest.ts"
+  echo "    Or open http://localhost:3000/demo — the dashboard updates live."
+fi
 
 echo ""
 echo "==> Demo running. Open the dashboard:  http://localhost:3000/demo"
