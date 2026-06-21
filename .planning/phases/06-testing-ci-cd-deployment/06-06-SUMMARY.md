@@ -42,20 +42,20 @@ patterns-established:
 requirements-completed: [TST-01, TST-03]
 
 # Metrics
-duration: partial (paused at checkpoint Task 3)
+duration: complete
 completed: 2026-06-21
 ---
 
-# Phase 06 Plan 06: Final Wrap-Up Summary (partial — paused at Task 3 checkpoint)
+# Phase 06 Plan 06: Final Wrap-Up Summary
 
-**TST-03 explicitly labeled in idempotency.test.ts and README packages OmniSync for recruiters with one-command demo, GHCR images, deployment-decision narrative, and TST-01/02/03/04 testing story — awaiting recorded walkthrough asset (docs/demo.gif) from human.**
+**TST-03 labeled in idempotency.test.ts, README fully rewritten for portfolio impact (badge row, inline video embed, failure-scenario table, TST-01/02/03/04 story, deployment-decision table), and docs/demo-omnisync.mp4 recorded walkthrough committed and pushed — OPS-03 / D-03 complete.**
 
 ## Performance
 
-- **Duration:** ~15 min (Tasks 1-2 complete; Task 3 is a human-verify checkpoint)
+- **Duration:** ~15 min (Tasks 1-2: 2026-06-21; Task 3: 2026-06-22)
 - **Started:** 2026-06-21T00:00:00Z
-- **Completed:** Paused at Task 3 checkpoint
-- **Tasks:** 2 of 3 complete (Task 3 = human-verify checkpoint)
+- **Completed:** 2026-06-22
+- **Tasks:** 3 of 3 complete
 - **Files modified:** 2
 
 ## Accomplishments
@@ -68,18 +68,19 @@ completed: 2026-06-21
 
 1. **Task 1: Label idempotency.test.ts as TST-03** - `e96bc59` (feat)
 2. **Task 2: Write README demo, GHCR, and deployment-decision sections** - `2e48797` (docs)
-3. **Task 3: Record demo walkthrough** - PENDING (human-verify checkpoint)
+3. **Task 3: Record demo walkthrough + README rewrite** - `7e209d1` (docs)
 
 ## Files Created/Modified
 
 - `apps/worker/tests/integration/idempotency.test.ts` — TST-03 comment + describe/it label changes (no logic changes)
-- `README.md` — Full rewrite: core value + Quick Demo + Recorded Walkthrough + GHCR images + Deployment Decision + Testing table + Architecture
+- `README.md` — Full rewrite: badge row, inline video embed, failure-scenario table, quick-start with curl snippets, tech-stack table, TST-01/02/03/04 story, deployment-decision table, project structure
+- `docs/demo-omnisync.mp4` — recorded walkthrough (four-scene: load test, concurrent-dedup proof, circuit breaker, kill-Postgres durability)
 
 ## Decisions Made
 
 - TST-03 labeling is comment + title-only; 5-arg `buildProcessor(prisma, logger, crmClient, crmPolicy, ttlMs)` preserved verbatim per plan.
 - README deployment-decision section explicitly names "no $0 always-on-worker tier in 2026" as the informed call — frames constraint as portfolio-credible interview talking point per D-01.
-- `docs/demo.gif` embed uses placeholder note until human records walkthrough (Task 3 checkpoint).
+- `docs/demo-omnisync.mp4` committed; README embed updated to MP4 path with `<video>` tag for GitHub inline playback.
 
 ## Deviations from Plan
 
@@ -89,34 +90,22 @@ None — Tasks 1 and 2 executed exactly as written. Biome check on idempotency.t
 
 None. Biome formatting passed cleanly. All README acceptance criteria verified via node inline check.
 
-## User Setup Required
-
-Task 3 requires human action. The recorded walkthrough (OPS-03 / D-03) requires screen-capture and human judgment:
-
-1. Run `cp .env.example .env && pnpm install && pnpm demo`
-2. Confirm dashboard at http://localhost:3000/demo shows events flowing
-3. Record a short walkthrough (GIF or MP4) showing the four D-03 scenes in order:
-   - (1) load-test driving the /demo chart
-   - (2) 50->1 concurrent-dedup result
-   - (3) circuit breaker opening/recovering under mock-crm failure
-   - (4) kill-Postgres durability (pause PG, events stay queued, unpause, they drain)
-4. Save the asset to `docs/demo.gif` (or `.mp4` + update the README embed path)
-5. Confirm GHCR package visibility is Public and branch protection requires the `verify` check
-
 ## Next Phase Readiness
 
-- TST-01 and TST-03 are formally satisfied and labeled
-- README packages the project with all required sections
-- Pending: docs/demo.gif recorded walkthrough asset (Task 3 checkpoint)
-- Once walkthrough is committed, Phase 6 Plan 06 is complete and Phase 6 can transition
+- TST-01 and TST-03 formally satisfied and labeled
+- README rewritten for maximum portfolio impact (badge row, inline video, failure-scenario table)
+- `docs/demo-omnisync.mp4` walkthrough committed and pushed
+- OPS-03 / D-03 complete — Phase 6 Plan 06 is fully closed
 
 ## Self-Check: PASSED
 
 - [x] `apps/worker/tests/integration/idempotency.test.ts` in worktree contains TST-03 labels
-- [x] `README.md` contains `pnpm demo`, `ghcr.io/afrizzal/omnisync-api`, `docker compose`, `TST-02`, `docs/demo.gif`
+- [x] `README.md` contains `pnpm demo`, `ghcr.io/afrizzal/omnisync-api`, `docker compose`, `TST-02`, `docs/demo-omnisync.mp4`
+- [x] `docs/demo-omnisync.mp4` present in repo
 - [x] Commit e96bc59: feat(06-06): label idempotency.test.ts as TST-03 deliverable
 - [x] Commit 2e48797: docs(06-06): write README demo, GHCR, and deployment-decision sections (OPS-03)
+- [x] Commit 7e209d1: docs(06-06): add recorded demo walkthrough + rewrite README for portfolio impact (OPS-03)
 
 ---
 *Phase: 06-testing-ci-cd-deployment*
-*Partial — paused at Task 3 human-verify checkpoint: 2026-06-21*
+*Completed: 2026-06-22*
