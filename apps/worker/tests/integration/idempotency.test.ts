@@ -1,10 +1,23 @@
 import { createPrismaClient } from "@omnisync/db";
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
+import type { CrmClient } from "../../src/crm/crm-client.js";
+import { createCrmPolicy } from "../../src/crm/crm-policy.js";
 import { buildProcessor } from "../../src/processor/event.processor.js";
 
 const prisma = createPrismaClient({ max: 12 });
-const noopLogger = { info: () => {}, error: () => {} };
-const processEvent = buildProcessor(prisma, noopLogger);
+const noopLogger = {
+  info: (_obj: Record<string, unknown>, _msg: string) => {},
+  error: (_obj: Record<string, unknown>, _msg: string) => {},
+};
+const noopCrmClient: CrmClient = { sync: async () => {} };
+const passThroughPolicy = createCrmPolicy(10_000); // never trips: noopCrmClient never throws
+const processEvent = buildProcessor(
+  prisma,
+  noopLogger,
+  noopCrmClient,
+  passThroughPolicy,
+  60_000, // ttlMs for the rule cache
+);
 
 const fingerprint = "c".repeat(64);
 const jobData = {

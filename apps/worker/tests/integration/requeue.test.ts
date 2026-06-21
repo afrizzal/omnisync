@@ -18,7 +18,8 @@ import { buildWorker } from "../../src/worker.js";
 // The ?? fallback ensures CI service-container env vars win (same pattern as Phase 3).
 // These are repeated here as documentation: actual resolution comes from vitest.setup.ts.
 const DB_URL =
-  process.env.DATABASE_URL ?? "postgresql://omnisync:omnisync@localhost:5433/omnisync";
+  process.env.DATABASE_URL ??
+  "postgresql://omnisync:omnisync@localhost:5433/omnisync";
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 
 // Unique fingerprint per run — 64 hex chars (Date.now() approach from worker.test.ts)
@@ -44,12 +45,19 @@ async function requeue(id: string): Promise<string | null> {
     fingerprint: entry.fingerprint,
   };
   await queue.add("process-event", jobData, { jobId: entry.fingerprint });
-  await prisma.deadLetterEvent.update({ where: { id }, data: { resolved: true } });
+  await prisma.deadLetterEvent.update({
+    where: { id },
+    data: { resolved: true },
+  });
   return entry.fingerprint;
 }
 
 // Bounded poll — max 10 * 500ms = 5s. Never unbounded (Pitfall from Phase 3).
-async function waitForEventCount(expected: number, maxIter = 10, delayMs = 500): Promise<number> {
+async function waitForEventCount(
+  expected: number,
+  maxIter = 10,
+  delayMs = 500,
+): Promise<number> {
   for (let i = 0; i < maxIter; i++) {
     const count = await prisma.event.count({ where: { fingerprint } });
     if (count === expected) return count;
@@ -108,34 +116,64 @@ describe("RES-06: re-queue idempotency — re-queue -> exactly one events row", 
     await prisma.$disconnect();
   });
 
-  it(
-    "re-queuing a DLQ entry results in exactly one events row",
-    { timeout: 20_000 },
-    async () => {
-      // First re-queue — requeueDlqEntry re-enqueues through the NORMAL worker pipeline
-      const result = await requeue(dlqId);
-      expect(result).toBe(fingerprint);
+  it("re-queuing a DLQ entry results in exactly one events row", {
+    timeout: 20_000,
+  }, async () => {
+    // First re-queue — requeueDlqEntry re-enqueues through the NORMAL worker pipeline
+    const result = await requeue(dlqId);
+    expect(result).toBe(fingerprint);
 
-      // Bounded poll — wait for worker to process and persist the event
-      const countAfterFirst = await waitForEventCount(1);
-      expect(countAfterFirst).toBe(1);
-    },
-  );
+    // Bounded poll — wait for worker to process and persist the event
+    const countAfterFirst = await waitForEventCount(1);
+    expect(countAfterFirst).toBe(1);
+  });
 
-  it(
-    "double re-queue does NOT produce a second events row (idempotency via ON CONFLICT)",
-    { timeout: 20_000 },
-    async () => {
-      // First re-queue via the service (drives the queue->worker->persist pipeline)
-      const processEvent = buildProcessor(prisma, noopLogger, noopCrmClient, createCrmPolicy(10000), 30000);
-      // Invoke buildProcessor directly for the first pass (Phase 3 pattern — deterministic)
-      await processEvent({ id: "rq-first", data: { source: "SHOPEE", fingerprint, payload: { source: "SHOPEE", eventType: "order.created", externalId: "ext-rq-1", occurredAt: "2026-01-01T00:00:00.000Z", payload: {} } } });
-      expect(await prisma.event.count({ where: { fingerprint } })).toBe(1);
+  it("double re-queue does NOT produce a second events row (idempotency via ON CONFLICT)", {
+    timeout: 20_000,
+  }, async () => {
+    // First re-queue via the service (drives the queue->worker->persist pipeline)
+    const processEvent = buildProcessor(
+      prisma,
+      noopLogger,
+      noopCrmClient,
+      createCrmPolicy(10000),
+      30000,
+    );
+    // Invoke buildProcessor directly for the first pass (Phase 3 pattern — deterministic)
+    await processEvent({
+      id: "rq-first",
+      data: {
+        source: "SHOPEE",
+        fingerprint,
+        payload: {
+          source: "SHOPEE",
+          eventType: "order.created",
+          externalId: "ext-rq-1",
+          occurredAt: "2026-01-01T00:00:00.000Z",
+          payload: {},
+        },
+      },
+    });
+    expect(await prisma.event.count({ where: { fingerprint } })).toBe(1);
 
-      // IDEMPOTENCY: second direct invocation with same fingerprint -> ON CONFLICT DO NOTHING
-      await processEvent({ id: "rq-second", data: { source: "SHOPEE", fingerprint, payload: { source: "SHOPEE", eventType: "order.created", externalId: "ext-rq-1", occurredAt: "2026-01-01T00:00:00.000Z", payload: {} } } });
-      const countAfterSecond = await prisma.event.count({ where: { fingerprint } });
-      expect(countAfterSecond).toBe(1); // still exactly one row — RES-06 idempotency
-    },
-  );
+    // IDEMPOTENCY: second direct invocation with same fingerprint -> ON CONFLICT DO NOTHING
+    await processEvent({
+      id: "rq-second",
+      data: {
+        source: "SHOPEE",
+        fingerprint,
+        payload: {
+          source: "SHOPEE",
+          eventType: "order.created",
+          externalId: "ext-rq-1",
+          occurredAt: "2026-01-01T00:00:00.000Z",
+          payload: {},
+        },
+      },
+    });
+    const countAfterSecond = await prisma.event.count({
+      where: { fingerprint },
+    });
+    expect(countAfterSecond).toBe(1); // still exactly one row — RES-06 idempotency
+  });
 });
