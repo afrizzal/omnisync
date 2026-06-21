@@ -16,7 +16,8 @@
     "assert:redis": "tsx scripts/assert-redis.ts",
     "demo": "bash scripts/demo.sh",
     "db:migrate": "pnpm --filter @omnisync/db migrate",
-    "db:generate": "pnpm --filter @omnisync/db generate"
+    "db:generate": "pnpm --filter @omnisync/db generate",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.0",
