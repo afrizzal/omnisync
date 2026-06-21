@@ -65,3 +65,63 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+  # OPS-01/D-09: build all three images on every push & PR (validates Dockerfiles);
+  # push to GHCR only on master. PRs are build-only (push:false) — no throwaway images.
+  # Runs after `verify` so broken code never produces a published image.
+  docker:
+    name: Docker Build & Push
+    runs-on: ubuntu-latest
+    needs: verify
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: github.ref == 'refs/heads/master'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push api
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: ${{ github.ref == 'refs/heads/master' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/omnisync-api:latest
+            ghcr.io/${{ github.repository_owner }}/omnisync-api:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push worker
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/worker/Dockerfile
+          push: ${{ github.ref == 'refs/heads/master' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/omnisync-worker:latest
+            ghcr.io/${{ github.repository_owner }}/omnisync-worker:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push mock-crm
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/mock-crm/Dockerfile
+          push: ${{ github.ref == 'refs/heads/master' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/omnisync-mock-crm:latest
+            ghcr.io/${{ github.repository_owner }}/omnisync-mock-crm:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
