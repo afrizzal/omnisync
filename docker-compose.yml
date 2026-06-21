@@ -69,6 +69,18 @@ services:
       timeout: 3s
       retries: 10
 
+  dashboard:
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3001
+    env_file: .env
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
 volumes:
   pgdata:
   redisdata:
