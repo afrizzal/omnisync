@@ -11,7 +11,7 @@ progress:
   completed_phases: 5
   total_plans: 22
   completed_plans: 22
-  percent: 40
+  percent: 83
 ---
 
 # Project State
@@ -21,7 +21,7 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value:** No accepted event is ever silently lost — once acknowledged (HTTP 202), an event is durably queued and processed at-least-once and idempotently, surviving worker crashes, DB outages, and flaky downstream APIs, with a DLQ as the final safety net.
-**Current focus:** Phase 05 — dashboard-observability
+**Current focus:** Phase 06 — testing-cicd-deployment (Phases 1–5 complete & verified)
 
 ## Current Position
 
@@ -30,7 +30,7 @@ Plan: Not started
 Status: Ready to execute
 Last activity: 2026-06-14
 
-Progress: [███░░░] Phase 2 of 6 complete (40%) — Phase 03 in progress: 03-03 worker test scaffold + CI service containers complete
+Progress: [█████░] Phase 5 of 6 complete (83%) — Phases 1–5 shipped & verified; Phase 6 (Testing/CI-CD/Deployment) not started
 
 ## Performance Metrics
 

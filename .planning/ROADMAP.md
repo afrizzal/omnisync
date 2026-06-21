@@ -15,8 +15,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation & Local Infra** - Monorepo scaffold, shared Prisma schema (with `UNIQUE(fingerprint)`), Zod types, Docker Compose (Redis noeviction + Postgres), and CI skeleton (completed 2026-06-02)
 - [x] **Phase 2: High-Speed Ingestion API** - Fastify ingestion endpoint with HMAC validation, Zod validation, SHA-256 fingerprint, Redis SET NX gate, BullMQ enqueue, and HTTP 202 fast-ACK (completed 2026-06-09)
 - [x] **Phase 3: Worker Core & Idempotent Persistence** - Always-on BullMQ worker pool that normalizes events and persists them idempotently via `ON CONFLICT DO NOTHING`, completing the happy path end-to-end (completed 2026-06-10)
-- [ ] **Phase 4: Resilience & Dynamic Routing** - Jittered exponential backoff, hand-built DLQ (BullMQ failed handler + Postgres mirror), mock CRM downstream, opossum circuit breaker, re-queue path, and runtime-reloadable routing rules
-- [ ] **Phase 5: Dashboard & Observability** - Next.js dashboard with live queue metrics, DLQ list with one-click re-queue and load-test visualization, plus OpenTelemetry structured logs and metrics wired to real events
+- [x] **Phase 4: Resilience & Dynamic Routing** - Jittered exponential backoff, hand-built DLQ (BullMQ failed handler + Postgres mirror), mock CRM downstream, cockatiel circuit breaker, re-queue path, and runtime-reloadable routing rules (completed 2026-06-13, verification 9/9)
+- [x] **Phase 5: Dashboard & Observability** - Next.js dashboard with live queue metrics, DLQ list with one-click re-queue and load-test visualization, plus OpenTelemetry structured logs and metrics wired to real events (completed 2026-06-15)
 - [ ] **Phase 6: Testing, CI/CD & Deployment** - Kill-Postgres integration test, Playwright E2E, ≥80% coverage gate, GitHub Actions CI/CD, multi-stage Docker, resolved always-on worker hosting, and load-test demo script
 
 ## Phase Details
@@ -86,7 +86,7 @@ Plans:
 - [x] 04-03-PLAN.md — Routing rules (TDD): RoutingRule Zod union, dispatch-table engine (RTE-01), lazy TTL cache (RTE-02) (Wave 0)
 - [x] 04-04-PLAN.md — Wire into worker: backoff on Worker, DLQ on failed handler, CRM breaker in processor (persist outside breaker → RES-07), rules at normalize() seam (Wave 1)
 - [x] 04-05-PLAN.md — Re-queue service + POST /admin/dlq/:id/requeue (RES-06, fingerprint-as-jobId idempotency) + mock-crm docker-compose service (Wave 1)
-- [ ] 04-06-PLAN.md — Integration proof: DLQ Postgres mirror (RES-03) + re-queue idempotency (RES-06); coverage gate + Nyquist sign-off (Wave 2)
+- [x] 04-06-PLAN.md — Integration proof: DLQ Postgres mirror (RES-03) + re-queue idempotency (RES-06); coverage gate + Nyquist sign-off (Wave 2)
 
 ### Phase 5: Dashboard & Observability
 **Goal**: Operators can see the system's health in real time: a Next.js dashboard shows live queue throughput metrics, lists DLQ entries with full error detail and a one-click re-queue action, and visualizes a live load test — all backed by OpenTelemetry-instrumented structured logs and metrics covering every event lifecycle transition.
@@ -129,6 +129,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation & Local Infra | 4/4 | Complete   | 2026-06-02 |
 | 2. High-Speed Ingestion API | 3/3 | Complete | 2026-06-09 |
 | 3. Worker Core & Idempotent Persistence | 5/5 | Complete   | 2026-06-10 |
-| 4. Resilience & Dynamic Routing | 5/6 | In Progress|  |
-| 5. Dashboard & Observability | 1/4 | In Progress|  |
+| 4. Resilience & Dynamic Routing | 6/6 | Complete | 2026-06-13 |
+| 5. Dashboard & Observability | 4/4 | Complete | 2026-06-15 |
 | 6. Testing, CI/CD & Deployment | 0/TBD | Not started | - |
