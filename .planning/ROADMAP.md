@@ -108,7 +108,7 @@ Plans:
 - [x] 05-04-PLAN.md — /demo live Recharts AreaChart + Start Load Test button (DSH-04) (Wave 2)
 
 ### Phase 6: Testing, CI/CD & Deployment
-**Goal**: The project's quality bar is enforced and the system is demonstrable live: the kill-Postgres integration test proves queue durability under DB failure, Playwright E2E covers the DLQ re-queue flow, ≥80% line coverage is a CI gate, Docker images build cleanly, and the always-on worker is deployed to a free-tier host reachable for a live recruiter demo.
+**Goal**: The project's quality bar is enforced and the system is demonstrable: the kill-Postgres integration test proves queue durability under DB failure, Playwright E2E covers the DLQ re-queue flow, ≥80% line coverage is a CI gate, Docker images build cleanly and publish to GHCR on merge to master, and a one-command reproducible demo + recorded walkthrough packages the resilience story (no live public deploy — see D-01).
 **Depends on**: Phase 5
 **Requirements**: TST-01, TST-02, TST-03, TST-04, OPS-01, OPS-03, OPS-04
 **Success Criteria** (what must be TRUE):
@@ -116,8 +116,16 @@ Plans:
   2. Firing 50 concurrent identical webhooks in an integration test results in exactly one row in the `events` table (concurrent dedup test passes in CI)
   3. The Playwright E2E test navigates to the DLQ dashboard, clicks re-queue on a seeded failed job, and asserts the event appears in the `events` table exactly once — this test passes in CI headlessly
   4. `pnpm test` reports ≥80% line coverage and the GitHub Actions workflow blocks merges that fall below the threshold
-  5. The always-on worker is reachable at a public URL (Render background worker, Fly.io, or equivalent) and the load-test script successfully blasts synthetic events through the full live pipeline
-**Plans**: TBD
+  5. (Reframed per D-01 — no free 2026 always-on-worker tier exists) Success = a one-command reproducible full-stack demo (`docker compose up` / `pnpm demo`) + a recorded walkthrough + deploy-ready images published to GHCR; the load-test script successfully blasts multi-channel synthetic events through the full local pipeline
+**Plans**: 6 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Wave 0 foundation: install test/CI deps, FIX broken 5-arg buildProcessor calls in existing integration tests, dashboard Dockerfile + compose service, .env.example + stubs
+- [ ] 06-02-PLAN.md — TST-02: Testcontainers kill-Postgres durability test (dockerode pause/unpause, 5-arg processor)
+- [ ] 06-03-PLAN.md — OPS-04 autocannon multi-channel load-test (real per-source HMAC) + OPS-03 one-command pnpm demo entrypoint
+- [ ] 06-04-PLAN.md — OPS-01: CI docker build+push job to GHCR (push on master, build-only on PRs)
+- [ ] 06-05-PLAN.md — TST-04: Playwright DLQ re-queue E2E + CI e2e job against the docker-compose stack
+- [ ] 06-06-PLAN.md — TST-01 coverage-gate verify + TST-03 relabel + README demo/GHCR/deployment-decision + recorded-walkthrough checkpoint
 
 ## Progress
 
@@ -131,4 +139,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Worker Core & Idempotent Persistence | 5/5 | Complete   | 2026-06-10 |
 | 4. Resilience & Dynamic Routing | 6/6 | Complete | 2026-06-13 |
 | 5. Dashboard & Observability | 4/4 | Complete | 2026-06-15 |
-| 6. Testing, CI/CD & Deployment | 0/TBD | Not started | - |
+| 6. Testing, CI/CD & Deployment | 0/6 | Planned | - |
