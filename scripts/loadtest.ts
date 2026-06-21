@@ -34,7 +34,7 @@ function makeRequest(src: (typeof SOURCES)[number]) {
 			req.body = body;
 			req.headers = {
 				"content-type": "application/json",
-				"x-webhook-signature": sig,
+				"x-webhook-signature": `sha256=${sig}`,
 			};
 			return req;
 		},
