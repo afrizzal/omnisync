@@ -13,7 +13,20 @@ export function buildDlqHandler(prisma: PrismaClient, logger: ProcessorLogger) {
     if (!job) return; // Pitfall 6: stalled job + removeOnFail → job is undefined
 
     const maxAttempts = job.opts.attempts ?? 1;
-    if (job.attemptsMade < maxAttempts) return; // intermediate retry — not yet exhausted
+    if (job.attemptsMade < maxAttempts) {
+      // OBS-01: the "failed" lifecycle transition must be observable on EVERY attempt,
+      // not just at exhaustion — info level because the retry is self-healing.
+      logger.info(
+        {
+          jobId: job.id,
+          attempt: job.attemptsMade,
+          maxAttempts,
+          reason: error.message,
+        },
+        "[worker] failed — retry scheduled",
+      );
+      return; // intermediate retry — not yet exhausted
+    }
 
     const data = job.data as {
       source: string;

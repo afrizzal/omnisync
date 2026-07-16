@@ -54,6 +54,26 @@ describe("buildDlqHandler (RES-02/RES-03) — final-attempt-gated DLQ writer", (
     expect(prisma.deadLetterEvent.create).not.toHaveBeenCalled();
   });
 
+  it("Test 1b: intermediate retry logs a structured 'failed — retry scheduled' transition (OBS-01)", async () => {
+    const prisma = makeFakePrisma();
+    const logger = makeLogger();
+    const handler = buildDlqHandler(prisma as never, logger);
+
+    const job = makeJob(2, 5);
+    await handler(job as never, new Error("CRM 500"));
+
+    expect(logger.info).toHaveBeenCalledWith(
+      expect.objectContaining({
+        jobId: "test-job-id",
+        attempt: 2,
+        maxAttempts: 5,
+        reason: "CRM 500",
+      }),
+      "[worker] failed — retry scheduled",
+    );
+    expect(logger.error).not.toHaveBeenCalled();
+  });
+
   it("Test 2: final attempt (attemptsMade >= attempts) calls deadLetterEvent.create exactly once", async () => {
     const prisma = makeFakePrisma();
     const logger = makeLogger();
