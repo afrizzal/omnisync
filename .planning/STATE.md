@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: milestone_audit_complete
-stopped_at: null
-last_updated: "2026-07-16T15:30:00Z"
+status: planning
+stopped_at: Milestone v1.0 completed, archived, and tagged
+last_updated: "2026-07-16T16:33:39.682Z"
 last_activity: 2026-07-16
 progress:
   total_phases: 6
@@ -18,19 +18,18 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-02)
+See: .planning/PROJECT.md (updated 2026-07-16 after v1.0 milestone)
 
 **Core value:** No accepted event is ever silently lost — once acknowledged (HTTP 202), an event is durably queued and processed at-least-once and idempotently, surviving worker crashes, DB outages, and flaky downstream APIs, with a DLQ as the final safety net.
-**Current focus:** v1.0 milestone audited — ready for /gsd:complete-milestone
+**Current focus:** Planning next milestone (v2) — start with /gsd:new-milestone
 
 ## Current Position
 
-Phase: 6 (all complete)
-Plan: 28 of 28 complete
-Status: v1.0 milestone audit complete (2026-07-16) — all 35 requirements satisfied; audit gaps (OBS-01, OBS-02, Phase 6 verification, doc drift) remediated same session; see .planning/v1.0-MILESTONE-AUDIT.md
+Milestone: v1.0 Full Spec — SHIPPED 2026-07-16 (tagged v1.0; archived to milestones/)
+Status: 35/35 requirements verified, audit PASSED, CI fully green (run 29515250970)
 Last activity: 2026-07-16
 
-Progress: [██████] 28/28 plans complete (100%) — Phases 1–6 shipped; milestone audit passed after remediation
+Progress: v1.0 complete — 6 phases, 28 plans, 59 tasks. Next: scope v2 (candidates in research/brainstorming_omnisync_Jul26.md)
 
 ## Performance Metrics
 
@@ -167,5 +166,5 @@ None yet.
 Last activity: 2026-07-16 - v1.0 milestone audit (gaps_found → remediated): integration checker 27/29 wiring + 4/4 flows; fixed OBS-01 (intermediate retry logging) + OBS-02 (latency/retry/error-distribution metrics + dashboard cards); rendered DLQ errorStack; removed placeholder test; generated missing 06-VERIFICATION.md; accepted OPS-03 substitution; synced REQUIREMENTS/ROADMAP/STATE. Prior: 2026-06-22 closed 06-06 Task 3 checkpoint (demo video + README rewrite).
 
 Last session: 2026-07-16
-Stopped at: Milestone v1.0 audited and remediated
-Resume signal: Run /gsd:complete-milestone v1.0 to archive, or /gsd:new-milestone to scope v2 (see .planning/research/brainstorming_omnisync_Jul26.md).
+Stopped at: Milestone v1.0 completed — archived to milestones/, tagged v1.0, CI green
+Resume signal: Run /gsd:new-milestone to scope v2 (see .planning/research/brainstorming_omnisync_Jul26.md).
