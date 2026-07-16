@@ -1,9 +1,9 @@
 ---
 phase: 6
 slug: testing-ci-cd-deployment
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: complete
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-06-21
 ---
 
@@ -39,35 +39,35 @@ created: 2026-06-21
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 6-01-01 | 01 | 0 | TST-02 | integration (Testcontainers) | `pnpm --filter @omnisync/worker test` | ❌ W0 gap | ⬜ pending |
-| 6-01-02 | 01 | 0 | TST-04 | E2E (Playwright) | `npx playwright test` | ❌ W0 gap | ⬜ pending |
-| 6-01-03 | 01 | 0 | OPS-01 | CI (GitHub Actions) | Manual: merge to master | ❌ W0 gap | ⬜ pending |
-| 6-01-04 | 01 | 0 | OPS-04 | manual smoke | `tsx scripts/loadtest.ts` | ❌ W0 gap | ⬜ pending |
-| 6-01-05 | 01 | 0 | OPS-03 | manual smoke | `bash scripts/demo.sh` | ❌ W0 gap | ⬜ pending |
-| 6-02-01 | 02 | 1 | TST-02 | integration | `pnpm --filter @omnisync/worker test` | ❌ W0 | ⬜ pending |
-| 6-03-01 | 03 | 1 | TST-04 | E2E | `npx playwright test` | ❌ W0 | ⬜ pending |
-| 6-04-01 | 04 | 1 | OPS-01 | CI | Manual: PR build check | ❌ W0 | ⬜ pending |
-| 6-05-01 | 05 | 2 | OPS-04 | manual smoke | `tsx scripts/loadtest.ts` | ❌ W0 | ⬜ pending |
-| 6-06-01 | 06 | 2 | OPS-03 | manual smoke | `bash scripts/demo.sh && docker compose up` | ❌ W0 | ⬜ pending |
-| 6-07-01 | 07 | 2 | TST-01 | coverage gate | `pnpm test -- --coverage` | ✅ thresholds set | ⬜ pending |
-| 6-07-02 | 07 | 2 | TST-03 | integration | `pnpm --filter @omnisync/worker test` | ✅ `idempotency.test.ts` | ⬜ pending |
+| 6-01-01 | 01 | 0 | TST-02 | integration (Testcontainers) | `pnpm --filter @omnisync/worker test` | ✅ | ✅ green |
+| 6-01-02 | 01 | 0 | TST-04 | E2E (Playwright) | `npx playwright test` | ✅ | ✅ green |
+| 6-01-03 | 01 | 0 | OPS-01 | CI (GitHub Actions) | Manual: merge to master | ✅ | ✅ green |
+| 6-01-04 | 01 | 0 | OPS-04 | manual smoke | `tsx scripts/loadtest.ts` | ✅ | ✅ green |
+| 6-01-05 | 01 | 0 | OPS-03 | manual smoke | `bash scripts/demo.sh` | ✅ | ✅ green |
+| 6-02-01 | 02 | 1 | TST-02 | integration | `pnpm --filter @omnisync/worker test` | ✅ | ✅ green |
+| 6-03-01 | 03 | 1 | TST-04 | E2E | `npx playwright test` | ✅ | ✅ green |
+| 6-04-01 | 04 | 1 | OPS-01 | CI | Manual: PR build check | ✅ | ✅ green |
+| 6-05-01 | 05 | 2 | OPS-04 | manual smoke | `tsx scripts/loadtest.ts` | ✅ | ✅ green |
+| 6-06-01 | 06 | 2 | OPS-03 | manual smoke | `bash scripts/demo.sh && docker compose up` | ✅ | ✅ green |
+| 6-07-01 | 07 | 2 | TST-01 | coverage gate | `pnpm test -- --coverage` | ✅ thresholds set | ✅ green |
+| 6-07-02 | 07 | 2 | TST-03 | integration | `pnpm --filter @omnisync/worker test` | ✅ `idempotency.test.ts` | ✅ green |
 
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+*Status: ✅ green · ✅ green · ❌ red · ⚠️ flaky*
 
 ---
 
 ## Wave 0 Requirements
 
-- [ ] `pnpm add -D testcontainers @testcontainers/postgresql --filter @omnisync/worker` — Testcontainers for TST-02
-- [ ] `pnpm add -D @playwright/test --workspace-root` — Playwright for TST-04
-- [ ] `pnpm add autocannon @types/autocannon --workspace-root` — autocannon for OPS-04
-- [ ] `apps/worker/tests/integration/durability.test.ts` — stub file for TST-02 Testcontainers kill-PG test
-- [ ] `e2e/playwright.config.ts` — Playwright config (baseURL, retries, workers: 1 in CI)
-- [ ] `e2e/dlq-requeue.spec.ts` — stub for TST-04 DLQ re-queue E2E flow
-- [ ] `scripts/loadtest.ts` — stub for OPS-04 autocannon script
-- [ ] `scripts/demo.sh` — OPS-03 one-command demo entrypoint
-- [ ] Verify `apps/dashboard/Dockerfile` exists (needed for Playwright E2E compose stack)
-- [ ] Verify `apps/worker/tests/integration/idempotency.test.ts` and `concurrency.test.ts` use correct 5-arg `buildProcessor` signature (crmClient, crmPolicy, ttlMs stubs) — fix if broken
+- [x] `pnpm add -D testcontainers @testcontainers/postgresql --filter @omnisync/worker` — Testcontainers for TST-02
+- [x] `pnpm add -D @playwright/test --workspace-root` — Playwright for TST-04
+- [x] `pnpm add autocannon @types/autocannon --workspace-root` — autocannon for OPS-04
+- [x] `apps/worker/tests/integration/durability.test.ts` — stub file for TST-02 Testcontainers kill-PG test
+- [x] `e2e/playwright.config.ts` — Playwright config (baseURL, retries, workers: 1 in CI)
+- [x] `e2e/dlq-requeue.spec.ts` — stub for TST-04 DLQ re-queue E2E flow
+- [x] `scripts/loadtest.ts` — stub for OPS-04 autocannon script
+- [x] `scripts/demo.sh` — OPS-03 one-command demo entrypoint
+- [x] Verify `apps/dashboard/Dockerfile` exists (needed for Playwright E2E compose stack)
+- [x] Verify `apps/worker/tests/integration/idempotency.test.ts` and `concurrency.test.ts` use correct 5-arg `buildProcessor` signature (crmClient, crmPolicy, ttlMs stubs) — fix if broken
 
 ---
 
@@ -84,11 +84,11 @@ created: 2026-06-21
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 120s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 120s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** approved retroactively 2026-07-16 during v1.0 milestone audit — all mapped commands green in CI run 29515250970 (verify + docker + e2e all success; first fully-green run). Wave 0 artifacts verified real by gsd-integration-checker + gsd-verifier (06-VERIFICATION.md).
