@@ -94,6 +94,45 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Avg Queue Latency</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-semibold">
+              {v(data?.latency?.avgWaitMs ?? undefined)}
+              {data?.latency?.avgWaitMs != null && (
+                <span className="text-base font-normal text-muted-foreground ml-1">
+                  ms wait
+                </span>
+              )}
+            </p>
+            {data?.latency && data.latency.sampleSize > 0 && (
+              <p className="text-xs text-muted-foreground mt-1">
+                +{data.latency.avgProcessMs ?? 0} ms processing · last{" "}
+                {data.latency.sampleSize} jobs
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Retries</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-semibold">
+              {v(data?.retries?.totalRetries)}
+            </p>
+            {data?.retries && data.retries.sampleSize > 0 && (
+              <p className="text-xs text-muted-foreground mt-1">
+                {data.retries.retriedJobs} of last {data.retries.sampleSize}{" "}
+                jobs retried
+              </p>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

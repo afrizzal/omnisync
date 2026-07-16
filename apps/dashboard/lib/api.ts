@@ -16,6 +16,17 @@ export interface MetricsResponse {
   events: { total: number };
   dlq: { unresolved: number };
   throughput: { last60s: number };
+  latency: {
+    avgWaitMs: number | null;
+    avgProcessMs: number | null;
+    sampleSize: number;
+  };
+  retries: {
+    retriedJobs: number;
+    totalRetries: number;
+    sampleSize: number;
+  };
+  errors: { bySource: Array<{ source: string; count: number }> };
 }
 
 export interface DlqEntry {

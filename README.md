@@ -138,7 +138,7 @@ CRM Webhooks        Queue.add(jobId = fingerprint) → HTTP 202 in < 5ms
              ──────────────────────────────────────
              /demo          live throughput waveform + stat cards
              /dlq           DLQ list + one-click re-queue
-             /metrics       queue depth · latency · error rate
+             /dashboard     queue depth · latency · retries · error rate
              /admin/queues  Bull-Board live job browser
 ```
 
@@ -164,7 +164,7 @@ Four named deliverables define the reliability proof:
 
 | ID | Test | What It Proves |
 |---|---|---|
-| **TST-01** | `pnpm test -- --coverage` (CI gate) | ≥ 80% line coverage on `apps/api` + `apps/worker`; build fails below threshold |
+| **TST-01** | `pnpm test -- --coverage` (CI gate) | ≥ 80% line coverage on `apps/api`, `apps/worker` + `packages/queue`; build fails below threshold |
 | **TST-02** | Testcontainers kill-Postgres integration | `docker pause postgres` mid-processing → zero events dropped from Redis queue → all drain after unpause |
 | **TST-03** | `idempotency.test.ts` — 50 concurrent identical jobs → exactly 1 `events` row | DB-level idempotency holds under real parallel race conditions (not mocked) |
 | **TST-04** | Playwright E2E — DLQ re-queue operator path | Dashboard `/dlq` renders failed events, re-queue button fires, event appears in `events` table exactly once |
