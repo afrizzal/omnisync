@@ -160,6 +160,14 @@ jobs:
           timeout 180 bash -c 'until curl -sf http://localhost:3001/healthz >/dev/null; do sleep 2; done'
           timeout 180 bash -c 'until curl -sf http://localhost:3000 >/dev/null; do sleep 2; done'
 
+      # Fresh compose volume = empty database. Containers do NOT auto-migrate on boot
+      # (decision 260621-j8p) — apply migrations from the host against the published port.
+      - name: Apply database migrations
+        run: pnpm --filter @omnisync/db exec prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://omnisync:omnisync@localhost:5433/omnisync?schema=public
+          DIRECT_URL: postgresql://omnisync:omnisync@localhost:5433/omnisync?schema=public
+
       - name: Seed a DLQ entry (mock-crm fail mode + signed webhook)
         run: |
           set -euo pipefail
