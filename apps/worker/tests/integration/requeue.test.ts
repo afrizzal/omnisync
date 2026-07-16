@@ -9,6 +9,7 @@
 
 import { createPrismaClient } from "@omnisync/db";
 import { createEventsQueue, createRedisConnection } from "@omnisync/queue";
+import type { Redis } from "ioredis";
 import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createCrmPolicy } from "../../src/crm/crm-policy.js";
 import { buildProcessor } from "../../src/processor/event.processor.js";
@@ -32,6 +33,7 @@ const prisma = createPrismaClient({ max: 5 });
 const connection = createRedisConnection(REDIS_URL);
 const queue = createEventsQueue(connection);
 let worker: ReturnType<typeof buildWorker>;
+let workerConnection: Redis;
 let dlqId: string;
 
 // Inline requeueDlqEntry logic (mirrors apps/api/src/services/requeue.ts exactly).
@@ -90,11 +92,15 @@ describe("RES-06: re-queue idempotency — re-queue -> exactly one events row", 
     });
     dlqId = dlqRow.id;
 
-    // Start worker with no-op CRM so pipeline completes without a real CRM service
+    // Start worker with no-op CRM so pipeline completes without a real CRM service.
+    // The worker gets its OWN Redis connection: sharing the queue's connection lets
+    // in-flight worker bookkeeping commands reject with "Connection is closed." when
+    // teardown quits the shared client — a flaky unhandled rejection under Vitest.
+    workerConnection = createRedisConnection(REDIS_URL);
     worker = buildWorker(
       {
         prisma,
-        connection,
+        connection: workerConnection,
         logger: noopLogger,
         crmClient: noopCrmClient,
         crmPolicy: createCrmPolicy(10000),
@@ -106,13 +112,16 @@ describe("RES-06: re-queue idempotency — re-queue -> exactly one events row", 
 
   afterEach(async () => {
     if (worker) await worker.close();
+    if (workerConnection) await workerConnection.quit().catch(() => {});
   });
 
   afterAll(async () => {
     await prisma.event.deleteMany({ where: { fingerprint } });
     await prisma.deadLetterEvent.deleteMany({ where: { fingerprint } });
     await queue.close();
-    await connection.quit();
+    // Let any in-flight BullMQ commands settle before dropping the connection.
+    await new Promise((r) => setTimeout(r, 250));
+    await connection.quit().catch(() => {});
     await prisma.$disconnect();
   });
 

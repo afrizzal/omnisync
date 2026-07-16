@@ -1,9 +1,12 @@
 import { createPrismaClient } from "@omnisync/db";
 import { createEventsQueue, createRedisConnection } from "@omnisync/queue";
+import type { Redis } from "ioredis";
 import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
+import { createCrmPolicy } from "../../src/crm/crm-policy.js";
 import { buildWorker } from "../../src/worker.js";
 
 const noopLogger = { info: () => {}, error: () => {} };
+const noopCrmClient = { sync: async () => {} };
 
 // Unique fingerprint per test run — avoids BullMQ jobId dedup when the completed job
 // stays in Redis for up to 1 hour (removeOnComplete: { age: 3600 }). Must be 64 hex chars.
@@ -24,6 +27,7 @@ const prisma = createPrismaClient({ max: 5 });
 const connection = createRedisConnection(process.env.REDIS_URL!);
 const queue = createEventsQueue(connection);
 let worker: ReturnType<typeof buildWorker>;
+let workerConnection: Redis;
 
 // Bounded poll — max 10 iterations * 500ms ~= 5s. Never an unbounded while(true).
 async function waitForCount(
@@ -45,18 +49,35 @@ describe("QUE-02 end-to-end queue -> worker -> row", () => {
   });
   afterEach(async () => {
     if (worker) await worker.close(); // close worker BEFORE connection (research Pitfall 4)
+    if (workerConnection) await workerConnection.quit().catch(() => {});
   });
   afterAll(async () => {
     await prisma.event.deleteMany({ where: { fingerprint } });
     await queue.close();
-    await connection.quit();
+    // Let any in-flight BullMQ commands settle before dropping the connection.
+    await new Promise((r) => setTimeout(r, 250));
+    await connection.quit().catch(() => {});
     await prisma.$disconnect();
   });
 
   it("consumes a queued job and persists exactly 1 row", {
     timeout: 20_000,
   }, async () => {
-    worker = buildWorker({ prisma, connection, logger: noopLogger }, 5);
+    // Full 6-field WorkerDeps: the old 3-field call left crmClient/crmPolicy undefined —
+    // every job threw AFTER persist and kept retrying in the background through teardown.
+    // Dedicated worker connection: same isolation rationale as requeue.test.ts.
+    workerConnection = createRedisConnection(process.env.REDIS_URL!);
+    worker = buildWorker(
+      {
+        prisma,
+        connection: workerConnection,
+        logger: noopLogger,
+        crmClient: noopCrmClient,
+        crmPolicy: createCrmPolicy(10000),
+        ttlMs: 30000,
+      },
+      5,
+    );
     await queue.add("process-event", jobData, { jobId: fingerprint });
     const count = await waitForCount(1);
     expect(count).toBe(1);
