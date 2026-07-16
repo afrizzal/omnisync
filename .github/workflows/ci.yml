@@ -188,7 +188,7 @@ jobs:
           timeout 120 bash -c 'until [ "$(curl -sf http://localhost:3001/api/dlq | node -e "let d=\"\";process.stdin.on(\"data\",c=>d+=c).on(\"end\",()=>console.log(JSON.parse(d).entries.length))")" -ge 1 ]; do sleep 3; done'
 
       - name: Run Playwright E2E
-        run: pnpm exec playwright test
+        run: pnpm test:e2e
         env:
           PLAYWRIGHT_BASE_URL: http://localhost:3000
           PLAYWRIGHT_API_URL: http://localhost:3001
