@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Worker Core & Idempotent Persistence** - Always-on BullMQ worker pool that normalizes events and persists them idempotently via `ON CONFLICT DO NOTHING`, completing the happy path end-to-end (completed 2026-06-10)
 - [x] **Phase 4: Resilience & Dynamic Routing** - Jittered exponential backoff, hand-built DLQ (BullMQ failed handler + Postgres mirror), mock CRM downstream, cockatiel circuit breaker, re-queue path, and runtime-reloadable routing rules (completed 2026-06-13, verification 9/9)
 - [x] **Phase 5: Dashboard & Observability** - Next.js dashboard with live queue metrics, DLQ list with one-click re-queue and load-test visualization, plus OpenTelemetry structured logs and metrics wired to real events (completed 2026-06-15)
-- [ ] **Phase 6: Testing, CI/CD & Deployment** - Kill-Postgres integration test, Playwright E2E, ≥80% coverage gate, GitHub Actions CI/CD, multi-stage Docker, resolved always-on worker hosting, and load-test demo script
+- [x] **Phase 6: Testing, CI/CD & Deployment** - Kill-Postgres integration test, Playwright E2E, ≥80% coverage gate, GitHub Actions CI/CD, multi-stage Docker, resolved always-on worker hosting, and load-test demo script (completed 2026-06-22; verified 2026-07-16 in v1.0 milestone audit)
 
 ## Phase Details
 
@@ -121,11 +121,11 @@ Plans:
 
 Plans:
 - [x] 06-01-PLAN.md — Wave 0 foundation: install test/CI deps, FIX broken 5-arg buildProcessor calls in existing integration tests, dashboard Dockerfile + compose service, .env.example + stubs
-- [ ] 06-02-PLAN.md — TST-02: Testcontainers kill-Postgres durability test (dockerode pause/unpause, 5-arg processor)
-- [ ] 06-03-PLAN.md — OPS-04 autocannon multi-channel load-test (real per-source HMAC) + OPS-03 one-command pnpm demo entrypoint
-- [ ] 06-04-PLAN.md — OPS-01: CI docker build+push job to GHCR (push on master, build-only on PRs)
+- [x] 06-02-PLAN.md — TST-02: Testcontainers kill-Postgres durability test (dockerode pause/unpause, 5-arg processor)
+- [x] 06-03-PLAN.md — OPS-04 autocannon multi-channel load-test (real per-source HMAC) + OPS-03 one-command pnpm demo entrypoint
+- [x] 06-04-PLAN.md — OPS-01: CI docker build+push job to GHCR (push on master, build-only on PRs)
 - [x] 06-05-PLAN.md — TST-04: Playwright DLQ re-queue E2E + CI e2e job against the docker-compose stack
-- [ ] 06-06-PLAN.md — TST-01 coverage-gate verify + TST-03 relabel + README demo/GHCR/deployment-decision + recorded-walkthrough checkpoint
+- [x] 06-06-PLAN.md — TST-01 coverage-gate verify + TST-03 relabel + README demo/GHCR/deployment-decision + recorded-walkthrough checkpoint
 
 ## Progress
 
@@ -139,4 +139,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Worker Core & Idempotent Persistence | 5/5 | Complete   | 2026-06-10 |
 | 4. Resilience & Dynamic Routing | 6/6 | Complete | 2026-06-13 |
 | 5. Dashboard & Observability | 4/4 | Complete | 2026-06-15 |
-| 6. Testing, CI/CD & Deployment | 5/6 | In Progress | - |
+| 6. Testing, CI/CD & Deployment | 6/6 | Complete | 2026-06-22 |

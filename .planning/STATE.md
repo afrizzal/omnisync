@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Paused at 06-06-PLAN.md Task 3 (human-verify checkpoint — record demo walkthrough)
-last_updated: "2026-06-21T08:00:00Z"
-last_activity: 2026-06-21
+status: milestone_audit_complete
+stopped_at: null
+last_updated: "2026-07-16T15:30:00Z"
+last_activity: 2026-07-16
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 28
-  completed_plans: 24
-  percent: 86
+  completed_plans: 28
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-02)
 
 **Core value:** No accepted event is ever silently lost — once acknowledged (HTTP 202), an event is durably queued and processed at-least-once and idempotently, surviving worker crashes, DB outages, and flaky downstream APIs, with a DLQ as the final safety net.
-**Current focus:** Phase 06 — testing-ci-cd-deployment
+**Current focus:** v1.0 milestone audited — ready for /gsd:complete-milestone
 
 ## Current Position
 
-Phase: 6
-Plan: 5 of 6 complete (06-06 paused at Task 3 human-verify checkpoint)
-Status: Executing Phase 06 — Plans 01-05 complete; Plan 06 paused at demo recording checkpoint
-Last activity: 2026-06-21
+Phase: 6 (all complete)
+Plan: 28 of 28 complete
+Status: v1.0 milestone audit complete (2026-07-16) — all 35 requirements satisfied; audit gaps (OBS-01, OBS-02, Phase 6 verification, doc drift) remediated same session; see .planning/v1.0-MILESTONE-AUDIT.md
+Last activity: 2026-07-16
 
-Progress: [█████░] 24/28 plans complete (86%) — Phases 1–5 shipped; Phase 6 Plans 01-05 done; Plan 06 at demo checkpoint
+Progress: [██████] 28/28 plans complete (100%) — Phases 1–6 shipped; milestone audit passed after remediation
 
 ## Performance Metrics
 
@@ -147,9 +147,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 3] Measure Upstash Redis command count under load to validate free-tier viability before committing to it (research flag from SUMMARY.md)
-- [Phase 4] Confirm opossum v9 current API shape (`circuitBreaker()` constructor vs `Policy` wrapper) before implementation
-- [Phase 6] Final always-on worker hosting choice (Render background worker vs Fly.io) needs real testing against free-tier keep-alive constraints
+- None blocking. Resolved during v1.0 audit (2026-07-16):
+  - [Phase 4] opossum concern obsolete — cockatiel was chosen and shipped (RES-04/05)
+  - [Phase 6] Hosting: resolved via documented substitution (no $0 always-on worker tier in 2026) — GHCR images + `pnpm demo` + recorded walkthrough; accepted in v1.0-MILESTONE-AUDIT.md
+  - [Phase 3] Upstash command-count validation moot for v1 (no hosted deploy); revisit only if v2 pursues live hosting
 
 ### Quick Tasks Completed
 
@@ -163,8 +164,8 @@ None yet.
 
 ## Session Continuity
 
-Last activity: 2026-06-21 - Quick task 260621-j8p: fixed /demo Live Load Test (Docker DB/Redis service-DNS override + migrate deploy + OPS-04 button wiring) — chart now climbs 0→240 live; unblocks 06-06 Task 3 demo recording. Prior: completed 06-05; executed 06-06 Tasks 1+2; paused at Task 3 demo recording checkpoint
+Last activity: 2026-07-16 - v1.0 milestone audit (gaps_found → remediated): integration checker 27/29 wiring + 4/4 flows; fixed OBS-01 (intermediate retry logging) + OBS-02 (latency/retry/error-distribution metrics + dashboard cards); rendered DLQ errorStack; removed placeholder test; generated missing 06-VERIFICATION.md; accepted OPS-03 substitution; synced REQUIREMENTS/ROADMAP/STATE. Prior: 2026-06-22 closed 06-06 Task 3 checkpoint (demo video + README rewrite).
 
-Last session: 2026-06-21T08:00:00Z
-Stopped at: Paused at 06-06-PLAN.md Task 3 (human-verify — record demo walkthrough to docs/demo.gif)
-Resume signal: Type "approved" once docs/demo.gif is committed and embedded in README, or describe what is blocking the recording.
+Last session: 2026-07-16
+Stopped at: Milestone v1.0 audited and remediated
+Resume signal: Run /gsd:complete-milestone v1.0 to archive, or /gsd:new-milestone to scope v2 (see .planning/research/brainstorming_omnisync_Jul26.md).

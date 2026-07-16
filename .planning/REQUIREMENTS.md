@@ -57,16 +57,16 @@ Full-spec scope (MVP + advanced). Each maps to a roadmap phase.
 
 ### Testing & Quality
 
-- [ ] **TST-01**: Unit + integration test suite (Vitest) achieves ≥80% line coverage, enforced as a CI gate
+- [x] **TST-01**: Unit + integration test suite (Vitest) achieves ≥80% line coverage, enforced as a CI gate *(scoped: thresholds enforced in `apps/api`, `apps/worker`, `packages/queue`; `packages/db` excluded by documented decision — infrastructure tests, not business logic)*
 - [x] **TST-02**: Integration test proves queue durability when PostgreSQL is killed mid-process (Testcontainers)
 - [x] **TST-03**: Integration test proves concurrent duplicate webhooks result in exactly one stored record
 - [x] **TST-04**: Playwright E2E test covers the DLQ dashboard re-queue flow
 
 ### Ops & Delivery
 
-- [ ] **OPS-01**: GitHub Actions CI runs type-check, tests, and Docker build on every push
+- [x] **OPS-01**: GitHub Actions CI runs type-check, tests, and Docker build on every push
 - [x] **OPS-02**: API and worker each build as a multi-stage Docker image and run together via docker-compose locally
-- [x] **OPS-03**: The system is deployed to a free-tier host with the always-on worker kept alive and reachable for a live demo
+- [x] **OPS-03**: The system is deployed to a free-tier host with the always-on worker kept alive and reachable for a live demo *(satisfied via documented substitution, accepted in v1.0 milestone audit 2026-07-16: no $0 always-on background-worker tier exists in 2026 — shipped GHCR images `ghcr.io/afrizzal/omnisync-{api,worker,mock-crm}` + one-command `pnpm demo` + recorded walkthrough `docs/demo-omnisync.mp4`; see README "Deployment Decision")*
 - [x] **OPS-04**: A load-test/demo script blasts a high volume of synthetic multi-channel events to drive the demo scenario
 
 ## v2 Requirements
@@ -130,19 +130,20 @@ Which phases cover which requirements. Populated during roadmap creation.
 | DSH-02 | Phase 5 | Complete |
 | DSH-03 | Phase 5 | Complete |
 | DSH-04 | Phase 5 | Complete |
-| TST-01 | Phase 6 | Pending |
+| TST-01 | Phase 6 | Complete |
 | TST-02 | Phase 6 | Complete |
 | TST-03 | Phase 6 | Complete |
 | TST-04 | Phase 6 | Complete |
-| OPS-01 | Phase 6 | Pending |
+| OPS-01 | Phase 6 | Complete |
 | OPS-03 | Phase 6 | Complete |
 | OPS-04 | Phase 6 | Complete |
 
 **Coverage:**
-- v1 requirements: 33 total
-- Mapped to phases: 33
+- v1 requirements: 35 total
+- Mapped to phases: 35
 - Unmapped: 0
+- Complete: 35 of 35
 
 ---
 *Requirements defined: 2026-06-02*
-*Last updated: 2026-06-02 — traceability populated after roadmap creation*
+*Last updated: 2026-07-16 — v1.0 milestone audit: all 35 requirements complete (TST-01/OPS-01 checked off; OPS-03 substitution accepted)*
