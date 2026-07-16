@@ -1,6 +1,6 @@
 import {
-  ConsecutiveBreaker,
   type CircuitBreakerPolicy,
+  ConsecutiveBreaker,
   circuitBreaker,
   handleAll,
 } from "cockatiel";

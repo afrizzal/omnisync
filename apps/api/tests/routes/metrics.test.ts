@@ -11,15 +11,29 @@ describe("GET /api/metrics", () => {
   // Two completed-job samples: first waited 40ms + processed 10ms (no retries),
   // second waited 60ms + processed 30ms after 2 retries (attemptsMade 3).
   const sampledJobs = [
-    { timestamp: 1_000, processedOn: 1_040, finishedOn: 1_050, attemptsMade: 1 },
-    { timestamp: 2_000, processedOn: 2_060, finishedOn: 2_090, attemptsMade: 3 },
+    {
+      timestamp: 1_000,
+      processedOn: 1_040,
+      finishedOn: 1_050,
+      attemptsMade: 1,
+    },
+    {
+      timestamp: 2_000,
+      processedOn: 2_060,
+      finishedOn: 2_090,
+      attemptsMade: 3,
+    },
   ];
 
   const mockQueue = {
     add: vi.fn().mockResolvedValue({ id: "job-1" }),
-    getJobCounts: vi
-      .fn()
-      .mockResolvedValue({ waiting: 1, active: 2, completed: 42, failed: 3, delayed: 0 }),
+    getJobCounts: vi.fn().mockResolvedValue({
+      waiting: 1,
+      active: 2,
+      completed: 42,
+      failed: 3,
+      delayed: 0,
+    }),
     getJobs: vi.fn().mockResolvedValue(sampledJobs),
   };
   const mockRedis = {
@@ -62,12 +76,26 @@ describe("GET /api/metrics", () => {
 
     expect(response.statusCode).toBe(200);
     const body = JSON.parse(response.body) as {
-      queue: { waiting: number; active: number; completed: number; failed: number; delayed: number };
+      queue: {
+        waiting: number;
+        active: number;
+        completed: number;
+        failed: number;
+        delayed: number;
+      };
       events: { total: number };
       dlq: { unresolved: number };
       throughput: { last60s: number };
-      latency: { avgWaitMs: number | null; avgProcessMs: number | null; sampleSize: number };
-      retries: { retriedJobs: number; totalRetries: number; sampleSize: number };
+      latency: {
+        avgWaitMs: number | null;
+        avgProcessMs: number | null;
+        sampleSize: number;
+      };
+      retries: {
+        retriedJobs: number;
+        totalRetries: number;
+        sampleSize: number;
+      };
       errors: { bySource: Array<{ source: string; count: number }> };
     };
 
@@ -81,9 +109,17 @@ describe("GET /api/metrics", () => {
     expect(body.throughput.last60s).toBe(7);
 
     // Latency: avg of (1040-1000, 2060-2000) = 50ms wait; (1050-1040, 2090-2060) = 20ms process
-    expect(body.latency).toEqual({ avgWaitMs: 50, avgProcessMs: 20, sampleSize: 2 });
+    expect(body.latency).toEqual({
+      avgWaitMs: 50,
+      avgProcessMs: 20,
+      sampleSize: 2,
+    });
     // Retries: one job retried (attemptsMade 3 → 2 retries)
-    expect(body.retries).toEqual({ retriedJobs: 1, totalRetries: 2, sampleSize: 2 });
+    expect(body.retries).toEqual({
+      retriedJobs: 1,
+      totalRetries: 2,
+      sampleSize: 2,
+    });
     // Error distribution: unresolved DLQ grouped by source
     expect(body.errors.bySource).toEqual([{ source: "SHOPEE", count: 5 }]);
   });
@@ -96,12 +132,28 @@ describe("GET /api/metrics", () => {
 
     expect(response.statusCode).toBe(200);
     const body = JSON.parse(response.body) as {
-      latency: { avgWaitMs: number | null; avgProcessMs: number | null; sampleSize: number };
-      retries: { retriedJobs: number; totalRetries: number; sampleSize: number };
+      latency: {
+        avgWaitMs: number | null;
+        avgProcessMs: number | null;
+        sampleSize: number;
+      };
+      retries: {
+        retriedJobs: number;
+        totalRetries: number;
+        sampleSize: number;
+      };
       errors: { bySource: unknown[] };
     };
-    expect(body.latency).toEqual({ avgWaitMs: null, avgProcessMs: null, sampleSize: 0 });
-    expect(body.retries).toEqual({ retriedJobs: 0, totalRetries: 0, sampleSize: 0 });
+    expect(body.latency).toEqual({
+      avgWaitMs: null,
+      avgProcessMs: null,
+      sampleSize: 0,
+    });
+    expect(body.retries).toEqual({
+      retriedJobs: 0,
+      totalRetries: 0,
+      sampleSize: 0,
+    });
     expect(body.errors.bySource).toEqual([]);
   });
 
@@ -147,7 +199,13 @@ describe("POST /api/demo/start", () => {
 
   const mockQueue = {
     add: vi.fn().mockResolvedValue({ id: "job-1" }),
-    getJobCounts: vi.fn().mockResolvedValue({ waiting: 0, active: 0, completed: 0, failed: 0, delayed: 0 }),
+    getJobCounts: vi.fn().mockResolvedValue({
+      waiting: 0,
+      active: 0,
+      completed: 0,
+      failed: 0,
+      delayed: 0,
+    }),
   };
   const mockRedis = {
     set: vi.fn().mockResolvedValue("OK"),

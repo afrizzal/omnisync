@@ -48,7 +48,11 @@ export function buildDlqHandler(prisma: PrismaClient, logger: ProcessorLogger) {
     });
 
     logger.error(
-      { jobId: job.id, fingerprint: data.fingerprint, attempts: job.attemptsMade },
+      {
+        jobId: job.id,
+        fingerprint: data.fingerprint,
+        attempts: job.attemptsMade,
+      },
       "[worker] job exhausted -> DLQ",
     );
   };

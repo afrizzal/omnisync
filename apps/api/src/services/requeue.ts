@@ -36,7 +36,8 @@ export async function requeueDlqEntry(
 
   // BullMQ returns the existing job (no new add) when the jobId already exists in active/waiting;
   // treat a re-add of a still-present job as already_queued (Pitfall 8 double-click safety).
-  if (job == null) return { status: "already_queued", fingerprint: entry.fingerprint };
+  if (job == null)
+    return { status: "already_queued", fingerprint: entry.fingerprint };
 
   // Mark the DLQ entry resolved so the dashboard reflects the re-queue (optional but cheap).
   await deps.prisma.deadLetterEvent.update({

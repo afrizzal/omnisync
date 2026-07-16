@@ -23,7 +23,10 @@ interface RetrySample {
   sampleSize: number;
 }
 
-function sampleJobStats(jobs: Job[]): { latency: LatencySample; retries: RetrySample } {
+function sampleJobStats(jobs: Job[]): {
+  latency: LatencySample;
+  retries: RetrySample;
+} {
   let waitSum = 0;
   let processSum = 0;
   let timed = 0;

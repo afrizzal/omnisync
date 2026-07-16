@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { requeueDlqEntry, type RequeueDeps } from "../services/requeue.js";
+import { type RequeueDeps, requeueDlqEntry } from "../services/requeue.js";
 
 export async function adminRoutes(
   app: FastifyInstance,

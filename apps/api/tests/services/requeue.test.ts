@@ -66,9 +66,9 @@ describe("requeueDlqEntry", () => {
     );
 
     expect(result.status).toBe("requeued");
-    expect((result as { status: "requeued"; fingerprint: string }).fingerprint).toBe(
-      mockDlqEntry.fingerprint,
-    );
+    expect(
+      (result as { status: "requeued"; fingerprint: string }).fingerprint,
+    ).toBe(mockDlqEntry.fingerprint);
     expect(mockQueue.add).toHaveBeenCalledWith(
       "process-event",
       {
@@ -95,9 +95,9 @@ describe("requeueDlqEntry", () => {
     );
 
     expect(result.status).toBe("already_queued");
-    expect((result as { status: "already_queued"; fingerprint: string }).fingerprint).toBe(
-      mockDlqEntry.fingerprint,
-    );
+    expect(
+      (result as { status: "already_queued"; fingerprint: string }).fingerprint,
+    ).toBe(mockDlqEntry.fingerprint);
     // does NOT mark resolved on already_queued
     expect(mockPrisma.deadLetterEvent.update).not.toHaveBeenCalled();
   });

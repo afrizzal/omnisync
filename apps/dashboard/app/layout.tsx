@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import "./globals.css";
-import { Providers } from "@/components/providers";
 import { NavBar } from "@/components/nav-bar";
+import { Providers } from "@/components/providers";
 
 export const metadata = {
   title: "OmniSync",

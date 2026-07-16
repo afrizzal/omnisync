@@ -10,9 +10,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { API_URL, type MetricsResponse } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { API_URL, type MetricsResponse } from "@/lib/api";
 
 // Real metrics are polled once a second, but the chart is rendered at ~10fps with
 // the displayed throughput eased toward the latest sampled rate. Decoupling render
@@ -65,7 +65,8 @@ export default function DemoPage() {
     fetch(`${API_URL}/api/demo/status`)
       .then((r) => (r.ok ? (r.json() as Promise<{ running?: boolean }>) : null))
       .then((d) => {
-        if (active && d && typeof d.running === "boolean") setRunning(d.running);
+        if (active && d && typeof d.running === "boolean")
+          setRunning(d.running);
       })
       .catch(() => undefined);
     return () => {
@@ -139,9 +140,12 @@ export default function DemoPage() {
     setBusy(true);
     const next = !running;
     try {
-      const res = await fetch(`${API_URL}/api/demo/${next ? "start" : "stop"}`, {
-        method: "POST",
-      });
+      const res = await fetch(
+        `${API_URL}/api/demo/${next ? "start" : "stop"}`,
+        {
+          method: "POST",
+        },
+      );
       if (res.ok) setRunning(next);
       else setReachable(false);
     } catch {
@@ -160,7 +164,8 @@ export default function DemoPage() {
           </h1>
           <p className="text-muted-foreground mt-1 max-w-xl text-sm">
             Fires synthetic webhooks through the real HMAC → validate → dedup →
-            enqueue → worker pipeline. The chart is genuine end-to-end throughput.
+            enqueue → worker pipeline. The chart is genuine end-to-end
+            throughput.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -214,7 +219,9 @@ export default function DemoPage() {
         <CardContent>
           <div className="mb-2 flex items-baseline justify-between">
             <span className="text-sm font-medium">Throughput</span>
-            <span className="text-muted-foreground text-xs">events / second</span>
+            <span className="text-muted-foreground text-xs">
+              events / second
+            </span>
           </div>
           <ResponsiveContainer width="100%" height={320}>
             <AreaChart
@@ -247,7 +254,11 @@ export default function DemoPage() {
                 height={20}
               />
               <YAxis
-                domain={[0, (max: number) => Math.max(10, Math.ceil((max * 1.25) / 5) * 5)]}
+                domain={[
+                  0,
+                  (max: number) =>
+                    Math.max(10, Math.ceil((max * 1.25) / 5) * 5),
+                ]}
                 allowDecimals={false}
                 width={40}
                 tick={{ fontSize: 11, fill: "currentColor", opacity: 0.55 }}

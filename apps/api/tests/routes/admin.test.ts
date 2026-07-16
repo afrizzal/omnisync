@@ -17,12 +17,19 @@ const mockRequeue = vi.mocked(requeueDlqEntry);
 describe("POST /admin/dlq/:id/requeue", () => {
   let app: FastifyInstance;
   const mockQueue = { add: vi.fn().mockResolvedValue({ id: "job-1" }) };
-  const mockRedis = { set: vi.fn().mockResolvedValue("OK"), del: vi.fn().mockResolvedValue(1) };
+  const mockRedis = {
+    set: vi.fn().mockResolvedValue("OK"),
+    del: vi.fn().mockResolvedValue(1),
+  };
   const mockPrisma = {} as never; // prisma is passed to requeueDlqEntry which is mocked
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    app = await buildApp({ queue: mockQueue as never, redis: mockRedis as never, prisma: mockPrisma });
+    app = await buildApp({
+      queue: mockQueue as never,
+      redis: mockRedis as never,
+      prisma: mockPrisma,
+    });
   });
 
   afterEach(async () => {
@@ -30,7 +37,10 @@ describe("POST /admin/dlq/:id/requeue", () => {
   });
 
   it("returns 200 with requeued status when entry is found and re-queued", async () => {
-    mockRequeue.mockResolvedValue({ status: "requeued", fingerprint: "abc123" });
+    mockRequeue.mockResolvedValue({
+      status: "requeued",
+      fingerprint: "abc123",
+    });
 
     const response = await app.inject({
       method: "POST",
@@ -57,7 +67,10 @@ describe("POST /admin/dlq/:id/requeue", () => {
   });
 
   it("returns 200 with already_queued status when entry is already in queue", async () => {
-    mockRequeue.mockResolvedValue({ status: "already_queued", fingerprint: "def456" });
+    mockRequeue.mockResolvedValue({
+      status: "already_queued",
+      fingerprint: "def456",
+    });
 
     const response = await app.inject({
       method: "POST",

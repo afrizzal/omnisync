@@ -26,12 +26,7 @@ export function NavBar() {
           {l.label}
         </Link>
       ))}
-      <Button
-        variant="outline"
-        size="sm"
-        className="ml-auto"
-        onClick={cycle}
-      >
+      <Button variant="outline" size="sm" className="ml-auto" onClick={cycle}>
         {theme === "light" ? "Light" : theme === "dark" ? "Dark" : "System"}
       </Button>
     </nav>

@@ -57,7 +57,7 @@ describe("GET /api/dlq", () => {
     });
 
     expect(response.statusCode).toBe(200);
-    const body = JSON.parse(response.body) as { entries: typeof mockEntry[] };
+    const body = JSON.parse(response.body) as { entries: (typeof mockEntry)[] };
     expect(Array.isArray(body.entries)).toBe(true);
     expect(body.entries.length).toBe(1);
   });
@@ -68,7 +68,7 @@ describe("GET /api/dlq", () => {
       url: "/api/dlq",
     });
 
-    const body = JSON.parse(response.body) as { entries: typeof mockEntry[] };
+    const body = JSON.parse(response.body) as { entries: (typeof mockEntry)[] };
     const entry = body.entries[0];
     expect(entry).toBeDefined();
     expect(entry!.failureReason).toBe("boom");

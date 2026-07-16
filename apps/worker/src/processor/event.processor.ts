@@ -1,7 +1,7 @@
 import type { PrismaClient } from "@omnisync/db";
 import { EventJobData } from "@omnisync/types";
-import type { CircuitBreakerPolicy } from "cockatiel";
 import type { Job } from "bullmq";
+import type { CircuitBreakerPolicy } from "cockatiel";
 import { z } from "zod/v4";
 import type { CrmClient } from "../crm/crm-client.js";
 import { normalize } from "../normalizer/normalize.js";

@@ -23,7 +23,10 @@ export async function demoRoutes(app: FastifyInstance): Promise<void> {
   app.post("/api/demo/start", async (_request, reply) => {
     if (!running) {
       running = true;
-      app.log.info({ batch: BATCH, tickMs: TICK_MS }, "[demo] load test started");
+      app.log.info(
+        { batch: BATCH, tickMs: TICK_MS },
+        "[demo] load test started",
+      );
       if (!looping) void runLoop(app);
     }
     return reply.code(202).send({ status: "started", running: true });

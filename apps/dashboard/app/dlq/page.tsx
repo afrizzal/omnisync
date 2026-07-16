@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { API_URL } from "@/lib/api";
-import { useDlq } from "@/hooks/useDlq";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -11,8 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { useDlq } from "@/hooks/useDlq";
+import { API_URL } from "@/lib/api";
 
 export default function DlqPage() {
   const { data, loading, error } = useDlq();
@@ -84,9 +84,7 @@ export default function DlqPage() {
                 <TableCell>{entry.source}</TableCell>
                 <TableCell>{entry.eventType}</TableCell>
                 <TableCell>
-                  <Badge variant="destructive">
-                    {entry.attempts} attempts
-                  </Badge>
+                  <Badge variant="destructive">{entry.attempts} attempts</Badge>
                 </TableCell>
                 <TableCell>
                   {entry.errorStack ? (

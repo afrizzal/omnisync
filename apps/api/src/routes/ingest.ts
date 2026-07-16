@@ -78,10 +78,7 @@ export async function ingestRoutes(
     }
     // OBS-01: structured log covering the "received" lifecycle step (D-07/D-08)
     // Uses the Fastify per-request pino child logger (request-enriched).
-    request.log.info(
-      { fingerprint, source, eventType },
-      "[ingest] received",
-    );
+    request.log.info({ fingerprint, source, eventType }, "[ingest] received");
     return reply.code(202).send({ status: "queued", fingerprint });
   });
 }

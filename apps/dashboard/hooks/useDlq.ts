@@ -1,6 +1,6 @@
 "use client";
 
-import { API_URL, POLL_INTERVAL_MS, type DlqResponse } from "@/lib/api";
+import { API_URL, type DlqResponse, POLL_INTERVAL_MS } from "@/lib/api";
 import { usePolling } from "./usePolling";
 
 export function useDlq() {
