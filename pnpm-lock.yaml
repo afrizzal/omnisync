@@ -202,12 +202,18 @@ importers:
       '@testcontainers/postgresql':
         specifier: 12.0.3
         version: 12.0.3
+      '@types/dockerode':
+        specifier: ^4.0.1
+        version: 4.0.1
       '@types/node':
         specifier: ^25.9.1
         version: 25.9.1
       '@vitest/coverage-v8':
         specifier: 4.1.8
         version: 4.1.8(vitest@4.1.8)
+      dockerode:
+        specifier: ^5.0.1
+        version: 5.0.1
       testcontainers:
         specifier: 12.0.3
         version: 12.0.3
@@ -1852,8 +1858,8 @@ packages:
     resolution: {integrity: sha512-XJgGhoR/CLpqshm4d3L7rzH6t8NgDFUIIpztYlLHIApeJjMZKYJMz2zxPsYxnejq5h3ELYSw/RBsi3t5h7gNTA==}
     engines: {node: '>= 8.0'}
 
-  dockerode@5.0.0:
-    resolution: {integrity: sha512-C52mvJ+7lcyhWNfrzVfFsbTrBfy/ezE9FGEYLpu17FUeBcCkxERk9nN7uDl/478ynDiQ4U+5DbQC2vENHkVEtQ==}
+  dockerode@5.0.1:
+    resolution: {integrity: sha512-avsq/xk4YPIrn0CgleX5bjT9Y8IT1p9PxrNQ++RBQ2WEyFfHCTDsT9kmyxz+H/axnjAwg8wJWEIuPGOUuNupiA==}
     engines: {node: '>= 14.17'}
 
   dotenv@16.6.1:
@@ -4590,7 +4596,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  dockerode@5.0.0:
+  dockerode@5.0.1:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@grpc/grpc-js': 1.14.4
@@ -5763,7 +5769,7 @@ snapshots:
       byline: 5.0.0
       debug: 4.4.3
       docker-compose: 1.4.2
-      dockerode: 5.0.0
+      dockerode: 5.0.1
       get-port: 7.2.0
       proper-lockfile: 4.1.2
       properties-reader: 3.0.1
