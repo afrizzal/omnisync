@@ -23,6 +23,7 @@ import { buildProcessor } from "../../src/processor/event.processor.js";
 // --- Module-level state (set up in beforeAll, torn down in afterAll) ---
 let pg: StartedPostgreSqlContainer;
 let prisma: PrismaClient;
+let recoveredPrisma: PrismaClient | undefined;
 let docker: Dockerode;
 
 beforeAll(async () => {
@@ -35,7 +36,16 @@ beforeAll(async () => {
   const connectionString = pg.getConnectionUri();
   // CRITICAL: createPrismaClient reads DATABASE_URL at module-load time (no url option).
   // Instead, construct PrismaClient directly with a PrismaPg adapter pointed at the container.
-  const adapter = new PrismaPg({ connectionString, max: 5 });
+  // Docker pause = SIGSTOP: a paused Postgres HANGS connections instead of refusing them.
+  // Without client-side timeouts the in-flight calls would never settle (pg defaults wait
+  // forever) — connectionTimeoutMillis bounds new connects, query_timeout bounds queries
+  // already on an established connection. Both make paused-DB calls REJECT within seconds.
+  const adapter = new PrismaPg({
+    connectionString,
+    max: 5,
+    connectionTimeoutMillis: 3_000,
+    query_timeout: 3_000,
+  });
   prisma = new PrismaClient({ adapter });
 
   // Apply schema via raw DDL — no migration CLI available in-test context.
@@ -81,9 +91,17 @@ beforeAll(async () => {
 }, 120_000);
 
 afterAll(async () => {
-  await prisma.$disconnect();
+  // Defensive unpause: if the test failed between pause() and unpause(), stopping a
+  // paused container hangs — unpause first (ignore "not paused" errors).
+  try {
+    await docker.getContainer(pg.getId()).unpause();
+  } catch {
+    // container was not paused — nothing to do
+  }
+  await prisma.$disconnect().catch(() => {});
+  await recoveredPrisma?.$disconnect().catch(() => {});
   await pg.stop();
-});
+}, 60_000);
 
 describe("TST-02 kill-Postgres durability", () => {
   it("pauses Postgres mid-flight; in-flight calls reject (events not dropped); all events drain after unpause", {
@@ -147,15 +165,31 @@ describe("TST-02 kill-Postgres durability", () => {
     // UNPAUSE: DB comes back online — simulates recovery from the outage.
     await container.unpause();
 
+    // Fresh client for the recovery phase: pool clients whose queries were aborted
+    // client-side by query_timeout may be in a poisoned state — a reconnecting worker
+    // after an outage gets fresh connections, so the test models exactly that.
+    const recoveredAdapter = new PrismaPg({
+      connectionString: pg.getConnectionUri(),
+      max: 5,
+    });
+    recoveredPrisma = new PrismaClient({ adapter: recoveredAdapter });
+    const reprocessEvent = buildProcessor(
+      recoveredPrisma,
+      noopLogger,
+      noopCrmClient,
+      crmPolicy,
+      60_000,
+    );
+
     // RE-DRIVE all events (models BullMQ at-least-once retry after the outage recovers).
     // ON CONFLICT DO NOTHING in persistEvent ensures idempotent upsert — no duplicates.
     await Promise.all(
-      events.map((e) => processEvent({ id: e.id, data: e.data })),
+      events.map((e) => reprocessEvent({ id: e.id, data: e.data })),
     );
 
     // DURABILITY ASSERTION 2: After re-delivery, every event landed exactly once.
     // This proves RES-07: zero events dropped, exactly-once storage via idempotency key.
-    const count = await prisma.event.count();
+    const count = await recoveredPrisma.event.count();
     expect(count).toBe(N);
   });
 });
