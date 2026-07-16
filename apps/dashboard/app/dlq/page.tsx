@@ -89,9 +89,20 @@ export default function DlqPage() {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <span className="max-w-xs truncate block">
-                    {entry.failureReason}
-                  </span>
+                  {entry.errorStack ? (
+                    <details className="max-w-xs">
+                      <summary className="truncate cursor-pointer">
+                        {entry.failureReason}
+                      </summary>
+                      <pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap break-all rounded bg-muted p-2 text-xs">
+                        {entry.errorStack}
+                      </pre>
+                    </details>
+                  ) : (
+                    <span className="max-w-xs truncate block">
+                      {entry.failureReason}
+                    </span>
+                  )}
                 </TableCell>
                 <TableCell>
                   {new Date(entry.frozenAt).toLocaleString()}
