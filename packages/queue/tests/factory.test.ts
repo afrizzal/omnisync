@@ -5,11 +5,20 @@ import * as queue from "../src/index.js";
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 
 describe("@omnisync/queue factories (D-07/D-08/D-09)", () => {
-  it("imports without opening a socket or reading env", () => {
-    // If the module had a top-level `new Redis(...)`, importing would throw / hang without REDIS_URL.
+  it("imports without opening a socket", () => {
+    // If the module had a top-level `new Redis(...)`, importing would throw / hang.
+    // (Importing DOES read env via @omnisync/config — vitest.setup.ts provides it.)
     expect(typeof queue.createRedisConnection).toBe("function");
     expect(typeof queue.createEventsQueue).toBe("function");
     expect(queue.QUEUE_NAME).toBe("events");
+  });
+
+  it("fullJitterBackoff stays within [0, min(cap, base * 2^attempt)] (RES-01)", () => {
+    for (const attempt of [1, 3, 10]) {
+      const delay = queue.fullJitterBackoff(attempt);
+      expect(delay).toBeGreaterThanOrEqual(0);
+      expect(delay).toBeLessThanOrEqual(Math.min(30000, 1000 * 2 ** attempt));
+    }
   });
   it("exports no guardInterval / queueOptions (D-09 dead config removed)", () => {
     const keys = Object.keys(queue);
