@@ -172,7 +172,7 @@ jobs:
           SIG=$(printf '%s' "$BODY" | openssl dgst -sha256 -hmac "$SECRET" | sed 's/^.* //')
           curl -sf -X POST http://localhost:3001/ingest/shopee \
             -H 'content-type: application/json' \
-            -H "x-webhook-signature: $SIG" \
+            -H "x-webhook-signature: sha256=$SIG" \
             -d "$BODY"
 
       - name: Wait for DLQ entry to appear (retries exhaust -> dlq_events)
